@@ -1,0 +1,24 @@
+.admintext{
+    color: white;
+}
+.inactiveTab{
+    color: white !important;
+}
+.tabText{
+    color: white;
+}
+.activeTab{
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+    color: black !important;
+}
+.inactiveTab:hover {
+    color: black !important;
+}
+.inactiveTab:hover .tabSvg {
+    color: black !important;
+}
+
+.sidebarMain{
+    background-color: #1e293b !important;
+}

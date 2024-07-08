@@ -1,5 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import 'react-toastify/dist/ReactToastify.min.css';
+import { ToastContainer } from "react-toastify";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -11,7 +14,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.7.2/font/bootstrap-icons.css" />
       <body className={inter.className}>{children}</body>
+      <ToastContainer  autoClose={2000} />
     </html>
+  
   );
 }

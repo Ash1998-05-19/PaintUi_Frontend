@@ -1,0 +1,27 @@
+.loginMain {
+    background-color: #1e293b !important;
+    height: 100vh;
+    background-image: url('/images/register_bg_2.png'); 
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat; 
+  }
+  .signInBtn{
+    background-color: #2b4ac7 !important;
+  
+  }
+  
+  .mt7{
+      margin-top: 7rem;
+  }
+  @media (min-width: 1200px) {
+    .loginBoxMain {
+      width: 32%;
+    }
+  }
+  @media (max-width: 1200px) {
+    .loginBoxMain {
+      width: 100%;
+    }
+  }
+  
