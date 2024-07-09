@@ -39,3 +39,62 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
       console.log("error message ", error);
     }
   };
+
+
+
+export const UserForgotPassword = async (payload,setLoading=()=>{}) => {
+  setLoading(true);
+  try {
+    const res = await fetch(`${API_BASE_URL}/user/forgetPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    const resData = await res.json();
+     
+
+    if (resData?.success) {
+      //toast.success("SuccessFully Login");
+      setLoading(false);
+      return {successMessage:resData};
+    } else {
+      //toast.error(resData.message);
+      setLoading(false);
+      return {errMessage:resData};
+    }
+  } catch (error) {
+    setLoading(false);
+    toast.error("someting went wrong");
+     
+  }
+};
+
+export const resetPassword = async (userId,Token,payload,setLoading=()=>{}) => {
+  setLoading(true);
+console.log('API_BASE_URL',API_BASE_URL)
+  try {
+    const res = await fetch(`${API_BASE_URL}/user/resetPassword/${userId}/${Token}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    const resData = await res.json();
+
+  if (resData?.success) {
+    //toast.success("SuccessFully Login");
+    setLoading(false);
+    return {successMessage:resData};
+  } else {
+    //toast.error(resData.message);
+    setLoading(false);
+    return {errMessage:resData};
+  }
+} catch (error) {
+  setLoading(false);
+  toast.error("someting went wrong");
+}
+};

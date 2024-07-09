@@ -10,6 +10,10 @@
     background-color: #2b4ac7 !important;
   
   }
+  .eyeButton{
+    top: 3px;
+    font-weight: bolder !important;
+  }
   
   .mt7{
       margin-top: 7rem;

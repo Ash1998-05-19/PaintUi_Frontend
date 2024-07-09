@@ -66,7 +66,7 @@ export default function UpdateUser(params) {
       FirstName: data?.firstName,
       LastName: data?.lastName,
       Email: data?.email,
-      Phone: data?.phone,
+   
       Password : data?.password
     };
 
@@ -203,7 +203,7 @@ export default function UpdateUser(params) {
             type="password"
             id="password"
             {...register("password", {
-                required: "Password is required",
+               
               minLength: {
                 value: 6,
                 message: "Password must be at least 6 characters long",

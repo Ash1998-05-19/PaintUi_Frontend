@@ -5,8 +5,10 @@ import Styles from "../common/sidebar.module.css";
 import { usePathname } from "next/navigation";
 import { initFlowbite } from "flowbite";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 export default function SidebarComp({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const firstName = Cookies.get("firstName");
   const lastName = Cookies.get("lastName");
@@ -20,6 +22,14 @@ export default function SidebarComp({ children }) {
   useEffect(() => {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
+
+  const logOut =()=>{
+    Cookies.remove("token");
+    Cookies.remove("email");
+    Cookies.remove("firstName");
+    Cookies.remove("lastName");
+    router.push("/")
+  }
   return (
     <>
       <button
@@ -377,7 +387,7 @@ export default function SidebarComp({ children }) {
                         Change Password
                       </a>
                     </li>
-                    <li>
+                    <li onClick={logOut}>
                       <a
                         href="#"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
