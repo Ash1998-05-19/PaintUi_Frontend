@@ -29,26 +29,67 @@ const MasonsPage = ( params ) => {
     <div>
       <h1>Related Masons</h1>
       {retailerData ? (
-        <ul>
-          {retailerData.relatedMasons.map((mason) => (
-            <li key={mason.UserId} className="mb-4">
-              <strong>Name:</strong> {mason.FirstName} {mason.LastName} <br />
-              <strong>Email:</strong> {mason.Email} <br />
-              <strong>Phone:</strong> {mason.Phone} <br />
-              <strong>Active:</strong> {mason.IsActive ? "Yes" : "No"} <br />
-              <strong>Created At:</strong> {new Date(mason.createdAt).toLocaleString()}
-              <ul className="mt-2">
-                {mason.ScannedCoupons.map((coupon, index) => (
-                  <li key={index} className="mt-2">
-                    <strong>Coupon Code:</strong> {coupon.CouponCode} <br />
-                    <strong>Amount:</strong> {coupon.Amount} <br />
-                    <strong>Redeem Date:</strong> {new Date(coupon.RedeemDateTime).toLocaleString()}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Email
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Phone
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Active
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Created At
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Scanned Coupons
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {retailerData?.relatedMasons.map((mason) => (
+                <tr
+                  key={mason.UserId}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td className="px-6 py-4">{mason.FirstName} {mason.LastName}</td>
+                  <td className="px-6 py-4">{mason.Email}</td>
+                  <td className="px-6 py-4">{mason.Phone}</td>
+                  <td className="px-6 py-4">{mason.IsActive ? "Yes" : "No"}</td>
+                  <td className="px-6 py-4">{new Date(mason.createdAt).toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" className="px-6 py-3">Coupon Code</th>
+                          <th scope="col" className="px-6 py-3">Amount</th>
+                          <th scope="col" className="px-6 py-3">Redeem Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mason.ScannedCoupons.map((coupon, index) => (
+                          <tr
+                            key={index}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          >
+                            <td className="px-6 py-4">{coupon.CouponCode}</td>
+                            <td className="px-6 py-4">{coupon.Amount}</td>
+                            <td className="px-6 py-4">{new Date(coupon.RedeemDateTime).toLocaleString()}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
       ) : (
         <p>Loading...</p>
       )}

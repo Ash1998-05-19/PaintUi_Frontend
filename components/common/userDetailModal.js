@@ -4,6 +4,7 @@
 import { Button, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { getretailerDetailById } from "@/apiFunction/userApi/userApi";
+import { ToastContainer, toast } from "react-toastify";
 
 export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
   console.log("UserDetailModal useridValue", userIdValue);
