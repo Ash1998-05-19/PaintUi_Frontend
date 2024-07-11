@@ -12,6 +12,7 @@ import { updateCoupon } from "@/apiFunction/couponApi/couponApi";
 import { getCategory } from "@/apiFunction/categoryApi/categoryApi";
 import { getCompany } from "@/apiFunction/companyApi/companyApi";
 import { getProduct } from "@/apiFunction/productApi/productApi";
+import { getUser } from "@/apiFunction/userApi/userApi";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,9 +21,10 @@ import DeleteModal from "@/components/common/deleteModal";
 import FilterModal from "@/components/common/filterModal";
 import CouponFilterModal from "@/components/common/couponFilterModal";
 import SpinnerComp from "@/components/common/spinner";
+import SearchInput from "@/components/common/searchDebounceInput";
 //import Cookies from "js-cookie";
 
-export default function Coupon() {
+export default function Coupon(params) {
 
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -30,8 +32,9 @@ export default function Coupon() {
   const [companyList, setCompanyList] = useState([]);
   const [filterModalvalue, setFilterModalValue] = useState(false);
   const [listData, setListData] = useState(false);
+  const [userData, setUserData] = useState(false);
   const [productList, setProductList] = useState(false);
-  const [payLoad, setPayLoad] = useState({categoryIds : [], companyIds: [], productCode : "", productName :"", reedemed : false, unReedemed :false, fromDate : "", toDate :"", fromExpiryDate :"", toExpiryDate : "", masonsCoupon : [], retailersCoupon : [], sortOrder : "DESC" })
+  const [payLoad, setPayLoad] = useState({categoryIds : [], companyIds: [], productCode : "", productName :"", reedemed : false, unReedemed :false, fromDate : "", toDate :"", fromExpiryDate :"", toExpiryDate : "", masonsCoupon : [], retailersCoupon : params?.searchParams?.id ?[params?.searchParams?.id]:[], sortOrder : "DESC" })
   const [isRefresh, setIsRefresh] = useState(0);
   const [deleteId, setDeleteId] = useState();
   const [couponCodes, setCouponCodes] = useState([]);
@@ -39,18 +42,35 @@ export default function Coupon() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  console.log("listData", listData);
+  //console.log("listData", listData);
+  console.log("Coupon params data", params)
+
+
 
   useEffect(() => {
-    getAllCoupons();
+    console.log("params data", params?.searchParams?.id)
+    if(payLoad?.retailersCoupon?.length>0 && params?.searchParams?.id != undefined){
+      console.log("Get all coupon function called")
+      getAllCoupons(payLoad);
+    }
+    if(!params?.searchParams?.id){
+      console.log("coupon function called without params")
+      getAllCoupons(payLoad);
+    }
+    
     getAllProducts();
     getAllCategories();
     getAllCompanies();
-  }, [page, searchData, isRefresh]);
-  const getAllCoupons = async () => {
+    getAllUsers();
+  }, [page, searchData, isRefresh, payLoad]);
+
+  //console.log("Outside get all coupon payload data", payLoad)
+
+  const getAllCoupons = async (payLoadData) => {
+   // console.log("Inside get all coupon payload data", payLoadData)
     setIsLoading(true);
-    let coupons = await getCoupon(page, searchData, payLoad);
-    console.log ("coupons data", coupons)
+    let coupons = await getCoupon(page, searchData, payLoadData);
+   // console.log ("coupons data", coupons)
     if (!coupons?.resData?.message) {
       setListData(coupons?.resData);
     //   const codes = coupons.resData.coupons.map(coupon => coupon.CouponCode);
@@ -60,6 +80,20 @@ export default function Coupon() {
     } else {
       toast.error(coupons?.message);
       
+      return false;
+    }
+  };
+
+
+  const getAllUsers = async () => {
+    //const roleId = 2;
+    let users = await getUser(page, searchData);
+    //console.log("User data", users)
+    if (!users?.resData?.message) {
+      setUserData(users?.resData);
+      return false;
+    } else {
+      toast.error(users?.message);
       return false;
     }
   };
@@ -103,16 +137,16 @@ export default function Coupon() {
 
 
   const searchInputChange = (e) => {
-    setSearchData(e.target.value);
+    setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
+   // console.log(newPage);
     setPage(newPage);
   };
 
   const openFilterModal = async () =>{
     setFilterModalValue(true) ;
-    console.log("filter")
+    //console.log("filter")
   }
 
   const closeFilterModal = async ()=>{
@@ -124,7 +158,7 @@ export default function Coupon() {
     try {
 
       const res = await deleteCoupon(deleteId);
-      console.log("delete response", res)
+      //console.log("delete response", res)
       if (res.resData.message == "Coupon deleted successfully" ) {
         toast.success("Coupon deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -148,12 +182,12 @@ export default function Coupon() {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
+    //console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let coupons = await updateCoupon(payload, id);
-    console.log("toggleCoupon", coupons);
+    //console.log("toggleCoupon", coupons);
     if (!coupons?.message) {
       toast.success(coupons?.resData?.message);
       setIsRefresh((prev) => prev + 1);
@@ -213,9 +247,7 @@ export default function Coupon() {
               </button>
             </Link>
           </div>
-          <label htmlFor="table-search" className="sr-only">
-            Search
-          </label>
+          
           
               <button onClick={generatePDF}
                 className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -225,30 +257,10 @@ export default function Coupon() {
               </button>
            
           <div className="flex"><i className="bi bi-funnel mt-2 mr-2 font-medium text-2xl" onClick={openFilterModal} ></i>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
+          <div>
+              <SearchInput setSearchData={searchInputChange} />
             </div>
-            <input
-              type="text"
-              id="table-search"
-              className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search"
-              onChange={searchInputChange}
-            />
-          </div></div>
+          </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -293,7 +305,8 @@ export default function Coupon() {
             </tr>
           </thead>
           <tbody>
-            {listData?.coupons?.map((item, index) => (
+          {listData?.coupons?.length > 0 && (
+             listData?.coupons?.map((item, index) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                 
                 <td className="px-6 py-4">{item?.CouponCode}</td>
@@ -385,9 +398,16 @@ export default function Coupon() {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+          )}
+           
           </tbody>
         </table>
+        {listData?.coupons?.length === 0 && (
+          <p className="text-center text-2xl font-bold text-gray-500">
+            No data found
+          </p>
+        )}
       </div>
 
       <div className="mt-4">
@@ -409,6 +429,7 @@ export default function Coupon() {
 <CouponFilterModal
         modalValue = {filterModalvalue}
         handleClose = {closeFilterModal}
+        userOptions = {userData}
         companyOptions={companyList}
         categoryOptions={categoryList}
         productOptions={productList}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Styles from "../../page.module.css"
+import Styles from "../page.module.css"
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LoginAdmin } from "@/apiFunction/auth/auth";
@@ -27,23 +27,27 @@ export default function Login() {
     //router.push('/dashboard');
    //Check if the field is empty
    if (Mobile === "") {
+    setIsLoading(false);
     toast.error("Phone number cannot be empty");
     return false;
   }
 
   // Check if the number has exactly 10 digits
   if (!/^\d{10}$/.test(Mobile)) {
+    setIsLoading(false);
     toast.error("Phone number must be 10 digits long");
     return false;
   }
 
   // Check if the number starts with 9, 8, or 7
   if (!/^[789]/.test(Mobile)) {
+    setIsLoading(false);
     toast.error("Phone number must start with 9, 8, or 7");
     return false;
   }
     // Validate Password
     if (Password.length < 5) {
+      setIsLoading(false);
       toast.error("Password must be at least 5 characters long");
       return false;
     }

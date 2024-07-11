@@ -6,3 +6,4 @@ export const apiActions = {
     SET_DATA: "set-data",
     SET_ERROR: "set-error",
   };
+export const UI_URL = 'http://localhost:3000'

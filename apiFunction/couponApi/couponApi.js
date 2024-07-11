@@ -37,9 +37,10 @@ export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
 };
 
 
-export const getCoupon = async (page,searchData,payLoad,setLoading=()=>{}) => {
+export const getCoupon = async (page,searchData,payLoadData,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
+  console.log("coupon api payload", payLoadData)
   try {
     const res = await fetch(`${API_BASE_URL}/coupon/getCoupons`, {
       method: "POST",
@@ -51,19 +52,19 @@ export const getCoupon = async (page,searchData,payLoad,setLoading=()=>{}) => {
       body: JSON.stringify({
         page : page,
         search : searchData,
-        categoryIds : payLoad?.categoryIds?.map(cat => cat.value),
-        companyIds : payLoad?.companyIds?.map(comp => comp.value),
-        productCode : payLoad?.productCode,
-        productName : payLoad?.productName,
-        reedemed : payLoad?.reedemed,
-        unReedemed : payLoad?.unReedemed,
-        fromDate : payLoad?.fromDate,
-        toDate : payLoad?.toDate,
-        fromExpiryDate : payLoad?.fromExpiryDate,
-        toExpiryDate : payLoad?.toExpiryDate,
-        masonsCoupon : payLoad?.masonsCoupon?.map(mas => mas.value),
-        retailersCoupon : payLoad?.retailersCoupon?.map(ret => ret.value),
-        sortOrder : payLoad.sortOrder,
+        categoryIds : payLoadData?.categoryIds?.map(cat => cat.value),
+        companyIds : payLoadData?.companyIds?.map(comp => comp.value),
+        productCode : payLoadData?.productCode,
+        productName : payLoadData?.productName,
+        reedemed : payLoadData?.reedemed,
+        unReedemed : payLoadData?.unReedemed,
+        fromDate : payLoadData?.fromDate,
+        toDate : payLoadData?.toDate,
+        fromExpiryDate : payLoadData?.fromExpiryDate,
+        toExpiryDate : payLoadData?.toExpiryDate,
+        masonsCoupon : payLoadData?.masonsCoupon?.map(mas => mas.value),
+        retailersCoupon : payLoadData?.retailersCoupon?.map(ret => ret.value ? ret.value : ret),
+        sortOrder : payLoadData.sortOrder,
 
 
       })

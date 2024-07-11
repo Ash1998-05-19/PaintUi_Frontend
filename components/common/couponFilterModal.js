@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 export default function CouponFilterModal({
   modalValue,
   handleClose,
+  userOptions,
   companyOptions,
   categoryOptions,
   productOptions,
@@ -15,12 +16,13 @@ export default function CouponFilterModal({
   setPayLoad,
   setIsRefresh,
 }) {
-  console.log("modl value", modalValue);
-  console.log("handle close", handleClose);
-  console.log("CategoryOption", categoryOptions);
-  console.log("Product Option", productOptions);
+  // console.log("modl value", modalValue);
+  // console.log("handle close", handleClose);
+  // console.log("CategoryOption", categoryOptions);
+  // console.log("UserOption", userOptions);
+  // console.log("Product Option", productOptions);
   const [isOpen, setIsOpen] = useState(modalValue.modalValue);
-  console.log("open modal", isOpen);
+  //console.log("open modal", isOpen);
 
   const [selectedOrder, setSelectedOrder] = useState({
     value: "descending",
@@ -33,20 +35,20 @@ export default function CouponFilterModal({
   ];
 
   const changeHandle = (type, data) => {
-    if (type === 'productIds' && data) {
-        const product = data[0];  // Assuming single product selection, you can adjust for multiple if needed
-        setPayLoad(prev => ({
-            ...prev,
-            productCode: product?.label.match(/Code: (\S+)\)/)?.[1] || '',
-            productName: product?.label.split(' (Code:')[0] || ''
-        }));
+    if (type === "productIds" && data) {
+      const product = data[0]; // Assuming single product selection, you can adjust for multiple if needed
+      setPayLoad((prev) => ({
+        ...prev,
+        productCode: product?.label.match(/Code: (\S+)\)/)?.[1] || "",
+        productName: product?.label.split(" (Code:")[0] || "",
+      }));
     } else {
-        setPayLoad(prev => ({
-            ...prev,
-            [type]: data
-        }));
+      setPayLoad((prev) => ({
+        ...prev,
+        [type]: data,
+      }));
     }
-};
+  };
 
   const handleDateChange = (type, data) => {
     setPayLoad((prev) => {
@@ -66,8 +68,6 @@ export default function CouponFilterModal({
     });
   };
 
-  
-
   const clearFilters = () => {
     setPayLoad({
       categoryIds: [],
@@ -80,7 +80,7 @@ export default function CouponFilterModal({
     handleClose();
   };
 
-  console.log("FilterModalPayload", payLoad);
+ // console.log("FilterModalPayload", payLoad);
 
   return (
     <>
@@ -161,9 +161,7 @@ export default function CouponFilterModal({
               <input
                 type="date"
                 value={payLoad?.fromDate || ""}
-                onChange={(e) =>
-                  handleDateChange("fromDate", e.target.value)
-                }
+                onChange={(e) => handleDateChange("fromDate", e.target.value)}
                 className="w-full"
               />
             </div>
@@ -172,9 +170,7 @@ export default function CouponFilterModal({
               <input
                 type="date"
                 value={payLoad?.toDate || ""}
-                onChange={(e) =>
-                  handleDateChange("toDate", e.target.value)
-                }
+                onChange={(e) => handleDateChange("toDate", e.target.value)}
                 className="w-full"
               />
             </div>
@@ -203,8 +199,14 @@ export default function CouponFilterModal({
             <div className="mb-4">
               <label className="block text-gray-700">Mason Coupons:</label>
               <Select
-                // onChange={(option) => changeHandle('masonCoupon', option)}
-                // options={masonCouponOptions}
+                 onChange={(option) => changeHandle('masonsCoupon', option)}
+                options={userOptions?.users
+                  ?.filter((element) => element?.RoleId === 3)
+                  ?.map((element) => ({
+                    value: element?.UserId,
+                    label: `${element?.FirstName}`,
+                  }))}
+                  isMulti
                 className="basic-single-select"
                 classNamePrefix="select"
               />
@@ -212,8 +214,14 @@ export default function CouponFilterModal({
             <div className="mb-4">
               <label className="block text-gray-700">Retailer Coupons:</label>
               <Select
-                // onChange={(option) => changeHandle('retailerCoupon', option)}
-                // options={retailerCouponOptions}
+                onChange={(option) => changeHandle('retailersCoupon', option)}
+                options={userOptions?.users
+                  ?.filter((element) => element?.RoleId === 2)
+                  ?.map((element) => ({
+                    value: element?.UserId,
+                    label: `${element?.FirstName}`,
+                  }))}
+                  isMulti
                 className="basic-single-select"
                 classNamePrefix="select"
               />

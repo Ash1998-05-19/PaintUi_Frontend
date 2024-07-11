@@ -91,7 +91,7 @@ export default function UpdateUser(params) {
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your User Details
       </h1>
-      <Link href="/faq">
+      <Link href="/admin/users">
         <div className="mb-5 mt-5">
           <button
             className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"

@@ -28,7 +28,8 @@ export default function SidebarComp({ children }) {
     Cookies.remove("email");
     Cookies.remove("firstName");
     Cookies.remove("lastName");
-    router.push("/")
+    Cookies.remove("phone");
+    router.push("/login")
   }
   return (
     <>
@@ -69,18 +70,18 @@ export default function SidebarComp({ children }) {
           <ul className="space-y-2 font-medium">
             <li>
               <Link
-                href="dashboard"
-                to="dashboard"
-                onClick={() => handleTabClick("dashboard")}
+                href="/admin/dashboard"
+               
+                onClick={() => handleTabClick("/admin/dashboard")}
                 className={` ${
-                  activeTab === "dashboard"
+                  activeTab === "/admin/dashboard"
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "dashboard" ? "" : Styles.inactiveTab
+                    activeTab === "/admin/dashboard" ? "" : Styles.inactiveTab
                   }  ${
                     Styles.tabSvg
                   }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
@@ -381,7 +382,7 @@ export default function SidebarComp({ children }) {
                     </li>
                     <li>
                       <a
-                        href="#"
+                        href="/admin/changePassword"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                       >
                         Change Password

@@ -67,11 +67,12 @@ export const addLedger = async (payload,setLoading=()=>{}) => {
   };
 
 
-export const getLedger = async (page,searchData,setLoading=()=>{}) => {
+export const getLedger = async (page,searchData,userId,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/ledger/getAllLedgerEntries?page=${page}&pageSize=${PAGE_LIMIT}&search=${searchData}`, {
+      
+      const res = await fetch(`${API_BASE_URL}/ledger/getAllLedgerEntries?page=${page}&pageSize=${PAGE_LIMIT}&search=${searchData}${userId? `&userIds=${userId}` : ''}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

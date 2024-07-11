@@ -10,23 +10,23 @@ export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
   console.log("UserDetailModal useridValue", userIdValue);
   const [retailerData, setRetailerData] = useState(null);
 
-  useEffect(()=>{
-    fetchRetailer();
-    console.log("use effect worked")
-  },[userIdValue])
+  // useEffect(()=>{
+  //   fetchRetailer();
+  //   console.log("use effect worked")
+  // },[userIdValue])
 
-  
+ 
 
-  const fetchRetailer = async () => {
-    let retailer = await getretailerDetailById(userIdValue);
-    if (retailer?.resData?.success) {
-      console.log("retailer data", retailer);
-      setRetailerData(retailer.resData.response);
-    } else {
-      toast.error(retailer?.message);
-      return false;
-    }
-  };
+  // const fetchRetailer = async () => {
+  //   let retailer = await getretailerDetailById(userIdValue);
+  //   if (retailer?.resData?.success) {
+  //     console.log("retailer data", retailer);
+  //     setRetailerData(retailer.resData.response);
+  //   } else {
+  //     toast.error(retailer?.message);
+  //     return false;
+  //   }
+  // };
 
   return (
     <>
@@ -34,13 +34,13 @@ export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
       <Modal.Header>Retailer Details</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
-          {retailerData ? (
+          {userIdValue ? (
             <>
               <h2 className="text-lg font-semibold">Details</h2>
               <ul>
                 <li className="mb-4">
                   <a
-                    href="#"
+                    href={`/admin/ledger?id=${userIdValue}`}
                     className="text-blue-500 hover:underline"
                     onClick={() => {
                       // Handle Ledger details click
@@ -62,7 +62,7 @@ export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="#"
+                   href={`/admin/coupon?id=${userIdValue}`}
                     className="text-blue-500 hover:underline"
                     onClick={() => {
                       // Handle Coupon details click
