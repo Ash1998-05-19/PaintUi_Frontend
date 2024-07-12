@@ -111,11 +111,11 @@ export default function UpdateCoupon(params) {
     try {
       const res = await updateCoupon(CouponDetails, params?.params?.couponId);
       console.log("coupon response", res);
-      if (!res.resData.message) {
+      if (res.resData.success) {
         router.push("/admin/coupon");
-        toast.success("Coupon Added Successfully");
+        toast.success(res.resData.message);
       } else {
-        console.error(res.resData.message);
+        console.error(res?.message);
       }
     } catch (error) {
       console.error("Error updating product:", error);
