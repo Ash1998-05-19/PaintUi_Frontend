@@ -171,7 +171,7 @@ export default function Category() {
                     <div className="flex items-center space-x-2">
                     {item?.IsActive ? (
                         <Link
-                          href={`/property/${item._id}`}
+                        href={`/admin/categories/updateCategory/${item.CategoryId}`}
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                         >
                           <i
