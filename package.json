@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tsndr/cloudflare-worker-jwt": "^2.2.2",
     "bootstrap-icons": "^1.11.3",
     "flowbite-react": "^0.9.0",
+    "jose": "^5.4.0",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "next": "14.2.3",

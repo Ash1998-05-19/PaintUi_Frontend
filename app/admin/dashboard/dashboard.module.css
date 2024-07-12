@@ -1,0 +1,33 @@
+.firstCard{
+    flex-grow: 1;
+    flex-basis: 200;
+    background-color: #faedcb !important;
+    color:#e8af09 !important ;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+
+}
+.secondCard{
+    flex-grow: 1;
+    flex-basis: 200;
+    background-color:  #c6def1 !important;
+    color: #0aa0ed !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.thirdCard{
+    flex-grow: 1;
+    flex-basis: 200;
+    background-color:  #dbcdf0 !important;
+    color:#7526ec !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 1rem;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    
+}

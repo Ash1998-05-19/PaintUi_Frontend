@@ -117,7 +117,7 @@ export default function AddCoupon() {
             <label htmlFor="productName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Product Name <span className="text-red-600">*</span>
             </label>
-            {productList?.data?.length > 0 ? (
+           
               <Controller
                 name="productName"
                 control={control}
@@ -141,7 +141,7 @@ export default function AddCoupon() {
                   />
                 )}
               />
-            ) : (null)}
+            
             {errors.productName && <span className="text-red-500">{errors.productName.message}</span>}
           </div>
         
