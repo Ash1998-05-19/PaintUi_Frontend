@@ -38,7 +38,7 @@ export default function Coupon(params) {
   const [isRefresh, setIsRefresh] = useState(0);
   const [deleteId, setDeleteId] = useState();
   const [couponCodes, setCouponCodes] = useState([]);
-
+  const [isdeleted ,setIsDeleted]=useState(0)
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
@@ -62,7 +62,7 @@ export default function Coupon(params) {
     getAllCategories();
     getAllCompanies();
     getAllUsers();
-  }, [page, searchData, isRefresh, payLoad]);
+  }, [page, searchData, isRefresh, payLoad,isdeleted ]);
 
   //console.log("Outside get all coupon payload data", payLoad)
 
@@ -162,7 +162,7 @@ export default function Coupon(params) {
       if (res.resData.message == "Coupon deleted successfully" ) {
         toast.success("Coupon deleted successfully");
         setIsPopupOpen(false); // Close the modal
-        getAllCoupons(); // Refresh the product list
+        setIsDeleted(prev => prev+1)
       } else {
         toast.error(res?.message || "Error deleting coupon");
       }
@@ -206,13 +206,15 @@ export default function Coupon(params) {
     const xOffset = (doc.internal.pageSize.width - qrSize) / 2; // Center alignment for X
   
     for (let i = 0; i < listData?.coupons?.length; i++) {
-      const code = listData.coupons[i].CouponCode;
+      const coupon = listData.coupons[i];
+      const qrData = `ID: ${coupon.CouponId}, Code: ${coupon.CouponCode}`;
+  
       const qrCanvas = document.createElement("canvas");
-      await QRCode.toCanvas(qrCanvas, code, { width: qrSize });
+      await QRCode.toCanvas(qrCanvas, qrData, { width: qrSize });
   
       const qrImage = qrCanvas.toDataURL("image/jpeg", 1.0);
       doc.addImage(qrImage, "JPEG", xOffset, yOffset, qrSize, qrSize);
-      doc.text(code, doc.internal.pageSize.width / 2, yOffset + qrSize + 10, { align: "center" });
+      doc.text(coupon.CouponCode, doc.internal.pageSize.width / 2, yOffset + qrSize + 10, { align: "center" });
   
       yOffset += qrSize + 30; // Increment Y offset for next QR code
   
@@ -225,6 +227,7 @@ export default function Coupon(params) {
   
     doc.save("coupons.pdf");
   };
+  
   
 
   return (
@@ -419,7 +422,7 @@ export default function Coupon(params) {
       </div>
       <DeleteModal
         isOpen={isPopupOpen}
-        title="Are you sure you want to delete this Product ?"
+        title="Are you sure you want to delete this Coupon ?"
         confirmLabel="Yes, I'm sure"
         cancelLabel="No, cancel"
         onConfirm={handleDelete}

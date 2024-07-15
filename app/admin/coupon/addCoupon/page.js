@@ -59,14 +59,18 @@ export default function AddCoupon() {
   const router = useRouter();
 
   const submitForm = async (data) => {
-    console.log("register data",data);
-    console.log("selected product", selectedProduct)
-    console.log("expiry date time", expiryDateTime)
-    
+    const selectProductAmount = productList?.data
+    ?.filter((item) => item.ProductId === selectedProduct.value)
+    .map((item) => item.Price);
+     if(parseInt(data.amount) > parseInt(selectProductAmount[0] )){
+      toast.warning(`Amount should be less then from product Amount ${selectProductAmount[0]} `)
+      return false
+     }
+
     const CouponDetails={
       ProductId : selectedProduct.value,
       ExpiryDateTime : expiryDateTime,
-      Amount : data.amount,
+      Amount : parseInt(data.amount),
     }
     console.log("couponDetails",CouponDetails)
     let res = await addCoupon(CouponDetails, data.quantity)
