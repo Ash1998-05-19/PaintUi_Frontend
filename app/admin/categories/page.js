@@ -249,7 +249,7 @@ export default function Category() {
 
       <DeleteModal
         isOpen={isPopupOpen}
-        title="Are you sure you want to delete this Product ?"
+        title="Are you sure you want to delete this Category ?"
         confirmLabel="Yes, I'm sure"
         cancelLabel="No, cancel"
         onConfirm={handleDelete}

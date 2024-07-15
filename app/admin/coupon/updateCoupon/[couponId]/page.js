@@ -73,7 +73,7 @@ export default function UpdateCoupon(params) {
       setValue("couponCode", couponObj.coupon.CouponCode);
       console.log("couponCode", couponObj.coupon.CouponCode);
       setValue("productName", {
-        value: couponObj.coupon.CouponId,
+        value: couponObj.coupon?.ProductId,
         label: couponObj.coupon?.Product?.Name,
       });
 
@@ -99,11 +99,20 @@ export default function UpdateCoupon(params) {
   const router = useRouter();
 
   const submitForm = async (data) => {
-    console.log("coupon payload data", data);
+   
+    const selectProductAmount = productList?.products
+    ?.filter((item) => item.ProductId === data?.productName.value)
+    .map((item) => item.Price);
+   
+     if(parseInt(data.amount) > parseInt(selectProductAmount[0] )){
+      toast.warning(`Amount should less then from product Amount ${selectProductAmount[0]} `)
+      return false
+     }
+
     const CouponDetails = {
       ProductId: data?.productName.value,
       ExpiryDateTime: data?.expiryDateTime,
-      Amount: data?.amount,
+      Amount: parseInt(data?.amount),
     };
 
     console.log("coupon details", CouponDetails);

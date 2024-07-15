@@ -313,60 +313,113 @@ export default function AddProduct() {
         </div>
 
         <div className="w-full">
-          <label htmlFor="discountPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Discount Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="discountPercentage"
-            {...register('discountPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Discount Percentage"
-          />
-        </div>
+            <label
+              htmlFor="discountPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Discount Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="discountPercentage"
+              {...register("discountPercentage", {
+                max: {
+                  value: 100, // Replace 100 with the desired maximum value
+                  message:
+                    " Discount Percentage must be less than or equal to 100",
+                },
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Discount Percentage"
+            />
+            {errors.discountPercentage && (
+              <span className="text-red-500">
+                {errors.discountPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="sgstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            SGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="sgstPercentage"
-            {...register('sgstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="SGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="sgstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              SGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="sgstPercentage"
+              {...register("sgstPercentage", {
+                max: {
+                  value: 100, // Replace 100 with the desired maximum value
+                  message: " SGST Percentage must be less than or equal to 100",
+                },
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="SGST Percentage"
+            />
+            {errors.sgstPercentage && (
+              <span className="text-red-500">
+                {errors.sgstPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="cgstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            CGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="cgstPercentage"
-            {...register('cgstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="CGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="cgstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              CGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="cgstPercentage"
+              {...register("cgstPercentage", {
+                max: {
+                  value: 100, // Replace 100 with the desired maximum value
+                  message: " CGST Percentage must be less than or equal to 100",
+                },
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="CGST Percentage"
+            />
+            {errors.cgstPercentage && (
+              <span className="text-red-500">
+                {errors.cgstPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="igstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            IGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="igstPercentage"
-            {...register('igstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="IGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="igstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              IGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="igstPercentage"
+              {...register("igstPercentage", {
+                max: {
+                  value: 100, // Replace 100 with the desired maximum value
+                  message: " IGST Percentage must be less than or equal to 100",
+                },
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="IGST Percentage"
+            />
+            {errors.igstPercentage && (
+              <span className="text-red-500">
+                {errors.igstPercentage.message}
+              </span>
+            )}
+          </div>
       </div>
 
       <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded-lg">Submit</button>

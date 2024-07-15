@@ -208,7 +208,7 @@ export default function Company() {
 
       <DeleteModal
         isOpen={isPopupOpen}
-        title="Are you sure you want to delete this Product ?"
+        title="Are you sure you want to delete this Company ?"
         confirmLabel="Yes, I'm sure"
         cancelLabel="No, cancel"
         onConfirm={handleDelete}
