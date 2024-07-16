@@ -52,6 +52,10 @@ const handleConfirmPasswordChange = (event) => {
     }
 };
 const submitForm = async () => {
+  if (NewPassword === "") {
+    toast.error("NewPassword cannot be empty");
+    return false;
+  }
     if (NewPassword.length < 5) {
         toast.error("Password must be at least 5 characters long");
         return;

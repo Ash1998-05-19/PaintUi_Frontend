@@ -62,7 +62,7 @@ export default function Coupon(params) {
     getAllCategories();
     getAllCompanies();
     getAllUsers();
-  }, [page, searchData, isRefresh, payLoad,isdeleted ]);
+  }, [page, searchData, isRefresh, params,isdeleted ]);
 
   //console.log("Outside get all coupon payload data", payLoad)
 

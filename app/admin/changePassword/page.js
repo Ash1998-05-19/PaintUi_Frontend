@@ -50,10 +50,26 @@ export default function Password(params) {
   const router = useRouter();
 
   const submitUserForm = async () => {
+    if (OldPassword === "") {
+      toast.error("OldPassword cannot be empty");
+      return false;
+    }
+
+    if (NewPassword === "") {
+      toast.error("NewPassword cannot be empty");
+      return false;
+    }
+
+    if (confirmPassword === "") {
+      toast.error("ConfirmPassword cannot be empty");
+      return false;
+    }
+
     if (NewPassword !== confirmPassword) {
       toast.error("Password does not match");
       return false;
     }
+
     
     
     setIsLoading(true);
@@ -103,7 +119,7 @@ export default function Password(params) {
         
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
-              Old Password
+              Old Password <span className="text-red-600">*</span>
             </label>
             <input
               type="password"
@@ -115,7 +131,7 @@ export default function Password(params) {
           </div>
           <div className="relative">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
-              New Password
+              New Password <span className="text-red-600">*</span>
             </label>
             <input
               type={passwordShow ? "text" : "password"}
@@ -142,7 +158,7 @@ export default function Password(params) {
           <div>
             <div className="relative">
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
-                Confirm New Password
+                Confirm New Password <span className="text-red-600">*</span>
               </label>
               <input
                 type={passwordShow ? "text" : "password"}
