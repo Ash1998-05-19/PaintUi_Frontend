@@ -1,28 +1,26 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { changePassword } from "@/apiFunction/auth/auth";
-
 import Styles from "./changepassword.module.css";
 import Cookies from "js-cookie";
 import SpinnerComp from "@/components/common/spinner";
 
 export default function Password(params) {
   const [OldPassword, setOldPassword] = useState("");
-
   const [NewPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordShow, setPasswordShow] = useState(false);
+  const [newPasswordShow, setNewPasswordShow] = useState(false);
+  const [confirmPasswordShow, setConfirmPasswordShow] = useState(false);
 
   const phone = Cookies.get("phone");
 
   const handleOldPasswordChange = (e) => {
     setOldPassword(e.target.value);
   };
-
 
   const handleNewPasswordChange = (event) => {
     const value = event.target.value;
@@ -51,17 +49,17 @@ export default function Password(params) {
 
   const submitUserForm = async () => {
     if (OldPassword === "") {
-      toast.error("OldPassword cannot be empty");
+      toast.error("Old Password cannot be empty");
       return false;
     }
 
     if (NewPassword === "") {
-      toast.error("NewPassword cannot be empty");
+      toast.error("New Password cannot be empty");
       return false;
     }
 
     if (confirmPassword === "") {
-      toast.error("ConfirmPassword cannot be empty");
+      toast.error("Confirm Password cannot be empty");
       return false;
     }
 
@@ -70,30 +68,25 @@ export default function Password(params) {
       return false;
     }
 
-    
-    
     setIsLoading(true);
 
     const UserDetails = {
-      Phone:phone,
+      Phone: phone,
       oldPassword: OldPassword,
       newPassword: NewPassword,
     };
-    let updateUserData = await changePassword(
-      UserDetails
-    );
-    console.log("response message",updateUserData )
-    if (
-      updateUserData?.successMessage?.success == true 
-    ) {
+
+    let updateUserData = await changePassword(UserDetails);
+    console.log("response message", updateUserData);
+    if (updateUserData?.successMessage?.success == true) {
       toast.success(updateUserData?.successMessage?.message);
       setIsLoading(false);
       Cookies.remove("token");
-    Cookies.remove("email");
-    Cookies.remove("firstName");
-    Cookies.remove("lastName");
-    Cookies.remove("phone");
-    router.push("/login")
+      Cookies.remove("email");
+      Cookies.remove("firstName");
+      Cookies.remove("lastName");
+      Cookies.remove("phone");
+      router.push("/login");
       return false;
     } else {
       toast.error(updateUserData?.errMessage);
@@ -101,13 +94,15 @@ export default function Password(params) {
       return false;
     }
   };
-  const handelPasswordShow = () => {
-    if (!passwordShow) {
-      setPasswordShow(true);
-    } else {
-      setPasswordShow(false);
-    }
+
+  const handleNewPasswordShow = () => {
+    setNewPasswordShow(!newPasswordShow);
   };
+
+  const handleConfirmPasswordShow = () => {
+    setConfirmPasswordShow(!confirmPasswordShow);
+  };
+
   return (
     <>
       {isLoading && <SpinnerComp />}
@@ -116,9 +111,8 @@ export default function Password(params) {
           Update Password
         </h1>
         <form className="grid gap-4 mb-4 md:grid-cols-2">
-        
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Old Password <span className="text-red-600">*</span>
             </label>
             <input
@@ -130,11 +124,11 @@ export default function Password(params) {
             />
           </div>
           <div className="relative">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               New Password <span className="text-red-600">*</span>
             </label>
             <input
-              type={passwordShow ? "text" : "password"}
+              type={newPasswordShow ? "text" : "password"}
               value={NewPassword}
               onChange={handleNewPasswordChange}
               name="NewPassword"
@@ -144,72 +138,48 @@ export default function Password(params) {
               required=""
             />
             <button
-              onClick={handelPasswordShow}
+              onClick={handleNewPasswordShow}
               type="button"
               className={`text-black absolute end-2.5 bottom-2.5 font-bold rounded-lg text-xl px-4 py-2 ${Styles.eyeButton}`}
             >
-              {passwordShow ? (
+              {newPasswordShow ? (
                 <i className="bi bi-eye-slash-fill"></i>
               ) : (
                 <i className="bi bi-eye-fill"></i>
               )}
             </button>
           </div>
-          <div>
-            <div className="relative">
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ">
-                Confirm New Password <span className="text-red-600">*</span>
-              </label>
-              <input
-                type={passwordShow ? "text" : "password"}
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                name="NewPassword"
-                id="NewPassword"
-                placeholder="New Password"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required=""
-              />
-              <button
-                onClick={handelPasswordShow}
-                type="button"
-                className={`text-black absolute end-2.5 bottom-2.5 font-bold rounded-lg text-xl px-4 py-2 ${Styles.eyeButton}`}
-              >
-                {passwordShow ? (
-                  <i className="bi bi-eye-slash-fill"></i>
-                ) : (
-                  <i className="bi bi-eye-fill"></i>
-                )}
-              </button>
-            </div>
-            {!passwordsMatch && (
-              <p className="text-red-500 text-sm mt-1">
-                Password should match.
-              </p>
-            )}
+          <div className="relative">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Confirm New Password <span className="text-red-600">*</span>
+            </label>
+            <input
+              type={confirmPasswordShow ? "text" : "password"}
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              name="confirmPassword"
+              id="confirmPassword"
+              placeholder="Confirm New Password"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required=""
+            />
+            <button
+              onClick={handleConfirmPasswordShow}
+              type="button"
+              className={`text-black absolute end-2.5 bottom-2.5 font-bold rounded-lg text-xl px-4 py-2 ${Styles.eyeButton}`}
+            >
+              {confirmPasswordShow ? (
+                <i className="bi bi-eye-slash-fill"></i>
+              ) : (
+                <i className="bi bi-eye-fill"></i>
+              )}
+            </button>
           </div>
-
-          {/* <div>
-                       
-                        <input
-                            type="password"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={NewPassword}
-                            onChange={handleNewPasswordChange}
-                        />
-                    </div> */}
-          {/* <div>
-                        
-                        <input
-                            type="password"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                        />
-                        {!passwordsMatch && (
-                            <p className="text-red-500 text-sm mt-1">Password should match.</p>
-                        )}
-                    </div> */}
+          {!passwordsMatch && (
+            <p className="text-red-500 text-sm mt-1">
+              Passwords should match.
+            </p>
+          )}
         </form>
         <button
           onClick={submitUserForm}

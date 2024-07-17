@@ -23,14 +23,14 @@ export default function SidebarComp({ children }) {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
 
-  const logOut =()=>{
+  const logOut = () => {
     Cookies.remove("token");
     Cookies.remove("email");
     Cookies.remove("firstName");
     Cookies.remove("lastName");
     Cookies.remove("phone");
-    router.push("/login")
-  }
+    router.push("/login");
+  };
   return (
     <>
       <button
@@ -71,7 +71,6 @@ export default function SidebarComp({ children }) {
             <li>
               <Link
                 href="/admin/dashboard"
-               
                 onClick={() => handleTabClick("/admin/dashboard")}
                 className={` ${
                   activeTab === "/admin/dashboard"
@@ -102,7 +101,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/users"
                 onClick={() => handleTabClick("/admin/users")}
                 className={` ${
-                  activeTab === "/admin/users" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/users"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -127,7 +128,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/categories"
                 onClick={() => handleTabClick("/admin/categories")}
                 className={` ${
-                  activeTab === "/admin/categories" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/categories"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -140,13 +143,13 @@ export default function SidebarComp({ children }) {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
                   <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.08.09a2 2 0 0 1-2.83 2.83l-.09-.08a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-.98 1.51V20a2 2 0 0 1-2 2h-1.7a2 2 0 0 1-2-2v-.21a1.65 1.65 0 0 0-.98-1.51 1.65 1.65 0 0 0-1.82.33l-.09.08a2 2 0 0 1-2.83-2.83l.08-.09a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-.98H4a2 2 0 0 1-2-2v-1.7a2 2 0 0 1 2-2h.21a1.65 1.65 0 0 0 1.51-.98 1.65 1.65 0 0 0-.33-1.82l-.08-.09a2 2 0 0 1 2.83-2.83l.09.08a1.65 1.65 0 0 0 1.82.33H12a1.65 1.65 0 0 0 .98-1.51V4a2 2 0 0 1 2-2h1.7a2 2 0 0 1 2 2v.21a1.65 1.65 0 0 0 .98 1.51 1.65 1.65 0 0 0 1.82-.33l.09-.08a2 2 0 0 1 2.83 2.83l-.08.09a1.65 1.65 0 0 0-.33 1.82V12c0 .35.07.68.2.98z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
                   />
                 </svg>
 
@@ -161,7 +164,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/companies"
                 onClick={() => handleTabClick("/admin/companies")}
                 className={` ${
-                  activeTab === "/admin/companies" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/companies"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -235,7 +240,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/coupon"
                 onClick={() => handleTabClick("/admin/coupon")}
                 className={` ${
-                  activeTab === "/admin/coupon" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/coupon"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -274,7 +281,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/ledger"
                 onClick={() => handleTabClick("/admin/ledger")}
                 className={` ${
-                  activeTab === "/admin/ledger" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/ledger"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -285,11 +294,18 @@ export default function SidebarComp({ children }) {
                   }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m4-12H8m8 4H8m8 4H8M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                  />
                 </svg>
+
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>Ledger</span>
               </Link>
             </li>
@@ -337,7 +353,6 @@ export default function SidebarComp({ children }) {
                 href=""
                 className="flex items-center space-x-3 rtl:space-x-reverse"
               >
-               
                 {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                   REC
                 </span> */}
@@ -356,7 +371,7 @@ export default function SidebarComp({ children }) {
                     className="w-8 h-8 rounded-full"
                     src="/images/profile-user.png"
                     alt="user photo"
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                   />
                 </button>
                 <div
@@ -372,7 +387,6 @@ export default function SidebarComp({ children }) {
                     </span>
                   </div>
                   <ul className="py-2" aria-labelledby="user-menu-button">
-                   
                     <li>
                       <a
                         href="/admin/changePassword"

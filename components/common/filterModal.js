@@ -115,7 +115,7 @@ const [selectedOrder, setSelectedOrder] = useState({ value: 'descending', label:
               <label className="block text-gray-700">Sort By:</label>
               <Select
               onChange = { (option) => changeSortHandle("sortBy",option)}
-              value = {payLoad?.sortBy}
+             
                 options={sortByOptions}
                 className="basic-single-select"
                 classNamePrefix="select"

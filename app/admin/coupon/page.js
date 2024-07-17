@@ -79,7 +79,7 @@ export default function Coupon(params) {
       return false;
     } else {
       toast.error(coupons?.message);
-      
+      setIsLoading(false);
       return false;
     }
   };
@@ -281,27 +281,23 @@ export default function Coupon(params) {
                 Expiry Date
               </th>
               <th scope="col" className="px-6 py-3">
-                Ammount
+                Amount
               </th>
-              {/* <th scope="col" className="px-6 py-3">
-                Action
-              </th> */}
-              {/* {roles.includes("Admin") && (
-                <th scope="col" className="px-6 py-3">
-                  Is Enabled
-                </th>
-              )}
-              {roles.includes("Admin") && (
-                <th scope="col" className="px-6 py-3">
-                  Is Featured
-                </th>
-              )}
-              {roles.includes("Developer") && (
-                <th scope="col" className="px-6 py-3">
-                  Review Status
-                </th>
-              )} */}
-
+              <th scope="col" className="px-6 py-3">
+                Redeemed
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Category Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Company Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Redeemed By User
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Redeemed To User
+              </th>
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
@@ -317,36 +313,12 @@ export default function Coupon(params) {
                 <td className="px-6 py-4">{item?.createdAt?.slice(0,10)}</td>
                 <td className="px-6 py-4">{item?.ExpiryDateTime?.slice(0,10)}</td>
                 <td className="px-6 py-4">{item?.Amount}</td>
+                <td className="px-6 py-4">{item?.RedeemByUser ? "Yes" : "No"}</td>
+                <td className="px-6 py-4">{item?.Product?.Category?.Name}</td>
+                <td className="px-6 py-4">{item?.Product?.Company?.Name}</td>
+                <td className="px-6 py-4">{item?.RedeemByUser?.FirstName || "-"}</td>
+                <td className="px-6 py-4">{item?.RedeemToUser?.FirstName || "-"}</td>
                 
-                  {/* <td className="px-6 py-4 text-blue-600 dark:text-blue-500">
-                    <i
-                      className={` ${
-                        item?.IsEnabled
-                          ? "bi bi-hand-thumbs-up-fill text-green-600	"
-                          : "bi bi-hand-thumbs-down-fill text-red-500"
-                      } `}
-                      style={{ fontSize: "24px" }}
-                    ></i>
-                  </td>
-              
-                {roles.includes("Admin") && (
-                  <td className="px-6 py-4 text-blue-600 dark:text-blue-500">
-                    <i
-                      className={` ${
-                        item.IsFeatured
-                          ? "bi bi-hand-thumbs-up-fill text-green-600	"
-                          : "bi bi-hand-thumbs-down-fill text-red-500"
-                      } `}
-                      style={{ fontSize: "24px" }}
-                    ></i>
-                  </td>
-                )}
-                {roles.includes("Developer") && (
-                  <td className="px-6 py-4 text-black-600 dark:text-black-500 ">
-                    { item?.IsEnabled ? (<span>Completed</span> ) :<span>Pending</span>}
-                 
-                </td>
-                )} */}
                 <td className="px-6 py-4">
                   <div className="flex items-center space-x-2">
                   
