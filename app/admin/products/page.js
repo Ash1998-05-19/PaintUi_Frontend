@@ -15,6 +15,7 @@ import DeleteModal from "@/components/common/deleteModal";
 import { ToastContainer, toast } from "react-toastify";
 import FilterModal from "@/components/common/filterModal";
 import SearchInput from "@/components/common/searchDebounceInput";
+import SpinnerComp from "@/components/common/spinner";
 //import Cookies from "js-cookie";
 
 export default function Product() {
@@ -42,6 +43,7 @@ export default function Product() {
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [filterModalvalue, setFilterModalValue] = useState(false);
   const [searchData, setSearchData] = useState("");
   console.log("listData", listData);
@@ -53,10 +55,12 @@ export default function Product() {
   }, [page, searchData, isRefresh]);
 
   const getAllProducts = async () => {
+    setIsLoading(true);
     let products = await getProduct(page, searchData, payLoad);
     console.log("product data", products);
     if (!products?.resData?.message) {
       setListData(products?.resData);
+      setIsLoading(false);
       return false;
     } else {
       toast.error(products?.message);
@@ -157,6 +161,7 @@ export default function Product() {
 
   return (
     <section>
+      {isLoading &&    <SpinnerComp/>  }
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Products

@@ -13,6 +13,7 @@ import DeleteModal from "@/components/common/deleteModal";
 import { ToastContainer, toast } from "react-toastify";
 import ListPagination from "@/components/common/pagination";
 import SearchInput from "@/components/common/searchDebounceInput";
+import SpinnerComp from "@/components/common/spinner";
 //import Cookies from "js-cookie";
 
 export default function Category() {
@@ -24,6 +25,7 @@ export default function Category() {
   const [listData, setListData] = useState("");
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState("");
   console.log("listData", listData);
@@ -32,9 +34,11 @@ export default function Category() {
     getAllCategories();
   }, [page, searchData, isRefresh]);
   const getAllCategories = async () => {
+    setIsLoading(true);
     let categories = await getCategory(page, searchData);
     if (!categories?.resData?.message) {
       setListData(categories?.resData);
+      setIsLoading(false);
       return false;
     } else {
       toast.error(categories?.message);
@@ -92,6 +96,7 @@ export default function Category() {
 
   return (
     <section>
+      {isLoading &&    <SpinnerComp/>  }
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Categories

@@ -28,9 +28,6 @@ export default function AddProduct() {
 
   const { register, handleSubmit, watch,control, formState: { errors } } = useForm();
 
-  const onSubmit = data => {
-    console.log(data);
-  };
 
   useEffect(() => {
     getAllCompanies();
@@ -59,12 +56,12 @@ export default function AddProduct() {
     }
   };
 
-  console.log("categoryList",categoryList);
-  console.log("companyList",companyList);
+  //console.log("categoryList",categoryList);
+  //console.log("companyList",companyList);
 
-  useEffect(() => {
-    generateProductCode();
-  }, [company, watch('productName'), watch('volume')]);
+  // useEffect(() => {
+  //   generateProductCode();
+  // }, [company, watch('productName'), watch('volume')]);
 
   const generateProductCode = () => {
     const productName = watch('productName');
@@ -75,25 +72,28 @@ export default function AddProduct() {
       const volumeCode = (volume * 1000).toString();
       const randomDigits = Math.floor(1000 + Math.random() * 9000);
       const code = `${companyCode}${prodCode}${volumeCode}-${randomDigits}`;
+      console.log("code inside generateProductCode", code)
       setProductCode(code);
+      return code;
     } else {
       setProductCode('');
+      return null;
     }
   };
 
   
 
-  const [productName, setProductName] = useState('');
+  // const [productName, setProductName] = useState('');
 
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [width, setWidth] = useState('');
-  const [volume, setVolume] = useState('');
-  const [price, setPrice] = useState('');
-  const [discountPercentage, setDiscountPercentage] = useState('');
-  const [sgstPercentage, setSgstPercentage] = useState('');
-  const [cgstPercentage, setCgstPercentage] = useState('');
-  const [igstPercentage, setIgstPercentage] = useState('');
+  // const [weight, setWeight] = useState('');
+  // const [height, setHeight] = useState('');
+  // const [width, setWidth] = useState('');
+  // const [volume, setVolume] = useState('');
+  // const [price, setPrice] = useState('');
+  // const [discountPercentage, setDiscountPercentage] = useState('');
+  // const [sgstPercentage, setSgstPercentage] = useState('');
+  // const [cgstPercentage, setCgstPercentage] = useState('');
+  // const [igstPercentage, setIgstPercentage] = useState('');
 
   const handleCategoryChange = (selectedOption) => {
     setCategory(selectedOption);
@@ -107,31 +107,34 @@ export default function AddProduct() {
   const router = useRouter();
 
   const submitForm = async (data) => {
+   const myProdCode = generateProductCode();
+  
+      console.log("ProductCode", myProdCode)
+  
     console.log("register data",data);
     const ProductDetails={
       Name: data.productName,
       CategoryId: category.value,
       CompanyId: company.value,
-      WeightInGrams: data.weight,
-      HeightInCm: data.height,
-      WidthInCm: data.width,
+      WeightInGrams: data.weight ? data.weight : undefined,
+      HeightInCm: data.height ? data.height : undefined,
+      WidthInCm: data.width ? data.width : undefined,
       VolumeInLiter: data.volume,
       Price: data.price,
-      DiscountPercentage: data.discountPercentage,
-      SGSTPercentage: data.sgstPercentage,
-      CGSTPercentage: data.cgstPercentage,
-      IGSTPercentage: data.igstPercentage,
-      ProductCode: productCode,
+      DiscountPercentage: data.discountPercentage ? data.discountPercentage : undefined,
+      SGSTPercentage: data.sgstPercentage ? data.sgstPercentage : undefined,
+      CGSTPercentage: data.cgstPercentage ? data.cgstPercentage : undefined,
+      IGSTPercentage: data.igstPercentage ? data.igstPercentage : undefined,
+      ProductCode: myProdCode,
     }
-    console.log("productDetails",ProductDetails)
+    //console.log("productDetails",ProductDetails)
     let res = await addProduct(ProductDetails)
     console.log("Response data", res);
-     if(!res?.resData?.message){
-
+     if(res?.resData?.success){
        router.push("/admin/products");
        toast.success("Product Added Successfully");
       }else{
-        toast.error(res?.resData?.message);
+        toast.error(res?.errMessage);
         return false;
       }
   };
@@ -285,13 +288,13 @@ export default function AddProduct() {
 
         <div className="w-full">
           <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Volume (in liters)
+            Volume (in liters) <span className="text-red-600">*</span>
           </label>
           <input
             type="number"
             step="0.01"
             id="volume"
-            {...register('volume')}
+            {...register('volume', { required: 'Volume is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Volume"
           />

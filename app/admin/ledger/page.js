@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import ListPagination from "@/components/common/pagination";
 import DeleteModal from "@/components/common/deleteModal";
 import SearchInput from "@/components/common/searchDebounceInput";
+import SpinnerComp from "@/components/common/spinner";
 //import Cookies from "js-cookie";
 export default function Ledger(params) {
 //   const roleData = Cookies.get("roles") ?? "";
@@ -24,6 +25,7 @@ export default function Ledger(params) {
   const [isRefresh, setIsRefresh] = useState(0);
   const [userId, setUserId] = useState(params?.searchParams?.id ?params?.searchParams?.id:null);
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
   console.log("listData", listData);
   console.log("ledger params data", params)
@@ -32,11 +34,12 @@ export default function Ledger(params) {
     getAllLedgers();
   }, [page, searchData, isRefresh]);
   const getAllLedgers = async () => {
-   
+    setIsLoading(true);
     let ledgers = await getLedger(page, searchData, userId);
     console.log("ledger details", ledgers);
     if (!ledgers?.resData?.message) {
       setListData(ledgers?.resData);
+      setIsLoading(false);
       return false;
     } else {
       toast.error(ledgers?.message);
@@ -77,6 +80,7 @@ export default function Ledger(params) {
   };
   return (
     <section>
+      {isLoading &&    <SpinnerComp/>  }
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Ledger

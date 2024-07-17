@@ -20,14 +20,14 @@ export const addProduct = async (payload,setLoading=()=>{}) => {
     const resData = await res.json();
     console.log('resData',resData)
 
-    if (resData) {
+    if (resData?.success) {
       console.log('working')
       setLoading(false);
       return {resData};
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.message};
+      return {errMessage:resData.error};
     }
   } catch (error) {
     setLoading(false);
@@ -202,14 +202,14 @@ export const updateProduct = async (payload,id,setLoading=()=>{}) => {
     const resData = await res.json();
     console.log('resData',resData)
 
-    if (resData) {
+    if (resData?.success) {
       console.log('working')
       setLoading(false);
       return {resData};
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.message};
+      return {errMessage:resData.error};
     }
   } catch (error) {
     setLoading(false);

@@ -148,11 +148,11 @@ export default function UpdateProduct(params ) {
 
     try {
       const res = await updateProduct(ProductDetails, params?.params?.productId);
-      if (!res.resData.message) {
+      if (res?.resData?.success) {
         router.push("/admin/products");
         toast.success("Product Updated Successfully");
       } else {
-        toast.error(res?.resData?.message);
+        toast.error(res?.errMessage);
       }
     } catch (error) {
       console.error("Error updating product:", error);
@@ -287,13 +287,13 @@ export default function UpdateProduct(params ) {
 
         <div className="w-full">
           <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Volume (in liters)
+            Volume (in liters) <span className="text-red-600">*</span>
           </label>
           <input
             type="number"
             step="0.01"
             id="volume"
-            {...register('volume')}
+            {...register('volume', { required: 'Volume is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Volume"
           />

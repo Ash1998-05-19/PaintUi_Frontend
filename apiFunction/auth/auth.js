@@ -32,7 +32,7 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
       } else {
         //toast.error(resData.message);
         setLoading(false);
-        return {errMessage:resData.error};
+        return {errMessage:resData.message};
       }
     } catch (error) {
       setLoading(false);

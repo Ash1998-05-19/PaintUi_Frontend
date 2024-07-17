@@ -22,6 +22,7 @@ export default function CouponFilterModal({
   // console.log("UserOption", userOptions);
   // console.log("Product Option", productOptions);
   const [isOpen, setIsOpen] = useState(modalValue.modalValue);
+  const [selectProduct,setSelectProduct]=useState("")
   //console.log("open modal", isOpen);
 
   const [selectedOrder, setSelectedOrder] = useState({
@@ -35,8 +36,26 @@ export default function CouponFilterModal({
   ];
 
   const changeHandle = (type, data) => {
+    console.log("change handle data", data)
+    console.log("change handle type", type)
+    if (type === "reedemed" && data) {
+      setPayLoad((prev) => ({
+        ...prev,
+        reedemed:data,
+        unReedemed:false
+      }));
+    }
+    if (type === "unReedemed" && data) {
+      setPayLoad((prev) => ({
+        ...prev,
+        reedemed:false,
+        unReedemed:data
+      }));
+    }
+
     if (type === "productIds" && data) {
-      const product = data[0]; // Assuming single product selection, you can adjust for multiple if needed
+      setSelectProduct(data)
+      const product = data; 
       setPayLoad((prev) => ({
         ...prev,
         productCode: product?.label.match(/Code: (\S+)\)/)?.[1] || "",
@@ -72,10 +91,16 @@ export default function CouponFilterModal({
     setPayLoad({
       categoryIds: [],
       companyIds: [],
-      productIds: [],
-      sortBy: "createdAt",
+      redeemed: undefined, 
+      fromDate: "",
+      toDate: "",
+      fromExpiryDate: "",
+      toExpiryDate: "",
+      masonsCoupon: [],
+      retailersCoupon: [],
       sortOrder: "DESC",
     });
+    setSelectProduct("")
     setIsRefresh((prev) => prev + 1);
     handleClose();
   };
@@ -124,21 +149,20 @@ export default function CouponFilterModal({
                   value: element?.ProductId,
                   label: `${element?.Name} (Code: ${element?.ProductCode})`,
                 }))}
-                value={payLoad?.productIds}
-                isMulti
+                value={selectProduct}
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
             </div>
-            <div className="mb-4">
+            <div className="flex justify-around mb-4">
               <div>
                 <input
                   type="radio"
                   id="redeemed"
                   name="status"
-                  value="redeemed"
-                  checked={payLoad?.redeemed === true}
-                  onChange={() => changeHandle("redeemed", true)}
+                  value="reedemed"
+                  checked={payLoad?.reedemed === true}
+                  onChange={() => changeHandle("reedemed", true)}
                   className="mr-2"
                 />
                 <label htmlFor="redeemed">Redeemed</label>
@@ -148,9 +172,9 @@ export default function CouponFilterModal({
                   type="radio"
                   id="unredeemed"
                   name="status"
-                  value="unredeemed"
-                  checked={payLoad?.redeemed === false}
-                  onChange={() => changeHandle("redeemed", false)}
+                  value="unReedemed"
+                  checked={payLoad?.unReedemed === true}
+                  onChange={() => changeHandle("unReedemed", true)}
                   className="mr-2"
                 />
                 <label htmlFor="unredeemed">Unredeemed</label>
@@ -206,6 +230,7 @@ export default function CouponFilterModal({
                     value: element?.UserId,
                     label: `${element?.FirstName}`,
                   }))}
+                  value={payLoad?.masonsCoupon}
                   isMulti
                 className="basic-single-select"
                 classNamePrefix="select"
@@ -221,6 +246,7 @@ export default function CouponFilterModal({
                     value: element?.UserId,
                     label: `${element?.FirstName}`,
                   }))}
+                  value={payLoad?.retailersCoupon}
                   isMulti
                 className="basic-single-select"
                 classNamePrefix="select"

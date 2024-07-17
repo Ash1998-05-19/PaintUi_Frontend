@@ -13,6 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import DeleteModal from "@/components/common/deleteModal";
 import ListPagination from "@/components/common/pagination";
 import SearchInput from "@/components/common/searchDebounceInput";
+import SpinnerComp from "@/components/common/spinner";
 //import Cookies from "js-cookie";
 
 export default function Company() {
@@ -24,6 +25,7 @@ export default function Company() {
   const [listData, setListData] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState("");
   console.log("listData", listData);
@@ -32,9 +34,11 @@ export default function Company() {
     getAllCompanies();
   }, [page, searchData, isRefresh]);
   const getAllCompanies = async () => {
+    setIsLoading(true);
     let companies = await getCompany(page, searchData);
     if (!companies?.resData?.message) {
       setListData(companies?.resData);
+      setIsLoading(false);
       return false;
     } else {
       toast.error(companies?.message);
@@ -92,6 +96,7 @@ export default function Company() {
 
   return (
     <section>
+      {isLoading &&    <SpinnerComp/>  }
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Companies

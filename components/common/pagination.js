@@ -38,12 +38,19 @@ const ListPagination = ({ data, pageNo, pageVal }) => {
   const pages = [...Array(endPage + 1 - startPage).keys()].map(
     (i) => startPage + i
   );
-
+  const userCount = data?.users?.filter(user => user.Role.Name !== 'Admin').length || 0;
   return (
     <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
       <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
         Total Records{" "}
-        {data?.totalItems?(<span className="font-semibold text-gray-900 dark:text-white">{data?.totalItems}</span>):(<span className="font-semibold text-gray-900 dark:text-white">{data?.users?.length - 1}</span>)}
+       
+
+{data?.totalItems ? (
+  <span className="font-semibold text-gray-900 dark:text-white">{data?.totalItems}</span>
+) : (
+  <span className="font-semibold text-gray-900 dark:text-white">{userCount}</span>
+)}
+
         
       </span>
       <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
