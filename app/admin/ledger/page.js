@@ -13,6 +13,8 @@ import ListPagination from "@/components/common/pagination";
 import DeleteModal from "@/components/common/deleteModal";
 import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
+import DateRange from "@/components/common/dateRange";
+import { ExportToExcel } from "@/components/common/exportToCsv";
 //import Cookies from "js-cookie";
 export default function Ledger(params) {
 //   const roleData = Cookies.get("roles") ?? "";
@@ -20,6 +22,9 @@ export default function Ledger(params) {
 //   const roles = roleData && JSON.parse(roleData);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [ledgerExcelData, setLedgerExcelData] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const [listData, setListData] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
@@ -32,10 +37,10 @@ export default function Ledger(params) {
 
   useEffect(() => {
     getAllLedgers();
-  }, [page, searchData, isRefresh]);
+  }, [page, searchData, isRefresh, fromDate, toDate]);
   const getAllLedgers = async () => {
     setIsLoading(true);
-    let ledgers = await getLedger(page, searchData, userId);
+    let ledgers = await getLedger(page, searchData, userId, fromDate, toDate);
     console.log("ledger details", ledgers);
     if (!ledgers?.resData?.message) {
       setListData(ledgers?.resData);
@@ -46,6 +51,35 @@ export default function Ledger(params) {
       return false;
     }
   };
+
+  useEffect(() => {
+    if (listData?.ledgerEntries) {
+      const keysToSelect = [
+        
+        "FirstName",
+        "LastName",
+        "EntryType",
+        "Amount",
+      ];
+
+      const filterCsvData = (data, keys) => {
+        return data.map((item) => {
+          let newItem = {};
+          keys.forEach((key) => {
+            // Handle nested UserDetail keys
+            if (key in item) {
+              newItem[key] = item[key];
+            } else if (key in item.UserDetail) {
+              newItem[key] = item.UserDetail[key];
+            }
+          });
+          return newItem;
+        });
+      };
+
+      setLedgerExcelData(filterCsvData(listData.ledgerEntries, keysToSelect));
+    }
+  }, [listData]);
 
   const searchInputChange = (e) => {
     setSearchData(e);
@@ -85,17 +119,38 @@ export default function Ledger(params) {
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Ledger
         </h1>
+        <DateRange
+          setFromDate={setFromDate}
+          setToDate={setToDate}
+          startDate={fromDate}
+          endDate={toDate}
+        />
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-        <div>
-            <Link href={"/admin/ledger/addLedger"}>
-              {" "}
-              <button
-                className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button"
-              >
-                + Add Ledger
-              </button>
-            </Link>
+        <div className="flex ">
+            <div>
+              {Object.keys(params?.searchParams || {}).length === 0 && (
+                <>
+                  <Link href={"/admin/ledger/addLedger"}>
+                    {" "}
+                    <button
+                      className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                      type="button"
+                    >
+                      + Add Ledger
+                    </button>
+                  </Link>
+                </>
+              )}
+            </div>
+
+            <div className="mt-0">
+              {listData?.ledgerEntries?.length > 0 && (
+                <ExportToExcel
+                  apiData={ledgerExcelData}
+                  fileName={"Ledger_Data"}
+                />
+              )}
+            </div>
           </div>
           
           <div>
@@ -105,9 +160,9 @@ export default function Ledger(params) {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 Ledger Id
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3">
                 User Name
               </th>
@@ -128,7 +183,7 @@ export default function Ledger(params) {
           {listData?.ledgerEntries?.length > 0 && (
              listData?.ledgerEntries?.map((item, index) => (
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td className="px-6 py-4">{item?.LedgerId}</td>
+                {/* <td className="px-6 py-4">{item?.LedgerId}</td> */}
                 <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
                 <td className="px-6 py-4">{item?.EntryType}</td>
                 <td className="px-6 py-4">{item?.Amount}</td>

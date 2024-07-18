@@ -34,10 +34,11 @@ export default function Coupon(params) {
   const [listData, setListData] = useState(false);
   const [userData, setUserData] = useState(false);
   const [productList, setProductList] = useState(false);
-  const [payLoad, setPayLoad] = useState({categoryIds : [], companyIds: [], productCode : "", productName :"", reedemed : false, unReedemed :false, fromDate : "", toDate :"", fromExpiryDate :"", toExpiryDate : "", masonsCoupon : [], retailersCoupon : params?.searchParams?.id ?[params?.searchParams?.id]:[], sortOrder : "DESC" })
+  const [payLoad, setPayLoad] = useState({categoryIds : [], companyIds: [], productCode : params?.searchParams?.productCode ?params?.searchParams?.productCode:"", productName :"", reedemed : false, unReedemed :false, fromDate : "", toDate :"", fromExpiryDate :"", toExpiryDate : "", masonsCoupon : [], retailersCoupon : params?.searchParams?.id ?[params?.searchParams?.id]:[], sortOrder : "DESC" })
   const [isRefresh, setIsRefresh] = useState(0);
   const [deleteId, setDeleteId] = useState();
   const [couponCodes, setCouponCodes] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
   const [isdeleted ,setIsDeleted]=useState(0)
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,28 +49,28 @@ export default function Coupon(params) {
 
 
   useEffect(() => {
-    console.log("params data", params?.searchParams?.id)
-    if(payLoad?.retailersCoupon?.length>0 && params?.searchParams?.id != undefined){
-      console.log("Get all coupon function called")
-      getAllCoupons(payLoad);
-    }
-    if(!params?.searchParams?.id){
-      console.log("coupon function called without params")
-      getAllCoupons(payLoad);
-    }
-    
+    // console.log("params data", params?.searchParams?.id)
+    // if(payLoad?.retailersCoupon?.length>0 && params?.searchParams?.id != undefined){
+    //   console.log("Get all coupon function called")
+    //   getAllCoupons(payLoad);
+    // }
+    // if(!params?.searchParams?.id){
+    //   console.log("coupon function called without params")
+    //   getAllCoupons(payLoad);
+    // }
+    getAllCoupons(payLoad);
     getAllProducts();
     getAllCategories();
     getAllCompanies();
     getAllUsers();
-  }, [page, searchData, isRefresh, params,isdeleted ]);
+  }, [page, searchData, isRefresh, params,isdeleted, pageSize ]);
 
   //console.log("Outside get all coupon payload data", payLoad)
 
   const getAllCoupons = async (payLoadData) => {
    // console.log("Inside get all coupon payload data", payLoadData)
     setIsLoading(true);
-    let coupons = await getCoupon(page, searchData, payLoadData);
+    let coupons = await getCoupon(page, searchData, payLoadData, pageSize);
    // console.log ("coupons data", coupons)
     if (!coupons?.resData?.message) {
       setListData(coupons?.resData);
@@ -239,9 +240,10 @@ export default function Coupon(params) {
           Coupons
         </h1>
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
+        {Object.keys(params?.searchParams || {}).length === 0 ? (
+        <>
           <div>
             <Link href={"/admin/coupon/addCoupon"}>
-              {" "}
               <button
                 className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 type="button"
@@ -250,21 +252,74 @@ export default function Coupon(params) {
               </button>
             </Link>
           </div>
-          
-          
-              <button onClick={generatePDF}
-                className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                type="button"
+
+          <button
+            onClick={generatePDF}
+            className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+            type="button"
+          >
+            Generate QR
+          </button>
+
+          <div className="relative">
+            <button
+              id="dropdownDefaultButton"
+              data-dropdown-toggle="dropdown"
+              className="text-black bg-white hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              type="button"
+            >
+              Items per page
+              <svg
+                className="w-2.5 h-2.5 ms-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 10 6"
               >
-                Generate QR
-              </button>
-           
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 4 4 4-4"
+                />
+              </svg>
+            </button>
+
+            <div
+              id="dropdown"
+              className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+            >
+              <ul
+                className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownDefaultButton"
+              >
+                {[10, 50, 100, 500].map((num) => (
+                  <li key={num}>
+                    <button
+                      onClick={() => setPageSize(num)}
+                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full text-left"
+                    >
+                      {num}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div></div> <div></div>
+        </>
+      )}
           <div className="flex"><i className="bi bi-funnel mt-2 mr-2 font-medium text-2xl" onClick={openFilterModal} ></i>
           <div>
               <SearchInput setSearchData={searchInputChange} />
             </div>
           </div>
         </div>
+        <div className="couponTable">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -378,6 +433,8 @@ export default function Coupon(params) {
            
           </tbody>
         </table>
+        </div>
+       
         {listData?.coupons?.length === 0 && (
           <p className="text-center text-2xl font-bold text-gray-500">
             No data found

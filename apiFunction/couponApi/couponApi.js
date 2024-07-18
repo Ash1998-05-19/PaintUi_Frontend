@@ -37,7 +37,7 @@ export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
 };
 
 
-export const getCoupon = async (page,searchData,payLoadData,setLoading=()=>{}) => {
+export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
   console.log("coupon api payload", payLoadData)
@@ -51,6 +51,7 @@ export const getCoupon = async (page,searchData,payLoadData,setLoading=()=>{}) =
       
       body: JSON.stringify({
         page : page,
+        pageSize : pageSize,
         search : searchData,
         categoryIds : payLoadData?.categoryIds?.map(cat => cat.value),
         companyIds : payLoadData?.companyIds?.map(comp => comp.value),

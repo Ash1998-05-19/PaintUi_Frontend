@@ -22,6 +22,11 @@
     background-color: rgb(243 244 246 / var(--tw-bg-opacity));
     overflow-x: hidden;
   }
+
+  .couponTable{
+    height: 500px;
+    overflow-y: scroll;
+  }
   /* background: linear-gradient(
       to bottom,
       transparent,
