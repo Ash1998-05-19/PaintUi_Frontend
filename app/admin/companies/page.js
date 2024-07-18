@@ -142,7 +142,11 @@ export default function Company() {
                 key={index}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
-                <td className="px-6 py-4">{item?.Name}</td>
+                <Link href={`/admin/products?companyId=${item?.CompanyId}`}>
+                    <td className="px-6 py-4 text-blue-600 cursor-pointer hover:font-semibold capitalize">
+                      {item?.Name}
+                    </td>
+                  </Link>
                 <td className="px-6 py-4">{item?.createdAt?.slice(0, 10)}</td>
                 <td className="px-6 py-4">{item?.updatedAt?.slice(0, 10)}</td>
 

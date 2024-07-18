@@ -18,7 +18,7 @@ import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
 //import Cookies from "js-cookie";
 
-export default function Product() {
+export default function Product(params) {
   //   const roleData = Cookies.get("roles") ?? "";
   //   const name = Cookies.get("name");
   //   const roles = roleData && JSON.parse(roleData);
@@ -29,8 +29,8 @@ export default function Product() {
   const [categoryList, setCategoryList] = useState([]);
   const [companyList, setCompanyList] = useState([]);
   const [payLoad, setPayLoad] = useState({
-    categoryIds: [],
-    companyIds: [],
+    categoryIds: params?.searchParams?.categoryId ? [params?.searchParams?.categoryId]:[],
+    companyIds: params?.searchParams?.companyId ? [params?.searchParams?.companyId]:[],
     productIds: [],
     sortBy: "createdAt",
     sortOrder: "DESC",
@@ -52,7 +52,7 @@ export default function Product() {
     getAllProducts();
     getAllCategories();
     getAllCompanies();
-  }, [page, searchData, isRefresh]);
+  }, [page, searchData, params, isRefresh]);
 
   const getAllProducts = async () => {
     setIsLoading(true);
@@ -168,6 +168,7 @@ export default function Product() {
         </h1>
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
           <div>
+          {Object.keys(params?.searchParams || {}).length === 0  && (<>
             <Link href={"/admin/products/addProduct"}>
               {" "}
               <button
@@ -177,6 +178,7 @@ export default function Product() {
                 + Add Products
               </button>
             </Link>
+          </>)}
           </div>
 
           <div className="flex">
@@ -217,7 +219,11 @@ export default function Product() {
                   key={index}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  <td className="px-6 py-4">{item?.Name}</td>
+                 <Link href={`/admin/coupon?productCode=${item?.ProductCode}`}>
+                    <td className="px-6 py-4 text-blue-600 cursor-pointer hover:font-semibold capitalize">
+                      {item?.Name}
+                    </td>
+                  </Link>
                   <td className="px-6 py-4">{item?.Price}</td>
                   <td className="px-6 py-4">{item?.Category?.Name}</td>
                   <td className="px-6 py-4">{item?.Company?.Name}</td>

@@ -64,9 +64,9 @@ export default function SidebarComp({ children }) {
         <div
           className={` ${Styles.sidebarMain} h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800`}
         >
-          <div className="mb-4 text-center">
+          {/* <div className="mb-4 text-center">
             <span className={`ms-3 ${Styles.admintext}`}>Admin</span>
-          </div>
+          </div> */}
           <ul className="space-y-2 font-medium">
             <li>
               <Link
@@ -261,14 +261,14 @@ export default function SidebarComp({ children }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M21 7a2 2 0 0 1-2 2h-.28a2 2 0 0 0-1.77 1.06l-.62 1.08a2 2 0 0 0 0 1.72l.62 1.08A2 2 0 0 0 18.72 15H19a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h.28a2 2 0 0 0 1.77-1.06l.62-1.08a2 2 0 0 0 0-1.72l-.62-1.08A2 2 0 0 0 5.28 9H5A2 2 0 0 1 3 7V4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3z"
+                    d="M4 4h16v4a2 2 0 0 1-2 2 2 2 0 0 0 0 4 2 2 0 0 1 2 2v4H4v-4a2 2 0 0 1 2-2 2 2 0 0 0 0-4 2 2 0 0 1-2-2V4z"
                   />
                   <path
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M7 15h10M7 9h10"
+                    d="M9 9l6 6m0-6l-6 6"
                   />
                 </svg>
 
@@ -346,9 +346,9 @@ export default function SidebarComp({ children }) {
       </aside>
 
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-          <nav className="border-gray-200 dark:bg-gray-900">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="">
+          <nav className="">
+            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
               <a
                 href=""
                 className="flex items-center space-x-3 rtl:space-x-reverse"

@@ -50,8 +50,8 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
         body: JSON.stringify({
           page : page,
           search : searchData,
-          categoryIds : payLoad?.categoryIds?.map(cat => cat.value),
-          companyIds : payLoad?.companyIds?.map(comp => comp.value),
+          categoryIds : payLoad?.categoryIds?.map(cat => cat),
+          companyIds : payLoad?.companyIds?.map(comp => comp),
           productIds : payLoad?.productIds?.map(prod => prod.value),
           sortBy : payLoad.sortBy,
           sortOrder : payLoad.sortOrder,

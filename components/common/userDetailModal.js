@@ -31,12 +31,11 @@ export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
   return (
     <>
     <Modal show={modalValue} onClose={() => setOpenUserModal(false)}>
-      <Modal.Header>Retailer Details</Modal.Header>
+      <Modal.Header>Related Operations</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           {userIdValue ? (
             <>
-              <h2 className="text-lg font-semibold">Details</h2>
               <ul>
                 <li className="mb-4">
                   <a
