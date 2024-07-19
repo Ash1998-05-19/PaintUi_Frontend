@@ -297,14 +297,16 @@ export default function Product(params) {
           </p>
         )}
       </div>
-
-      <div className="mt-4">
-        <ListPagination
-          data={listData}
-          pageNo={handlePageChange}
-          pageVal={page}
-        />
-      </div>
+      {listData?.products?.length > 0 && (
+          <div className="mt-4">
+          <ListPagination
+            data={listData}
+            pageNo={handlePageChange}
+            pageVal={page}
+          />
+        </div>
+        )}
+      
 
       <DeleteModal
         isOpen={isPopupOpen}

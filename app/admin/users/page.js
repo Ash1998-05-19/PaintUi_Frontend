@@ -14,6 +14,7 @@ import ListPagination from "@/components/common/pagination";
 import { UserDetailModal } from "@/components/common/userDetailModal";
 import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
+import { UserDetailPopover } from "@/components/common/userDetailPopover";
 //import Cookies from "js-cookie";
 export default function User() {
   //   const roleData = Cookies.get("roles") ?? "";
@@ -104,7 +105,7 @@ export default function User() {
 
   return (
     <section>
-      {isLoading &&    <SpinnerComp/>  }
+      {isLoading && <SpinnerComp />}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Users
@@ -122,8 +123,8 @@ export default function User() {
             </Link>
           </div>
           <div>
-        <SearchInput setSearchData={searchInputChange} />
-      </div>
+            <SearchInput setSearchData={searchInputChange} />
+          </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -157,17 +158,20 @@ export default function User() {
                   >
                     <td
                       className="px-6 py-4 cursor-pointer"
-                      onClick={() =>
-                        item?.Role?.Name === "Retailer" &&
-                        OpenUserModal(item.UserId)
-                      }
                       style={{
                         color:
                           item?.Role?.Name === "Retailer" ? "blue" : "inherit",
                       }}
                     >
-                      {item?.FirstName}
+                      {item?.Role?.Name === "Retailer" ? (
+                        <UserDetailPopover userIdValue={item.UserId}>
+                          <span>{item.FirstName}</span>
+                        </UserDetailPopover>
+                      ) : (
+                        <span>{item.FirstName}</span>
+                      )}
                     </td>
+
                     <td className="px-6 py-4">{item?.Role?.Name}</td>
                     <td className="px-6 py-4">{item?.Phone}</td>
                     <td className="px-6 py-4">{item?.Email}</td>
@@ -224,13 +228,16 @@ export default function User() {
           </p>
         )}
       </div>
-      <div className="mt-4">
+      {listData?.users?.length > 0 &&(
+        <div className="mt-4">
         <ListPagination
           data={listData}
           pageNo={handlePageChange}
           pageVal={page}
         />
       </div>
+      )}
+      
       <DeleteModal
         isOpen={isPopupOpen}
         title="Are you sure you want to delete this User ?"
@@ -244,7 +251,6 @@ export default function User() {
         setOpenUserModal={setOpenUserModal}
         userIdValue={modalUserId}
       />
-   
     </section>
   );
 }

@@ -206,15 +206,16 @@ export default function Company() {
           </p>
         )}
       </div>
-
-      <div className="mt-4">
-        <ListPagination
-          data={listData}
-          pageNo={handlePageChange}
-          pageVal={page}
-        />
-      </div>
-
+      {listData?.companies?.length > 0 && (
+          <div className="mt-4">
+          <ListPagination
+            data={listData}
+            pageNo={handlePageChange}
+            pageVal={page}
+          />
+        </div>
+        )}
+      
       <DeleteModal
         isOpen={isPopupOpen}
         title="Are you sure you want to delete this Company ?"

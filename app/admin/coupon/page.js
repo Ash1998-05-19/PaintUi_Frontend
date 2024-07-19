@@ -293,7 +293,14 @@ export default function Coupon(params) {
                   </button>
                 </Link>
               </div>
-              {listData?.coupons?.length != 0 && (
+              
+            </>
+          ) : (
+            <>
+              <div></div> <div></div>
+            </>
+          )}
+          {listData?.coupons?.length != 0 && (
                 <button
                   onClick={generatePDF}
                   className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -302,12 +309,6 @@ export default function Coupon(params) {
                   Generate QR
                 </button>
               )}
-            </>
-          ) : (
-            <>
-              <div></div> <div></div>
-            </>
-          )}
           {listData?.coupons?.length != 0 && (
             <li className="me-2 list-none relative">
               {" "}
@@ -512,14 +513,16 @@ export default function Coupon(params) {
 
         
       </div>
-
-      <div className="mt-4">
-        <ListPagination
-          data={listData}
-          pageNo={handlePageChange}
-          pageVal={page}
-        />
-      </div>
+      {listData?.coupons?.length > 0 && (
+          <div className="mt-4">
+          <ListPagination
+            data={listData}
+            pageNo={handlePageChange}
+            pageVal={page}
+          />
+        </div>
+        )}
+      
       <DeleteModal
         isOpen={isPopupOpen}
         title="Are you sure you want to delete this Coupon ?"

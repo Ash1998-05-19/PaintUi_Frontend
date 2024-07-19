@@ -96,7 +96,7 @@ export default function Category() {
 
   return (
     <section>
-      {isLoading &&    <SpinnerComp/>  }
+      {isLoading && <SpinnerComp />}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Categories
@@ -114,8 +114,8 @@ export default function Category() {
             </Link>
           </div>
           <div>
-              <SearchInput setSearchData={searchInputChange} />
-            </div>
+            <SearchInput setSearchData={searchInputChange} />
+          </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -129,14 +129,14 @@ export default function Category() {
               <th scope="col" className="px-6 py-3">
                 Modified Date
               </th>
-      
+
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-          {listData?.categories?.length > 0 && (
+            {listData?.categories?.length > 0 &&
               listData?.categories?.map((item, index) => (
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <Link href={`/admin/products?categoryId=${item?.CategoryId}`}>
@@ -146,7 +146,7 @@ export default function Category() {
                   </Link>
                   <td className="px-6 py-4">{item?.createdAt?.slice(0, 10)}</td>
                   <td className="px-6 py-4">{item?.updatedAt?.slice(0, 10)}</td>
-  
+
                   {/* <td className="px-6 py-4 text-blue-600 dark:text-blue-500">
                       <i
                         className={` ${
@@ -178,9 +178,9 @@ export default function Category() {
                   )} */}
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
-                    {item?.IsActive ? (
+                      {item?.IsActive ? (
                         <Link
-                        href={`/admin/categories/updateCategory/${item.CategoryId}`}
+                          href={`/admin/categories/updateCategory/${item.CategoryId}`}
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                         >
                           <i
@@ -199,7 +199,7 @@ export default function Category() {
                           ></i>
                         </button>
                       )}
-  
+
                       {/* <Link
                         href="#"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -216,14 +216,14 @@ export default function Category() {
                           </label>
                         </div>
                       </Link> */}
-  
+
                       <Switch
                         onChange={() =>
                           toggleChange(item?.CategoryId, item?.IsActive)
                         }
                         checked={item?.IsActive}
                       />
-  
+
                       <Link
                         href="#"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -237,24 +237,24 @@ export default function Category() {
                     </div>
                   </td>
                 </tr>
-              ))
-          )}
-
-          
+              ))}
           </tbody>
         </table>
         {listData?.categories?.length === 0 && (
-
-          <p className="text-center text-2xl font-bold text-gray-500">No data found</p>)}
+          <p className="text-center text-2xl font-bold text-gray-500">
+            No data found
+          </p>
+        )}
       </div>
-
-      <div className="mt-4">
-        <ListPagination
-          data={listData}
-          pageNo={handlePageChange}
-          pageVal={page}
-        />
-      </div>
+      {listData?.categories?.length === 0 && (
+        <div className="mt-4">
+          <ListPagination
+            data={listData}
+            pageNo={handlePageChange}
+            pageVal={page}
+          />
+        </div>
+      )}
 
       <DeleteModal
         isOpen={isPopupOpen}
