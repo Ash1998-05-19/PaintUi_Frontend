@@ -94,6 +94,24 @@ export default function AddUser() {
           />
           {errors.lastName && <span className="text-red-600">Last Name is required</span>}
         </div>
+
+        {/* <div>
+          <label
+            htmlFor="shopName"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+          >
+            Shop Name
+          </label>
+          <input
+            type="text"
+            id="shopName"
+            {...register("shopName", { required: false })}
+            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.lastName ? 'border-red-500' : 'border-gray-300'}`}
+            placeholder="Shop Name"
+          />
+          {errors.shopName && <span className="text-red-600">Shop Name is required</span>}
+        </div> */}
+
         <div>
           <label
             htmlFor="email"

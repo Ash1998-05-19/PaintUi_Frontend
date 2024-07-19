@@ -369,7 +369,7 @@ export default function SidebarComp({ children }) {
                   <span className="sr-only">Open user menu</span>
                   <img
                     className="w-8 h-8 rounded-full"
-                    src="/images/profile-user.png"
+                    src="/images/new_user_logo.png"
                     alt="user photo"
                     style={{ backgroundColor: "white" }}
                   />

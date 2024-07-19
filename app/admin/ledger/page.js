@@ -17,9 +17,9 @@ import DateRange from "@/components/common/dateRange";
 import { ExportToExcel } from "@/components/common/exportToCsv";
 //import Cookies from "js-cookie";
 export default function Ledger(params) {
-//   const roleData = Cookies.get("roles") ?? "";
-//   const name = Cookies.get("name");
-//   const roles = roleData && JSON.parse(roleData);
+  //   const roleData = Cookies.get("roles") ?? "";
+  //   const name = Cookies.get("name");
+  //   const roles = roleData && JSON.parse(roleData);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [ledgerExcelData, setLedgerExcelData] = useState("");
@@ -28,12 +28,14 @@ export default function Ledger(params) {
   const [listData, setListData] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
-  const [userId, setUserId] = useState(params?.searchParams?.id ?params?.searchParams?.id:null);
+  const [userId, setUserId] = useState(
+    params?.searchParams?.id ? params?.searchParams?.id : null
+  );
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
   console.log("listData", listData);
-  console.log("ledger params data", params)
+  console.log("ledger params data", params);
 
   useEffect(() => {
     getAllLedgers();
@@ -54,13 +56,7 @@ export default function Ledger(params) {
 
   useEffect(() => {
     if (listData?.ledgerEntries) {
-      const keysToSelect = [
-        
-        "FirstName",
-        "LastName",
-        "EntryType",
-        "Amount",
-      ];
+      const keysToSelect = ["FirstName", "LastName", "EntryType", "Amount"];
 
       const filterCsvData = (data, keys) => {
         return data.map((item) => {
@@ -95,8 +91,8 @@ export default function Ledger(params) {
       console.log("delete response", res);
       if (!res?.message) {
         toast.success("Ledger deleted successfully");
-        setIsPopupOpen(false); 
-        getAllLedgers(); 
+        setIsPopupOpen(false);
+        getAllLedgers();
       } else {
         toast.error(res?.message || "Error deleting ledger");
       }
@@ -114,7 +110,7 @@ export default function Ledger(params) {
   };
   return (
     <section>
-      {isLoading &&    <SpinnerComp/>  }
+      {isLoading && <SpinnerComp />}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Ledger
@@ -126,7 +122,7 @@ export default function Ledger(params) {
           endDate={toDate}
         />
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-        <div className="flex ">
+          <div className="flex ">
             <div>
               {Object.keys(params?.searchParams || {}).length === 0 && (
                 <>
@@ -152,10 +148,10 @@ export default function Ledger(params) {
               )}
             </div>
           </div>
-          
+
           <div>
-              <SearchInput setSearchData={searchInputChange} />
-            </div>
+            <SearchInput setSearchData={searchInputChange} />
+          </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -167,31 +163,28 @@ export default function Ledger(params) {
                 User Name
               </th>
               <th scope="col" className="px-6 py-3">
-               Entry Type
+                Entry Type
               </th>
               <th scope="col" className="px-6 py-3">
                 Amount
               </th>
-             
-              
+
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
             </tr>
           </thead>
           <tbody>
-          {listData?.ledgerEntries?.length > 0 && (
-             listData?.ledgerEntries?.map((item, index) => (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                {/* <td className="px-6 py-4">{item?.LedgerId}</td> */}
-                <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
-                <td className="px-6 py-4">{item?.EntryType}</td>
-                <td className="px-6 py-4">{item?.Amount}</td>
+            {listData?.ledgerEntries?.length > 0 &&
+              listData?.ledgerEntries?.map((item, index) => (
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  {/* <td className="px-6 py-4">{item?.LedgerId}</td> */}
+                  <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
+                  <td className="px-6 py-4">{item?.EntryType}</td>
+                  <td className="px-6 py-4">{item?.Amount}</td>
 
-                
-                <td className="px-6 py-4">
-                  <div className="flex items-center space-x-2">
-                
+                  <td className="px-6 py-4">
+                    <div className="flex items-center space-x-2">
                       <Link
                         href={`/admin/ledger/updateLedger/${item.LedgerId}`}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -201,32 +194,28 @@ export default function Ledger(params) {
                           style={{ fontSize: "1.5em" }}
                         ></i>
                       </Link>
-                   
 
-                    
-                    {/* <Switch
+                      {/* <Switch
                       onChange={() =>
                         toggleChange(item?.CategoryId, item?.IsActive)
                       }
                       checked={item?.IsActive}
                     /> */}
 
-                    <Link
-                      href="#"
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                    >
-                      <i
-                        onClick={() => deleteLedgerModal(item.LedgerId)}
-                        className="bi bi-trash-fill"
-                        style={{ color: "red", fontSize: "1.5em" }}
-                      ></i>
-                    </Link>
-                  </div>
-                </td>
-              </tr>
-            ))
-          )}
-           
+                      <Link
+                        href="#"
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      >
+                        <i
+                          onClick={() => deleteLedgerModal(item.LedgerId)}
+                          className="bi bi-trash-fill"
+                          style={{ color: "red", fontSize: "1.5em" }}
+                        ></i>
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         {listData?.ledgerEntries?.length === 0 && (
@@ -244,14 +233,15 @@ export default function Ledger(params) {
         onConfirm={handleDelete}
         onCancel={handleCancel}
       />
-
-      <div className="mt-4">
-        <ListPagination
-          data={listData}
-          pageNo={handlePageChange}
-          pageVal={page}
-        />
-      </div>
+      {listData?.ledgerEntries?.length > 0 && (
+        <div className="mt-4">
+          <ListPagination
+            data={listData}
+            pageNo={handlePageChange}
+            pageVal={page}
+          />
+        </div>
+      )}
     </section>
   );
 }
