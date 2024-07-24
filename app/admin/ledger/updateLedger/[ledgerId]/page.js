@@ -38,6 +38,7 @@ export default function UpdateLedger(params) {
       console.log("User object data", ledgerObj)
       setValue("entryType", ledgerObj?.ledgerEntry?.EntryType);
       setValue("amount", ledgerObj?.ledgerEntry?.Amount);
+      setValue("note", ledgerObj?.ledgerEntry?.Note);
     }
   }, [ledgerObj]);
 
@@ -58,6 +59,7 @@ export default function UpdateLedger(params) {
     const LedgerDetails = {
       EntryType: data?.entryType,
       Amount: data?.amount,
+      Note : data?.note
     };
 
     console.log("user details", LedgerDetails);
@@ -65,11 +67,11 @@ export default function UpdateLedger(params) {
     try {
       const res = await updateLedger(LedgerDetails, params?.params?.ledgerId);
       console.log("ledger response", res);
-      if (!res.resData.message) {
+      if (res?.resData?.success) {
         router.push("/admin/ledger");
         toast.success("Ledger Updated Successfully");
       } else {
-        console.error(res.resData.message);
+        console.error(res?.resData?.ErrMessage);
       }
     } catch (error) {
       console.error("Error updating ledger:", error);
@@ -141,6 +143,20 @@ export default function UpdateLedger(params) {
           />
           {errors.amount && <span className="text-red-500">{errors.amount.message}</span>}
         </div>
+
+        <div className="w-full">
+            <label htmlFor="note" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Note 
+            </label>
+            <textarea
+              id="note"
+              {...register('note', { required: false })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter your note"
+              rows="4"
+            ></textarea>
+            {errors.narration && <span className="text-red-500">{errors.narration.message}</span>}
+          </div>
 
   
       </div>

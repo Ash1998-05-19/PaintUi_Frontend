@@ -83,8 +83,8 @@ export default function Login() {
           className={` ${Styles.mt7} flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
         >
           <img
-            className="w-28 h-28 mr-2 rounded-full"
-            src="/images/logo-3.jpg"
+            className="w-28 h-28 mr-2 rounded"
+            src="/images/logo-4.png"
             alt="logo"
           />
         </a>

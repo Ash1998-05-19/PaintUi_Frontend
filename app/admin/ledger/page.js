@@ -168,6 +168,9 @@ export default function Ledger(params) {
               <th scope="col" className="px-6 py-3">
                 Amount
               </th>
+              {/* <th scope="col" className="px-6 py-3">
+                Note
+              </th> */}
 
               <th scope="col" className="px-6 py-3">
                 Action
@@ -182,7 +185,7 @@ export default function Ledger(params) {
                   <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
                   <td className="px-6 py-4">{item?.EntryType}</td>
                   <td className="px-6 py-4">{item?.Amount}</td>
-
+                  {/* <td className="px-6 py-4">{item?.Note}</td> */}
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Link
