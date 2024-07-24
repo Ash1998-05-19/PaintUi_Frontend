@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useState ,useRef} from "react";
-import { useForm } from 'react-hook-form';
+import { useState, useRef } from "react";
+import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { addUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
@@ -9,45 +9,49 @@ import { useRouter } from "next/navigation";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
 
-
 export default function AddUser() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
-  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => console.log(data);
+
   const router = useRouter();
 
-
   const handleEnabledChange = (e) => {
-    console.log("isEnabled Value",e.target.value)
-    setIsEnabled(e.target.value==="true");
+    console.log("isEnabled Value", e.target.value);
+    setIsEnabled(e.target.value === "true");
   };
 
   const submitForm = async (data) => {
-    console.log("register data",data);
-    const UserDetails={
-      FirstName : data.firstName,
-      LastName : data.lastName,
-      Email : data.email,
-      Phone : data.phone,
-      Password : data.password,
-      Role : "Retailer"
-    }
-    console.log("categoryDetails",UserDetails)
-    let res = await addUser(UserDetails)
+    console.log("register data", data);
+    const UserDetails = {
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email ,
+      ShopName: data.shopName,
+      Address: data.address,
+      Phone: data.phone,
+      // Password: data.password,
+      Role: "Retailer",
+    };
+    console.log("userDetails", UserDetails);
+    let res = await addUser(UserDetails);
     console.log("Response data", res);
-     if(!res?.resData?.message){
-      console.log("Response",res?.resData?.message )
-       router.push("/admin/users");
-       toast.success("User Added Succesfully");
-      }else{
-        toast.error(res?.resData?.message);
-        return false;
-      }
+    if (res?.resData?.success) {
+      console.log("Response", res?.resData?.message);
+      router.push("/admin/users");
+      toast.success("User Added Succesfully");
+    } else {
+      toast.error(res?.errMessage);
+      return false;
+    }
   };
-  
+
   return (
     <section>
-       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
+      <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your User Details
       </h1>
       <Link href="/admin/users">
@@ -61,140 +65,186 @@ export default function AddUser() {
         </div>
       </Link>
       <form onSubmit={handleSubmit(submitForm)} className="mb-5">
-      <div className="grid gap-4 w-1/2 mb-4 md:grid-cols-1">
-        <div>
-          <label
-            htmlFor="firstName"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            First Name <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            {...register("firstName", { required: true })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.firstName ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="First Name"
-          />
-          {errors.firstName && <span className="text-red-600">First Name is required</span>}
-        </div>
-        <div>
-          <label
-            htmlFor="lastName"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            {...register("lastName", { required: false })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.lastName ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Last Name"
-          />
-          {errors.lastName && <span className="text-red-600">Last Name is required</span>}
-        </div>
+        <div className="grid gap-4 mb-4 md:grid-cols-2">
+          <div className="w-full">
+            <label
+              htmlFor="firstName"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+            >
+              First Name <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              {...register("firstName", { required: true })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.firstName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="First Name"
+            />
+            {errors.firstName && (
+              <span className="text-red-600">First Name is required</span>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+            >
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              {...register("lastName", { required: false })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.lastName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Last Name"
+            />
+            {errors.lastName && (
+              <span className="text-red-600">Last Name is required</span>
+            )}
+          </div>
 
-        {/* <div>
-          <label
-            htmlFor="shopName"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            Shop Name
-          </label>
-          <input
-            type="text"
-            id="shopName"
-            {...register("shopName", { required: false })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.lastName ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Shop Name"
-          />
-          {errors.shopName && <span className="text-red-600">Shop Name is required</span>}
-        </div> */}
+          <div>
+            <label
+              htmlFor="shopName"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+            >
+              Shop Name
+            </label>
+            <input
+              type="text"
+              id="shopName"
+              {...register("shopName", { required: false })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.lastName ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Shop Name"
+            />
+            {errors.shopName && (
+              <span className="text-red-600">Shop Name is required</span>
+            )}
+          </div>
 
-        <div>
-          <label
-            htmlFor="email"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            Email 
-          </label>
-          <input
-            type="email"
-            id="email"
-            {...register("email", {
-              
-              pattern: {
-                value: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-                message: "Only Gmail addresses are allowed",
-              },
-            })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Email"
-          />
-          {errors.email && <span className="text-red-600">{errors.email.message}</span>}
-        </div>
-        <div>
-          <label
-            htmlFor="phone"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            Phone <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            {...register("phone", {
-              required: "Phone Number is required",
-              pattern: {
-                value: /^[0-9]*$/,
-                message: "Please enter a valid phone number",
-              },
-              minLength: {
-                value: 10,
-                message: "Mobile number should be at least 10 digits",
-              },
-              maxLength: {
-                value: 10,
-                message: "Mobile number should not exceed 10 digits",
-              },
-              validate: {
-                validFirstDigit: (value) =>
-                  /^[789]/.test(value.charAt(0)) ||
-                  "First digit must be 7, 8, or 9",
-              },
-            })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Phone"
-          />
-          {errors.phone && <span className="text-red-600">{errors.phone.message}</span>}
-        </div>
-        <div>
-          <label
-            htmlFor="password"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
-          >
-            Password <span className="text-red-600">*</span>
-          </label>
-          <input
-            type="password"
-            id="password"
-            {...register("password", {
-              required : "Password is required",
-              minLength: {
-                value: 6,
-                message: "Password must be at least 6 characters long",
-              },
-            })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
-            placeholder="Password"
-          />
-          {errors.password && <span className="text-red-600">{errors.password.message}</span>}
-        </div>
-      </div>
-      <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-    </form>
+          <div>
+            <label
+              htmlFor="email"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              {...register("email", {
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+                  message: "Only Gmail addresses are allowed",
+                },
+              })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Email"
+            />
+            {errors.email && (
+              <span className="text-red-600">{errors.email.message}</span>
+            )}
+          </div>
 
+          <div>
+            <label
+              htmlFor="phone"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+            >
+              Phone <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              {...register("phone", {
+                required: "Phone Number is required",
+                pattern: {
+                  value: /^[0-9]*$/,
+                  message: "Please enter a valid phone number",
+                },
+                minLength: {
+                  value: 10,
+                  message: "Mobile number should be at least 10 digits",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "Mobile number should not exceed 10 digits",
+                },
+                validate: {
+                  validFirstDigit: (value) =>
+                    /^[789]/.test(value.charAt(0)) ||
+                    "First digit must be 7, 8, or 9",
+                },
+              })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.phone ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Phone"
+            />
+            {errors.phone && (
+              <span className="text-red-600">{errors.phone.message}</span>
+            )}
+          </div>
+          {/* <div>
+            <label
+              htmlFor="password"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
+            >
+              Password <span className="text-red-600">*</span>
+            </label>
+            <input
+              type="password"
+              id="password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters long",
+                },
+              })}
+              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder="Password"
+            />
+            {errors.password && (
+              <span className="text-red-600">{errors.password.message}</span>
+            )}
+          </div> */}
+          <div className="w-full">
+            <label
+              htmlFor="address"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Address
+            </label>
+            <textarea
+              id="address"
+              {...register("address", { required: false })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter your address"
+              rows="4"
+            ></textarea>
+            {errors.address && (
+              <span className="text-red-500">{errors.address.message}</span>
+            )}
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Submit
+        </button>
+      </form>
 
       {/* <div>
         <button

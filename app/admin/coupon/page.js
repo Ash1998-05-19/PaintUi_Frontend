@@ -39,7 +39,7 @@ export default function Coupon(params) {
       ? params?.searchParams?.productCode
       : "",
     productName: "",
-    reedemed: false,
+    reedemed: params?.searchParams?.Redeemed?true:false,
     unReedemed: false,
     fromDate: "",
     toDate: "",
@@ -239,7 +239,7 @@ export default function Coupon(params) {
 
     for (let i = 0; i < listData?.coupons?.length; i++) {
       const coupon = listData.coupons[i];
-      const qrData = `ID: ${coupon.CouponId}, Code: ${coupon.CouponCode}`;
+      const qrData = `${coupon.CouponCode}`;
 
       const qrCanvas = document.createElement("canvas");
       await QRCode.toCanvas(qrCanvas, qrData, { width: qrSize });
@@ -247,7 +247,7 @@ export default function Coupon(params) {
       const qrImage = qrCanvas.toDataURL("image/jpeg", 1.0);
       doc.addImage(qrImage, "JPEG", xOffset, yOffset, qrSize, qrSize);
       doc.text(
-        coupon.CouponCode,
+        `${coupon.CouponCode} (${coupon.Product.Name})`,
         doc.internal.pageSize.width / 2,
         yOffset + qrSize + 10,
         { align: "center" }
