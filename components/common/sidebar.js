@@ -310,41 +310,41 @@ export default function SidebarComp({ children }) {
               </Link>
             </li>
 
-            {/* <li>
-              <Link
-                href="login"
-                to="/login"
-                onClick={() => handleTabClick("login")}
+            {/* <li className="fixed bottom-0 left-0 w-full">
+              <button
+                onClick={logOut}
                 className={` ${
-                  activeTab === "signIn" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/logout"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "signIn" ? "" : Styles.inactiveTab
-                  }  ${
+                    activeTab === "/admin/logout" ? "" : Styles.inactiveTab
+                  } ${
                     Styles.tabSvg
-                  }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-black`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 18 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-              </Link>
+                <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
+              </button>
             </li> */}
           </ul>
         </div>
       </aside>
-      
+
       <div className="p-4 sm:ml-64">
         <div className="">
           <nav className="">
@@ -352,8 +352,7 @@ export default function SidebarComp({ children }) {
               <a
                 href=""
                 className="flex items-center space-x-3 rtl:space-x-reverse"
-              >
-              </a>
+              ></a>
               <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <button
                   type="button"
@@ -406,7 +405,7 @@ export default function SidebarComp({ children }) {
             </div>
           </nav>
         </div>
-        
+
         <div className="mt-3 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           {children}
           {/* Content for Dashboard tab */}

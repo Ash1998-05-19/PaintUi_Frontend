@@ -35,12 +35,12 @@ export const addUser = async (payload,setLoading=()=>{}) => {
   }
 };
 
-export const getUser = async (page, searchData, userType, fromDate, toDate, setLoading = () => {}) => {
+export const getUser = async (page, searchData, userType, fromDate, toDate, limit, setLoading = () => {}) => {
   const token = Cookies.get("token");
   setLoading(true);
   try {
     const res = await fetch(
-      `${API_BASE_URL}/user/getAllUsers?page=${page}&pageSize=${PAGE_LIMIT}&search=${searchData}${
+      `${API_BASE_URL}/user/getAllUsers?page=${page}${limit?`&limit=${limit}`:`&limit=${PAGE_LIMIT}`}&search=${searchData}${
         userType ? `&Type=${userType}` : ""
       }${fromDate ? `&fromDate=${fromDate}` : ""}${toDate ? `&toDate=${toDate}` : ""}`,
       {

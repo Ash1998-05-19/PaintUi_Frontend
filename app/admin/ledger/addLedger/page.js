@@ -14,11 +14,12 @@ import Select from "react-select";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
 
-export default function AddLedger() {
+export default function AddLedger(params) {
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState("");
   const [userList, setUserList] = useState([]);
   const [users, setUsers] = useState(null);
+  const [userType, setUserType] = useState(params.searchParams.Type?params.searchParams.Type:"Retailer");
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
 
@@ -36,9 +37,13 @@ export default function AddLedger() {
 
   useEffect(() => {
     getAllUsers();
-  }, [page, searchData]);
+  }, [page, searchData, userType]);
   const getAllUsers = async () => {
-    let users = await getUser(page, searchData);
+    console.log("userType", userType);
+    const limit = 100000;
+    const fromDate = undefined;
+    const toDate = undefined;
+    let users = await getUser(page, searchData, userType, fromDate, toDate, limit);
     if (!users?.resData?.message) {
       setUserList(users?.resData);
       return false;
@@ -67,7 +72,7 @@ export default function AddLedger() {
     console.log("LedgerDetails", LedgerDetails);
     let res = await addLedger(LedgerDetails);
     console.log("Response data", res);
-    if (res?.success) {
+    if (res?.resData?.success) {
       router.push("/admin/ledger");
       toast.success("Ledger Added Successfully");
     } else {
@@ -178,7 +183,7 @@ export default function AddLedger() {
                     handleUserChange(value);
                   }}
                   options={userList?.users
-                    ?.filter((user) => user.Role.Name === "Retailer")
+                    ?.filter((user) => user.IsActive)
                     .map((element) => ({
                       value: element.UserId,
                       label: element.FirstName,
