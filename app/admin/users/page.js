@@ -39,7 +39,7 @@ export default function User(params) {
 
   useEffect(() => {
     getAllUsers();
-  }, [page, searchData, isRefresh, userType, fromDate, toDate]);
+  }, [page, searchData, isRefresh, userType]);
   const getAllUsers = async () => {
     setIsLoading(true);
     console.log("userType", userType);
@@ -54,6 +54,13 @@ export default function User(params) {
       return false;
     }
   };
+
+  useEffect(() => {
+    if(fromDate && toDate){
+      getAllUsers();
+    }
+  }, [fromDate, toDate]);
+  
 
   const searchInputChange = (e) => {
     setSearchData(e);
@@ -136,6 +143,7 @@ export default function User(params) {
           setToDate={setToDate}
           startDate={fromDate}
           endDate={toDate}
+          setIsRefresh ={setIsRefresh}
         />
           <div>
             <SearchInput setSearchData={searchInputChange} />
