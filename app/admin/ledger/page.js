@@ -39,7 +39,7 @@ export default function Ledger(params) {
 
   useEffect(() => {
     getAllLedgers();
-  }, [page, searchData, isRefresh, fromDate, toDate]);
+  }, [page, searchData, isRefresh]);
   const getAllLedgers = async () => {
     setIsLoading(true);
     let ledgers = await getLedger(page, searchData, userId, fromDate, toDate);
@@ -53,6 +53,11 @@ export default function Ledger(params) {
       return false;
     }
   };
+  useEffect(() => {
+    if (fromDate && toDate) {
+      getAllLedgers();
+    }
+  }, [fromDate, toDate]);
 
   useEffect(() => {
     if (listData?.ledgerEntries) {
@@ -115,12 +120,7 @@ export default function Ledger(params) {
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
           Ledger
         </h1>
-        <DateRange
-          setFromDate={setFromDate}
-          setToDate={setToDate}
-          startDate={fromDate}
-          endDate={toDate}
-        />
+
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
           <div className="flex ">
             <div>
@@ -147,6 +147,13 @@ export default function Ledger(params) {
                 />
               )}
             </div>
+            <DateRange
+              setFromDate={setFromDate}
+              setToDate={setToDate}
+              startDate={fromDate}
+              endDate={toDate}
+              setIsRefresh={setIsRefresh}
+            />
           </div>
 
           <div>

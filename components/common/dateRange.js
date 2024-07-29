@@ -5,6 +5,7 @@ export default function DateRange({
   setToDate,
   startDate,
   endDate,
+  setIsRefresh
 }) {
   const handleEndDateFocus = (e) => {
     if (!startDate) {
@@ -15,6 +16,7 @@ export default function DateRange({
   const clearInput=()=>{
     setFromDate("")
     setToDate("")
+    setIsRefresh(prev=>prev+1)
   }
   return (
     <>

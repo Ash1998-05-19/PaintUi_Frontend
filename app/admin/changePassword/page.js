@@ -27,11 +27,11 @@ export default function Password(params) {
     setNewPassword(value);
 
     // Check if passwords match when new password changes
-    if (value !== confirmPassword) {
-      setPasswordsMatch(false);
-    } else {
-      setPasswordsMatch(true);
-    }
+    // if (value !== confirmPassword) {
+    //   setPasswordsMatch(false);
+    // } else {
+    //   setPasswordsMatch(true);
+    // }
   };
 
   const handleConfirmPasswordChange = (event) => {
@@ -64,10 +64,10 @@ export default function Password(params) {
     }
 
     if (NewPassword !== confirmPassword) {
-      toast.error("Password does not match");
+      toast.error("New Password and Confirm Password should match");
       return false;
     }
-
+    
     setIsLoading(true);
 
     const UserDetails = {
@@ -174,12 +174,12 @@ export default function Password(params) {
                 <i className="bi bi-eye-fill"></i>
               )}
             </button>
-          </div>
-          {!passwordsMatch && (
+            {/* {!passwordsMatch && (
             <p className="text-red-500 text-sm mt-1">
               Passwords should match.
             </p>
-          )}
+          )} */}
+          </div>
         </form>
         <button
           onClick={submitUserForm}

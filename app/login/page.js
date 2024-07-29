@@ -40,15 +40,15 @@ export default function Login() {
   }
 
   // Check if the number starts with 9, 8, or 7
-  if (!/^[789]/.test(Mobile)) {
-    setIsLoading(false);
-    toast.error("Phone number must start with 9, 8, or 7");
-    return false;
-  }
+  // if (!/^[789]/.test(Mobile)) {
+  //   setIsLoading(false);
+  //   toast.error("Phone number must start with 9, 8, or 7");
+  //   return false;
+  // }
     // Validate Password
-    if (Password.length < 5) {
+    if (Password.length == 0) {
       setIsLoading(false);
-      toast.error("Password must be at least 5 characters long");
+      toast.error("Password is required");
       return false;
     }
     const LoginData = {

@@ -246,7 +246,7 @@ export default function Category() {
           </p>
         )}
       </div>
-      {listData?.categories?.length === 0 && (
+      {listData?.categories?.length > 0 && (
         <div className="mt-4">
           <ListPagination
             data={listData}
