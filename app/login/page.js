@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Styles from "../page.module.css"
+import Styles from "./login.module.css"
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LoginAdmin } from "@/apiFunction/auth/auth";
@@ -14,6 +15,7 @@ export default function Login() {
   const router = useRouter();
   const [Mobile, setMobile] = useState("");
   const [Password, setPassword] = useState("");
+  const [passwordShow,setPasswordShow]=useState(false)
   const [isLoading, setIsLoading] = useState(false);
 
   const handleMobile = useCallback((value) => {
@@ -22,6 +24,15 @@ export default function Login() {
   const handlePassword = useCallback((value) => {
     setPassword(() => value.target.value);
   }, []);
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      login();
+    }
+  };
+
   const login = async () => {
     setIsLoading(true);
     //router.push('/dashboard');
@@ -70,6 +81,14 @@ export default function Login() {
       return;
     }
   };
+  const handelPasswordShow=()=>{
+    if(!passwordShow){
+      setPasswordShow(true)
+    }else{
+      setPasswordShow(false)
+    }
+    
+  }
   return (
     
     <section
@@ -95,7 +114,7 @@ export default function Login() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Login to your account
             </h1>
-            <form className="space-y-4 md:space-y-6">
+            <form onKeyDown={handleKeyPress} className="space-y-4 md:space-y-6">
             <div>
                 <label
                   htmlFor="phone"
@@ -121,37 +140,27 @@ export default function Login() {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  value={Password}
-                  onChange={handlePassword}
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required=""
-                />
+                <div className="relative">
+                  <input
+                    type={passwordShow ? "text" :"password"}
+                    value={Password}
+                    onChange={handlePassword}
+                    name="password"
+                    id="password"
+                    placeholder="Password"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full  p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    required=""
+                  />
+                  <button
+                  onClick={handelPasswordShow}
+                    type="button"
+                    className={`text-black absolute end-2.5 bottom-2.5 font-bold rounded-lg text-xl px-4 py-2 ${Styles.eyeButton}`}
+                  >{passwordShow ? (<i className="bi bi-eye-slash-fill"></i>):(<i className="bi bi-eye-fill"></i>)}
+                  
+                  </button>
+                </div>
               </div>
               <div className="flex items-center justify-between">
-                {/* <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      aria-describedby="remember"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      required=""
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="remember"
-                      className="text-gray-500 dark:text-gray-300"
-                    >
-                      Remember me
-                    </label>
-                  </div>
-                </div> */}
                 <Link
                   href="/forgotPassword"
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"

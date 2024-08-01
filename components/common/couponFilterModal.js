@@ -196,6 +196,7 @@ export default function CouponFilterModal({
                 value={payLoad?.toDate || ""}
                 onChange={(e) => handleDateChange("toDate", e.target.value)}
                 className="w-full"
+                disabled={!payLoad?.fromDate}
               />
             </div>
             <div className="mb-4">
@@ -218,6 +219,7 @@ export default function CouponFilterModal({
                   handleDateChange("toExpiryDate", e.target.value)
                 }
                 className="w-full"
+                disabled={!payLoad?.fromExpiryDate}
               />
             </div>
             <div className="mb-4">

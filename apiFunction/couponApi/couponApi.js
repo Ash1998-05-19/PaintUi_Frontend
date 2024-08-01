@@ -58,6 +58,7 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         productCode : payLoadData?.productCode,
         productName : payLoadData?.productName,
         reedemed : payLoadData?.reedemed,
+        flag : payLoadData?.flag,
         unReedemed : payLoadData?.unReedemed,
         fromDate : payLoadData?.fromDate,
         toDate : payLoadData?.toDate,

@@ -33,9 +33,9 @@ export default function Dashboard(params) {
     <div className={Styles.background}>
     <section className="flex justify-center item-center ">
       {isLoading && <SpinnerComp />}
-      <div className="grid gap-4 md:grid-cols-3 items-center justify-center mt-4">
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 lg:grid-cols-3 items-center justify-center mt-4">
         <div
-          className={`${Styles.firstCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.firstCard} max-w-sm p-6 h-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/retailer.png" // Ensure the path is correct
@@ -47,13 +47,13 @@ export default function Dashboard(params) {
               Total Retailer Count
             </h5>
           </Link>
-          <p className={`mb-3 mt-2 font-semibold text-6xl`}>
+          <p className={`mb-3 mt-2 font-semibold text-2xl`}>
             {dashboardData.retailerCount}
           </p>
         </div>
 
         <div
-          className={`${Styles.secondCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.secondCard} h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/mason.png" // Ensure the path is correct
@@ -65,13 +65,13 @@ export default function Dashboard(params) {
               Total Mason Count
             </h5>
           </Link>
-          <p className={`mb-3 mt-2 font-semibold text-6xl`}>
+          <p className={`mb-3 mt-2 font-semibold text-2xl`}>
             {dashboardData.masonCount}
           </p>
         </div>
 
         <div
-          className={`${Styles.fifthCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.fifthCard} h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/company.png" // Ensure the path is correct
@@ -83,13 +83,13 @@ export default function Dashboard(params) {
               Total Companies Count
             </h5>
           </Link>
-          <p className={`mb-3 mt-2 font-semibold text-6xl`}>
+          <p className={`mb-3 mt-2 font-semibold text-2xl`}>
             {dashboardData.companyCount}
           </p>
         </div>
 
         <div
-          className={`${Styles.sixthCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.sixthCard} h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/product.png" // Ensure the path is correct
@@ -101,13 +101,13 @@ export default function Dashboard(params) {
               Total Products Count
             </h5>
           </Link>
-          <p className={`mb-3 mt-2 font-semibold text-6xl`}>
+          <p className={`mb-3 mt-2 font-semibold text-2xl`}>
             {dashboardData.productCount}
           </p>
         </div>
 
         <div
-          className={`${Styles.thirdCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.thirdCard} h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/coupon.png" // Ensure the path is correct
@@ -115,18 +115,20 @@ export default function Dashboard(params) {
             className="w-9 h-9 mb-3"
           />
 
-          <Link href="/admin/coupon?Redeemed=true">
+          <Link href="/admin/coupon?Redeemed=true&flag=true">
             <h5 className="mb-2 text-2xl font-semibold tracking-tight ">
-              Scanned Coupon Count
+              Scanned Coupon Count 
             </h5>
+           
           </Link>
-          <p className="mb-3 mt-2 font-semibold text-6xl">
+          <p className="text-xs font-bold tracking-tight ">(Current Month)</p>
+          <p className="mb-3 mt-2 font-semibold text-2xl">
             {dashboardData.scannedCouponsCount}
           </p>
         </div>
 
         <div
-          className={`${Styles.fourthCard} max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
+          className={`${Styles.fourthCard} h-full max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center `}
         >
           <img
             src="/images/amount.png" // Ensure the path is correct
@@ -135,10 +137,11 @@ export default function Dashboard(params) {
           />
           <Link href="#">
             <h5 className="mb-2 text-2xl font-semibold tracking-tight ">
-              Scanned Coupon Amount
+              Scanned Coupon Amount 
             </h5>
           </Link>
-          <p className="mb-3 mt-2 font-semibold text-6xl">
+          <p className="text-xs font-bold tracking-tight ">(Current Month)</p>
+          <p className="mb-3 mt-2 font-semibold text-2xl">
             {dashboardData.scannedCouponsAmount}
           </p>
         </div>

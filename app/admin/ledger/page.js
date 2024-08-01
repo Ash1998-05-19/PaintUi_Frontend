@@ -15,6 +15,7 @@ import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
 import DateRange from "@/components/common/dateRange";
 import { ExportToExcel } from "@/components/common/exportToCsv";
+import LedgerFilterModal from "@/components/common/ledgerFilterModal";
 //import Cookies from "js-cookie";
 export default function Ledger(params) {
   //   const roleData = Cookies.get("roles") ?? "";
@@ -25,12 +26,19 @@ export default function Ledger(params) {
   const [ledgerExcelData, setLedgerExcelData] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [sortOrder, setSortOrder] = useState(""); 
+const [sortBy, setSortBy] = useState(""); 
   const [listData, setListData] = useState(false);
+  const [filterModalvalue, setFilterModalValue] = useState(false);
   const [deleteId, setDeleteId] = useState();
   const [isRefresh, setIsRefresh] = useState(0);
   const [userId, setUserId] = useState(
     params?.searchParams?.id ? params?.searchParams?.id : null
   );
+
+  const [payLoad, setPayLoad] = useState({
+    userIds: [],
+  });
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
@@ -42,7 +50,7 @@ export default function Ledger(params) {
   }, [page, searchData, isRefresh]);
   const getAllLedgers = async () => {
     setIsLoading(true);
-    let ledgers = await getLedger(page, searchData, userId, fromDate, toDate);
+    let ledgers = await getLedger(page, searchData, userId, fromDate, toDate, sortOrder, sortBy);
     console.log("ledger details", ledgers);
     if (!ledgers?.resData?.message) {
       setListData(ledgers?.resData);
@@ -53,21 +61,34 @@ export default function Ledger(params) {
       return false;
     }
   };
-  useEffect(() => {
-    if (fromDate && toDate) {
-      getAllLedgers();
-    }
-  }, [fromDate, toDate]);
 
   useEffect(() => {
     if (listData?.ledgerEntries) {
-      const keysToSelect = ["FirstName", "LastName", "EntryType", "Amount"];
+      const keysToSelect = [
+        "FirstName",
+        "LastName",
+        "EntryType",
+        "Amount",
+        "creditSum",
+        "debitSum",
+        "netAmount",
+      ];
 
-      const filterCsvData = (data, keys) => {
+      const filterCsvData = (data, userSumsData, keys) => {
         return data.map((item) => {
           let newItem = {};
           keys.forEach((key) => {
             // Handle nested UserDetail keys
+            if (data.indexOf(item) == 0) {
+              if (userSumsData?.length > 0) {
+                userSumsData?.map((subitem) => {
+                  if (key in subitem) {
+                    newItem[key] = subitem[key];
+                  }
+                });
+              }
+            }
+
             if (key in item) {
               newItem[key] = item[key];
             } else if (key in item.UserDetail) {
@@ -78,7 +99,9 @@ export default function Ledger(params) {
         });
       };
 
-      setLedgerExcelData(filterCsvData(listData.ledgerEntries, keysToSelect));
+      setLedgerExcelData(
+        filterCsvData(listData.ledgerEntries, listData.userSums, keysToSelect)
+      );
     }
   }, [listData]);
 
@@ -88,6 +111,15 @@ export default function Ledger(params) {
   const handlePageChange = (newPage) => {
     console.log(newPage);
     setPage(newPage);
+  };
+
+  const openFilterModal = async () => {
+    setFilterModalValue(true);
+    console.log("filter");
+  };
+
+  const closeFilterModal = async () => {
+    setFilterModalValue(false);
   };
 
   const handleDelete = async () => {
@@ -129,7 +161,7 @@ export default function Ledger(params) {
                   <Link href={"/admin/ledger/addLedger"}>
                     {" "}
                     <button
-                      className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                      className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                       type="button"
                     >
                       + Add Ledger
@@ -147,17 +179,15 @@ export default function Ledger(params) {
                 />
               )}
             </div>
-            <DateRange
-              setFromDate={setFromDate}
-              setToDate={setToDate}
-              startDate={fromDate}
-              endDate={toDate}
-              setIsRefresh={setIsRefresh}
-            />
           </div>
-
-          <div>
-            <SearchInput setSearchData={searchInputChange} />
+          <div className="flex">
+            <i
+              className="bi bi-funnel mt-2 mr-2 font-medium text-2xl"
+              onClick={openFilterModal}
+            ></i>
+            <div>
+              <SearchInput setSearchData={searchInputChange} />
+            </div>
           </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -175,9 +205,9 @@ export default function Ledger(params) {
               <th scope="col" className="px-6 py-3">
                 Amount
               </th>
-              {/* <th scope="col" className="px-6 py-3">
-                Note
-              </th> */}
+              <th scope="col" className="px-6 py-3">
+                Transaction Date
+              </th>
 
               <th scope="col" className="px-6 py-3">
                 Action
@@ -192,7 +222,14 @@ export default function Ledger(params) {
                   <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
                   <td className="px-6 py-4">{item?.EntryType}</td>
                   <td className="px-6 py-4">{item?.Amount}</td>
-                  {/* <td className="px-6 py-4">{item?.Note}</td> */}
+                  <td className="px-6 py-4">
+                    {item?.TransactionDate
+                      ? new Date(item.TransactionDate)
+                          .toISOString()
+                          .split("T")[0]
+                      : "-"}
+                  </td>
+
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2">
                       <Link
@@ -243,6 +280,21 @@ export default function Ledger(params) {
         onConfirm={handleDelete}
         onCancel={handleCancel}
       />
+      <LedgerFilterModal
+        modalValue={filterModalvalue}
+        handleClose={closeFilterModal}
+        userOptions={listData}
+        setFromDate={setFromDate}
+        setToDate={setToDate}
+        firstDate={fromDate}
+        lastDate={toDate}
+        setIsRefresh={setIsRefresh}
+        setUserId={setUserId}
+        userValue={userId}
+        setSortOrder = {setSortOrder}
+        sortOrderValue = {sortOrder}
+        setSortBy = {setSortBy}
+      />
       {listData?.ledgerEntries?.length > 0 && (
         <div className="mt-4">
           <ListPagination
@@ -252,6 +304,38 @@ export default function Ledger(params) {
           />
         </div>
       )}
+      {userId && listData?.userSums ? (
+        <div className="flex justify-center mt-3 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 h-20">
+          <div className="grid grid-cols-3 gap-4 justify-center items-center w-full">
+            <div className="text-center">
+              <h1 className="text-md font-bold text-gray-500">
+                CreditSum :{" "}
+                <span className="text-sm font-semibold text-black">
+                  {listData?.userSums[0]?.creditSum}
+                </span>
+              </h1>
+            </div>
+            <div className="text-center">
+              {" "}
+              <h1 className="text-md font-bold text-gray-500">
+                DebitSum :{" "}
+                <span className="text-sm font-semibold text-black">
+                  {listData?.userSums[0]?.debitSum}
+                </span>
+              </h1>
+            </div>
+            <div className="text-center">
+              {" "}
+              <h1 className="text-md font-bold text-gray-500">
+                NetAmout :{" "}
+                <span className="text-sm font-semibold text-black">
+                  {listData?.userSums[0]?.netAmount}
+                </span>
+              </h1>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

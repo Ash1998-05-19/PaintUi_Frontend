@@ -8,6 +8,8 @@ import { addLedger } from "@/apiFunction/ledgerApi/ledgerApi";
 import { getCompanyListForProduct } from "@/apiFunction/companyApi/companyApi";
 import { addProduct } from "@/apiFunction/productApi/productApi";
 import { ToastContainer, toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
@@ -19,7 +21,10 @@ export default function AddLedger(params) {
   const [searchData, setSearchData] = useState("");
   const [userList, setUserList] = useState([]);
   const [users, setUsers] = useState(null);
-  const [userType, setUserType] = useState(params.searchParams.Type?params.searchParams.Type:"Retailer");
+  const [transactionDate, setTransactionDate] = useState(null);
+  const [userType, setUserType] = useState(
+    params.searchParams.Type ? params.searchParams.Type : "Retailer"
+  );
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
 
@@ -43,7 +48,14 @@ export default function AddLedger(params) {
     const limit = 100000;
     const fromDate = undefined;
     const toDate = undefined;
-    let users = await getUser(page, searchData, userType, fromDate, toDate, limit);
+    let users = await getUser(
+      page,
+      searchData,
+      userType,
+      fromDate,
+      toDate,
+      limit
+    );
     if (!users?.resData?.message) {
       setUserList(users?.resData);
       return false;
@@ -68,6 +80,9 @@ export default function AddLedger(params) {
       RetailerUserId: users.value,
       Amount: data.amount,
       Note: data.note,
+      PersonalNote: data.personalNote,
+      TransactionDate: data.transactionDate,
+      Unit: data.unit,
     };
     console.log("LedgerDetails", LedgerDetails);
     let res = await addLedger(LedgerDetails);
@@ -115,7 +130,7 @@ export default function AddLedger(params) {
                 />
                 <label
                   htmlFor="entryType1"
-                  className="ml-2  mr-4  text-sm font-medium text-gray-900 dark:text-gray-300"
+                  className="ml-2 mr-4 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Credit
                 </label>
@@ -123,7 +138,7 @@ export default function AddLedger(params) {
               <div className="flex items-center mb-2">
                 <input
                   type="radio"
-                  id="entryType2"
+                  id="entryType2" // Corrected the id to match the label's htmlFor
                   value="Debit"
                   {...register("entryType", {
                     required: "Entry Type is required",
@@ -137,10 +152,32 @@ export default function AddLedger(params) {
                   Debit
                 </label>
               </div>
-              {errors.entryType && (
-                <span className="text-red-500">{errors.entryType.message}</span>
-              )}
             </div>
+            {errors.entryType && (
+              <span className="text-red-500">{errors.entryType.message}</span>
+            )}
+          </div>
+
+          <div className="w-full">
+            <label
+              htmlFor="transactionDate"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Date
+            </label>
+            <input
+              type="datetime-local"
+              id="transactionDate"
+              {...register("transactionDate")}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              value={transactionDate}
+              onChange={(e) => setTransactionDate(e.target.value)}
+            />
+            {errors.transactionDate && (
+              <span className="text-red-500">
+                {errors.transactionDate.message}
+              </span>
+            )}
           </div>
 
           <div className="w-full">
@@ -151,14 +188,36 @@ export default function AddLedger(params) {
               Amount <span className="text-red-600">*</span>
             </label>
             <input
-              type="amount"
+              type="number"
               step="0.01"
               id="price"
+              min="0"
               {...register("amount", { required: "Amount is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Amount"
             />
             {errors.amount && (
+              <span className="text-red-500">{errors.amount.message}</span>
+            )}
+          </div>
+
+          <div className="w-full">
+            <label
+              htmlFor="unit"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Product Unit
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="unit"
+              min="0"
+              {...register("unit", { required: false })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Product Unit"
+            />
+            {errors.unit && (
               <span className="text-red-500">{errors.amount.message}</span>
             )}
           </div>
@@ -205,17 +264,38 @@ export default function AddLedger(params) {
               htmlFor="note"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Note
+              Narration
             </label>
             <textarea
               id="note"
               {...register("note", { required: false })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter your note"
+              placeholder="Enter your narration"
               rows="4"
             ></textarea>
-            {errors.narration && (
-              <span className="text-red-500">{errors.narration.message}</span>
+            {errors.note && (
+              <span className="text-red-500">{errors.note.message}</span>
+            )}
+          </div>
+
+          <div className="w-full">
+            <label
+              htmlFor="personalNote"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Personal Note
+            </label>
+            <textarea
+              id="personalNote"
+              {...register("personalNote", { required: false })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Enter your personal note"
+              rows="4"
+            ></textarea>
+            {errors.personalNote && (
+              <span className="text-red-500">
+                {errors.personalNote.message}
+              </span>
             )}
           </div>
         </div>

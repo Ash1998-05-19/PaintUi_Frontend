@@ -406,7 +406,7 @@ export default function SidebarComp({ children }) {
           </nav>
         </div>
 
-        <div className="mt-3 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        <div className="mt-3 p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           {children}
           {/* Content for Dashboard tab */}
           {/* {activeTab === 'dashboard' && <Dashboard activeTab={activeTab}/>}

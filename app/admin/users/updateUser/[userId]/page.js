@@ -68,8 +68,8 @@ export default function UpdateUser(params) {
       FirstName: data?.firstName,
       LastName: data?.lastName,
       Email: data?.email,
-      Address : data?.address,
-      ShopName : data?.shopName,
+      Address : data?.address?data?.address:"",
+      ShopName : data?.shopName?data?.shopName:"",
       // Password : data?.password
     };
 
