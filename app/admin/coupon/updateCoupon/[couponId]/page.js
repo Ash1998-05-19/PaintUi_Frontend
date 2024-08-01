@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { getProduct } from "@/apiFunction/productApi/productApi";
 import { addCoupon } from "@/apiFunction/couponApi/couponApi";
@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function UpdateCoupon(params) {
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     getValues,
@@ -78,8 +79,11 @@ export default function UpdateCoupon(params) {
       });
 
       setValue("amount", couponObj.coupon.Amount);
-      setValue("expiryDateTime", new Date(couponObj.coupon.ExpiryDateTime));
-      console.log("expiryDateTime", couponObj.coupon.ExpiryDateTime );
+      const expiryDateTime = couponObj.coupon.ExpiryDateTime
+            ? new Date(couponObj.coupon.ExpiryDateTime).toISOString().slice(0, 16)
+            : '';
+
+        setValue("expiryDateTime", expiryDateTime);
       setValue("quantity", couponObj.coupon.Quantity);
     }
   }, [couponObj]);
@@ -193,12 +197,13 @@ export default function UpdateCoupon(params) {
               htmlFor="amount"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Amount
+              Amount <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
               step="0.01"
               id="amount"
+               min = "0"
               {...register("amount", { required: "Amount is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Amount"
@@ -221,38 +226,35 @@ export default function UpdateCoupon(params) {
       />
       {errors.quantity && <span className="text-red-500">{errors.quantity.message}</span>}
     </div> */}
-          <div className="w-full">
+           <div className="w-full">
             <label
               htmlFor="expiryDateTime"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Expiry Date & Time
+              Expiry Date & Time <span className="text-red-600">*</span>
             </label>
-            <DatePicker
-              selected={watch("expiryDateTime")}
-              onChange={handleTimeChange}
-              showTimeSelect
-              dateFormat="Pp"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-              placeholderText="Select Expiry Date & Time"
-              popperPlacement="right-start"
-              popperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [10, 0],
-                    },
-                  },
-                  {
-                    name: "preventOverflow",
-                    options: {
-                      boundary: "viewport",
-                    },
-                  },
-                ],
-              }}
+            <Controller
+              name="expiryDateTime"
+              control={control}
+              rules={{ required: "Expiry Date & Time is required" }}
+              render={({ field }) => (
+                <input
+                  type="datetime-local"
+                  value={
+                    field.value
+                      
+                  }
+                  onChange={(e) => field.onChange(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  placeholder="Select Expiry Date & Time"
+                />
+              )}
             />
+            {errors.expiryDateTime && (
+              <span className="text-red-500">
+                {errors.expiryDateTime.message}
+              </span>
+            )}
           </div>
         </div>
 

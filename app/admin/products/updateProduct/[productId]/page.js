@@ -250,6 +250,7 @@ export default function UpdateProduct(params ) {
           <input
             type="number"
             id="weight"
+            min = "0"
             {...register('weight', { required: 'Weight is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Weight"
@@ -265,6 +266,7 @@ export default function UpdateProduct(params ) {
             type="number"
             step="0.01"
             id="height"
+            min = "0"
             {...register('height')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Height"
@@ -279,6 +281,7 @@ export default function UpdateProduct(params ) {
             type="number"
             step="0.01"
             id="width"
+            min = "0"
             {...register('width')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Width"
@@ -293,6 +296,7 @@ export default function UpdateProduct(params ) {
             type="number"
             step="0.01"
             id="volume"
+            min = "0"
             {...register('volume', { required: 'Volume is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Volume"
@@ -307,6 +311,7 @@ export default function UpdateProduct(params ) {
             type="number"
             step="0.01"
             id="price"
+            min = "0"
             {...register('price', { required: 'Price is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Price"
@@ -325,12 +330,10 @@ export default function UpdateProduct(params ) {
               type="number"
               step="0.01"
               id="discountPercentage"
+              min = "0"
+              max = "100"
               {...register("discountPercentage", {
-                max: {
-                  value: 100, // Replace 100 with the desired maximum value
-                  message:
-                    " Discount Percentage must be less than or equal to 100",
-                },
+                
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Discount Percentage"
@@ -353,11 +356,10 @@ export default function UpdateProduct(params ) {
               type="number"
               step="0.01"
               id="sgstPercentage"
+              min = "0"
+              max = "100"
               {...register("sgstPercentage", {
-                max: {
-                  value: 100, // Replace 100 with the desired maximum value
-                  message: " SGST Percentage must be less than or equal to 100",
-                },
+                
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="SGST Percentage"
@@ -380,11 +382,10 @@ export default function UpdateProduct(params ) {
               type="number"
               step="0.01"
               id="cgstPercentage"
+              min = "0"
+              max = "100"
               {...register("cgstPercentage", {
-                max: {
-                  value: 100, // Replace 100 with the desired maximum value
-                  message: " CGST Percentage must be less than or equal to 100",
-                },
+                
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="CGST Percentage"
@@ -407,11 +408,10 @@ export default function UpdateProduct(params ) {
               type="number"
               step="0.01"
               id="igstPercentage"
+              min = "0"
+              max = "100"
               {...register("igstPercentage", {
-                max: {
-                  value: 100, // Replace 100 with the desired maximum value
-                  message: " IGST Percentage must be less than or equal to 100",
-                },
+                
               })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="IGST Percentage"
