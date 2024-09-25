@@ -69,6 +69,36 @@ export const getCategory = async (page,searchData,setLoading=()=>{}) => {
     }
 };
 
+export const getCategoryById = async (id,setLoading=()=>{}) => {
+  const token = Cookies.get("token");
+  setLoading(true);
+  try {
+    const res = await fetch(`${API_BASE_URL}/category/getCategoryById/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+    const resData = await res.json();
+    console.log('resIdData',resData)
+
+    if (resData) {
+      console.log('working')
+      setLoading(false);
+      return {resData};
+    } else {
+      //toast.error(resData.message);
+      setLoading(false);
+      return {errMessage:resData.message};
+    }
+  } catch (error) {
+    setLoading(false);
+    toast.error("someting went wrong");
+    console.log("error message ", error);
+  }
+};
+
 export const getCategoryListForProduct = async (page,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);

@@ -9,7 +9,7 @@ import { LoginAdmin } from "@/apiFunction/auth/auth";
 
 import { ToastContainer, toast } from "react-toastify";
 import SpinnerComp from "@/components/common/spinner";
-import Login from "./(auth)/logIn/page";
+import Login from "./login/page";
 //import { loginUser } from "@/api-functions/auth/authAction";
 
 export default function MainPage() {

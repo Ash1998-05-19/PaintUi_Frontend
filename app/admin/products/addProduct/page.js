@@ -28,9 +28,6 @@ export default function AddProduct() {
 
   const { register, handleSubmit, watch,control, formState: { errors } } = useForm();
 
-  const onSubmit = data => {
-    console.log(data);
-  };
 
   useEffect(() => {
     getAllCompanies();
@@ -59,12 +56,12 @@ export default function AddProduct() {
     }
   };
 
-  console.log("categoryList",categoryList);
-  console.log("companyList",companyList);
+  //console.log("categoryList",categoryList);
+  //console.log("companyList",companyList);
 
-  useEffect(() => {
-    generateProductCode();
-  }, [company, watch('productName'), watch('volume')]);
+  // useEffect(() => {
+  //   generateProductCode();
+  // }, [company, watch('productName'), watch('volume')]);
 
   const generateProductCode = () => {
     const productName = watch('productName');
@@ -75,25 +72,28 @@ export default function AddProduct() {
       const volumeCode = (volume * 1000).toString();
       const randomDigits = Math.floor(1000 + Math.random() * 9000);
       const code = `${companyCode}${prodCode}${volumeCode}-${randomDigits}`;
+      console.log("code inside generateProductCode", code)
       setProductCode(code);
+      return code;
     } else {
       setProductCode('');
+      return null;
     }
   };
 
   
 
-  const [productName, setProductName] = useState('');
+  // const [productName, setProductName] = useState('');
 
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [width, setWidth] = useState('');
-  const [volume, setVolume] = useState('');
-  const [price, setPrice] = useState('');
-  const [discountPercentage, setDiscountPercentage] = useState('');
-  const [sgstPercentage, setSgstPercentage] = useState('');
-  const [cgstPercentage, setCgstPercentage] = useState('');
-  const [igstPercentage, setIgstPercentage] = useState('');
+  // const [weight, setWeight] = useState('');
+  // const [height, setHeight] = useState('');
+  // const [width, setWidth] = useState('');
+  // const [volume, setVolume] = useState('');
+  // const [price, setPrice] = useState('');
+  // const [discountPercentage, setDiscountPercentage] = useState('');
+  // const [sgstPercentage, setSgstPercentage] = useState('');
+  // const [cgstPercentage, setCgstPercentage] = useState('');
+  // const [igstPercentage, setIgstPercentage] = useState('');
 
   const handleCategoryChange = (selectedOption) => {
     setCategory(selectedOption);
@@ -107,31 +107,34 @@ export default function AddProduct() {
   const router = useRouter();
 
   const submitForm = async (data) => {
+   const myProdCode = generateProductCode();
+  
+      console.log("ProductCode", myProdCode)
+  
     console.log("register data",data);
     const ProductDetails={
       Name: data.productName,
       CategoryId: category.value,
       CompanyId: company.value,
-      WeightInGrams: data.weight,
-      HeightInCm: data.height,
-      WidthInCm: data.width,
+      WeightInGrams: data.weight ? data.weight : undefined,
+      HeightInCm: data.height ? data.height : undefined,
+      WidthInCm: data.width ? data.width : undefined,
       VolumeInLiter: data.volume,
       Price: data.price,
-      DiscountPercentage: data.discountPercentage,
-      SGSTPercentage: data.sgstPercentage,
-      CGSTPercentage: data.cgstPercentage,
-      IGSTPercentage: data.igstPercentage,
-      ProductCode: productCode,
+      DiscountPercentage: data.discountPercentage ? data.discountPercentage : undefined,
+      SGSTPercentage: data.sgstPercentage ? data.sgstPercentage : undefined,
+      CGSTPercentage: data.cgstPercentage ? data.cgstPercentage : undefined,
+      IGSTPercentage: data.igstPercentage ? data.igstPercentage : undefined,
+      ProductCode: myProdCode,
     }
-    console.log("productDetails",ProductDetails)
+    //console.log("productDetails",ProductDetails)
     let res = await addProduct(ProductDetails)
     console.log("Response data", res);
-     if(!res?.resData?.message){
-
+     if(res?.resData?.success){
        router.push("/admin/products");
        toast.success("Product Added Successfully");
       }else{
-        toast.error(res?.resData?.message);
+        toast.error(res?.errMessage);
         return false;
       }
   };
@@ -141,7 +144,7 @@ export default function AddProduct() {
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Product Details
       </h1>
-      <Link href="/faq">
+      <Link href="/admin/products">
         <div className="mb-5 mt-5">
           <button
             className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -248,6 +251,7 @@ export default function AddProduct() {
           <input
             type="number"
             id="weight"
+            min = "0"
             {...register('weight')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Weight"
@@ -263,6 +267,7 @@ export default function AddProduct() {
             type="number"
             step="0.01"
             id="height"
+            min = "0"
             {...register('height')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Height"
@@ -277,6 +282,7 @@ export default function AddProduct() {
             type="number"
             step="0.01"
             id="width"
+            min = "0"
             {...register('width')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Width"
@@ -285,13 +291,14 @@ export default function AddProduct() {
 
         <div className="w-full">
           <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Volume (in liters)
+            Volume (in liters) <span className="text-red-600">*</span>
           </label>
           <input
             type="number"
             step="0.01"
             id="volume"
-            {...register('volume')}
+            min = "0"
+            {...register('volume', { required: 'Volume is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Volume"
           />
@@ -305,6 +312,7 @@ export default function AddProduct() {
             type="number"
             step="0.01"
             id="price"
+            min = "0"
             {...register('price', { required: 'Price is required' })}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Price"
@@ -313,60 +321,107 @@ export default function AddProduct() {
         </div>
 
         <div className="w-full">
-          <label htmlFor="discountPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Discount Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="discountPercentage"
-            {...register('discountPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Discount Percentage"
-          />
-        </div>
+            <label
+              htmlFor="discountPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Discount Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="discountPercentage"
+              min = "0"
+               max = "100"
+              {...register("discountPercentage", {
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Discount Percentage"
+            />
+            {errors.discountPercentage && (
+              <span className="text-red-500">
+                {errors.discountPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="sgstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            SGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="sgstPercentage"
-            {...register('sgstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="SGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="sgstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              SGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="sgstPercentage"
+              min = "0"
+               max = "100"
+              {...register("sgstPercentage", {
+               
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="SGST Percentage"
+            />
+            {errors.sgstPercentage && (
+              <span className="text-red-500">
+                {errors.sgstPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="cgstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            CGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="cgstPercentage"
-            {...register('cgstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="CGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="cgstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              CGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="cgstPercentage"
+              min = "0"
+               max = "100"
+              {...register("cgstPercentage", {
+               
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="CGST Percentage"
+            />
+            {errors.cgstPercentage && (
+              <span className="text-red-500">
+                {errors.cgstPercentage.message}
+              </span>
+            )}
+          </div>
 
-        <div className="w-full">
-          <label htmlFor="igstPercentage" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            IGST Percentage
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            id="igstPercentage"
-            {...register('igstPercentage')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="IGST Percentage"
-          />
-        </div>
+          <div className="w-full">
+            <label
+              htmlFor="igstPercentage"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              IGST Percentage
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="igstPercentage"
+              min = "0"
+              max = "100"
+              {...register("igstPercentage", {
+                
+              })}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="IGST Percentage"
+            />
+            {errors.igstPercentage && (
+              <span className="text-red-500">
+                {errors.igstPercentage.message}
+              </span>
+            )}
+          </div>
       </div>
 
       <button type="submit" className="mt-4 bg-blue-500 text-white p-2 rounded-lg">Submit</button>

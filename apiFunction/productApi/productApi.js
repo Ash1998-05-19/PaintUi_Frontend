@@ -20,14 +20,14 @@ export const addProduct = async (payload,setLoading=()=>{}) => {
     const resData = await res.json();
     console.log('resData',resData)
 
-    if (resData) {
+    if (resData?.success) {
       console.log('working')
       setLoading(false);
       return {resData};
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.message};
+      return {errMessage:resData.error};
     }
   } catch (error) {
     setLoading(false);
@@ -50,8 +50,8 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
         body: JSON.stringify({
           page : page,
           search : searchData,
-          categoryIds : payLoad?.categoryIds?.map(cat => cat.value),
-          companyIds : payLoad?.companyIds?.map(comp => comp.value),
+          categoryIds : payLoad?.categoryIds?.map(cat => cat.value ? cat.value : cat),
+          companyIds : payLoad?.companyIds?.map(comp => comp.value ? comp.value : comp),
           productIds : payLoad?.productIds?.map(prod => prod.value),
           sortBy : payLoad.sortBy,
           sortOrder : payLoad.sortOrder,
@@ -202,14 +202,14 @@ export const updateProduct = async (payload,id,setLoading=()=>{}) => {
     const resData = await res.json();
     console.log('resData',resData)
 
-    if (resData) {
+    if (resData?.success) {
       console.log('working')
       setLoading(false);
       return {resData};
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.message};
+      return {errMessage:resData.error};
     }
   } catch (error) {
     setLoading(false);

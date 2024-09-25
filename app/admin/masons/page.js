@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { getretailerDetailById } from "@/apiFunction/userApi/userApi";
 import { toast } from "react-toastify"; 
 
+
 const MasonsPage = ( params ) => {
   const [retailerData, setRetailerData] = useState(null);
+  const [userId, setUserId] = useState(params?.searchParams?.id ?params?.searchParams?.id:null);
   console.log("masons params", params)
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const MasonsPage = ( params ) => {
   }, []);
 
   const fetchRetailer = async () => {
-    let retailer = await getretailerDetailById(params?.searchParams?.id);
+    let retailer = await getretailerDetailById(userId);
     if (retailer?.resData?.success) {
       console.log("retailer data", retailer);
       setRetailerData(retailer.resData.response);

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { getProduct } from "@/apiFunction/productApi/productApi";
 import { addCoupon } from "@/apiFunction/couponApi/couponApi";
@@ -15,6 +15,7 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function UpdateCoupon(params) {
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     getValues,
@@ -73,13 +74,16 @@ export default function UpdateCoupon(params) {
       setValue("couponCode", couponObj.coupon.CouponCode);
       console.log("couponCode", couponObj.coupon.CouponCode);
       setValue("productName", {
-        value: couponObj.coupon.CouponId,
+        value: couponObj.coupon?.ProductId,
         label: couponObj.coupon?.Product?.Name,
       });
 
       setValue("amount", couponObj.coupon.Amount);
-      setValue("expiryDateTime", new Date(couponObj.coupon.ExpiryDateTime));
-      console.log("expiryDateTime", couponObj.coupon.ExpiryDateTime );
+      const expiryDateTime = couponObj.coupon.ExpiryDateTime
+            ? new Date(couponObj.coupon.ExpiryDateTime).toISOString().slice(0, 16)
+            : '';
+
+        setValue("expiryDateTime", expiryDateTime);
       setValue("quantity", couponObj.coupon.Quantity);
     }
   }, [couponObj]);
@@ -99,11 +103,20 @@ export default function UpdateCoupon(params) {
   const router = useRouter();
 
   const submitForm = async (data) => {
-    console.log("coupon payload data", data);
+   
+    const selectProductAmount = productList?.products
+    ?.filter((item) => item.ProductId === data?.productName.value)
+    .map((item) => item.Price);
+   
+     if(parseInt(data.amount) > parseInt(selectProductAmount[0] )){
+      toast.warning(`Amount should less then from product Amount ${selectProductAmount[0]} `)
+      return false
+     }
+
     const CouponDetails = {
       ProductId: data?.productName.value,
       ExpiryDateTime: data?.expiryDateTime,
-      Amount: data?.amount,
+      Amount: parseInt(data?.amount),
     };
 
     console.log("coupon details", CouponDetails);
@@ -111,11 +124,11 @@ export default function UpdateCoupon(params) {
     try {
       const res = await updateCoupon(CouponDetails, params?.params?.couponId);
       console.log("coupon response", res);
-      if (!res.resData.message) {
+      if (res.resData.success) {
         router.push("/admin/coupon");
-        toast.success("Coupon Added Successfully");
+        toast.success(res.resData.message);
       } else {
-        console.error(res.resData.message);
+        console.error(res?.message);
       }
     } catch (error) {
       console.error("Error updating product:", error);
@@ -127,7 +140,7 @@ export default function UpdateCoupon(params) {
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Coupon Details
       </h1>
-      <Link href="/faq">
+      <Link href="/admin/coupon">
         <div className="mb-5 mt-5">
           <button
             className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
@@ -184,12 +197,13 @@ export default function UpdateCoupon(params) {
               htmlFor="amount"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Amount
+              Amount <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
               step="0.01"
               id="amount"
+               min = "0"
               {...register("amount", { required: "Amount is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Amount"
@@ -212,38 +226,35 @@ export default function UpdateCoupon(params) {
       />
       {errors.quantity && <span className="text-red-500">{errors.quantity.message}</span>}
     </div> */}
-          <div className="w-full">
+           <div className="w-full">
             <label
               htmlFor="expiryDateTime"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Expiry Date & Time
+              Expiry Date & Time <span className="text-red-600">*</span>
             </label>
-            <DatePicker
-              selected={watch("expiryDateTime")}
-              onChange={handleTimeChange}
-              showTimeSelect
-              dateFormat="Pp"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-              placeholderText="Select Expiry Date & Time"
-              popperPlacement="right-start"
-              popperProps={{
-                modifiers: [
-                  {
-                    name: "offset",
-                    options: {
-                      offset: [10, 0],
-                    },
-                  },
-                  {
-                    name: "preventOverflow",
-                    options: {
-                      boundary: "viewport",
-                    },
-                  },
-                ],
-              }}
+            <Controller
+              name="expiryDateTime"
+              control={control}
+              rules={{ required: "Expiry Date & Time is required" }}
+              render={({ field }) => (
+                <input
+                  type="datetime-local"
+                  value={
+                    field.value
+                      
+                  }
+                  onChange={(e) => field.onChange(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+                  placeholder="Select Expiry Date & Time"
+                />
+              )}
             />
+            {errors.expiryDateTime && (
+              <span className="text-red-500">
+                {errors.expiryDateTime.message}
+              </span>
+            )}
           </div>
         </div>
 

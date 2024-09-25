@@ -23,13 +23,14 @@ export default function SidebarComp({ children }) {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
 
-  const logOut =()=>{
+  const logOut = () => {
     Cookies.remove("token");
     Cookies.remove("email");
     Cookies.remove("firstName");
     Cookies.remove("lastName");
-    router.push("/")
-  }
+    Cookies.remove("phone");
+    router.push("/login");
+  };
   return (
     <>
       <button
@@ -63,24 +64,23 @@ export default function SidebarComp({ children }) {
         <div
           className={` ${Styles.sidebarMain} h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800`}
         >
-          <div className="mb-4 text-center">
+          {/* <div className="mb-4 text-center">
             <span className={`ms-3 ${Styles.admintext}`}>Admin</span>
-          </div>
+          </div> */}
           <ul className="space-y-2 font-medium">
             <li>
               <Link
-                href="dashboard"
-                to="dashboard"
-                onClick={() => handleTabClick("dashboard")}
+                href="/admin/dashboard"
+                onClick={() => handleTabClick("/admin/dashboard")}
                 className={` ${
-                  activeTab === "dashboard"
+                  activeTab === "/admin/dashboard"
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "dashboard" ? "" : Styles.inactiveTab
+                    activeTab === "/admin/dashboard" ? "" : Styles.inactiveTab
                   }  ${
                     Styles.tabSvg
                   }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
@@ -101,7 +101,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/users"
                 onClick={() => handleTabClick("/admin/users")}
                 className={` ${
-                  activeTab === "/admin/users" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/users"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -126,7 +128,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/categories"
                 onClick={() => handleTabClick("/admin/categories")}
                 className={` ${
-                  activeTab === "/admin/categories" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/categories"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -139,13 +143,13 @@ export default function SidebarComp({ children }) {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
                   <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 8.5a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.08.09a2 2 0 0 1-2.83 2.83l-.09-.08a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-.98 1.51V20a2 2 0 0 1-2 2h-1.7a2 2 0 0 1-2-2v-.21a1.65 1.65 0 0 0-.98-1.51 1.65 1.65 0 0 0-1.82.33l-.09.08a2 2 0 0 1-2.83-2.83l.08-.09a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-.98H4a2 2 0 0 1-2-2v-1.7a2 2 0 0 1 2-2h.21a1.65 1.65 0 0 0 1.51-.98 1.65 1.65 0 0 0-.33-1.82l-.08-.09a2 2 0 0 1 2.83-2.83l.09.08a1.65 1.65 0 0 0 1.82.33H12a1.65 1.65 0 0 0 .98-1.51V4a2 2 0 0 1 2-2h1.7a2 2 0 0 1 2 2v.21a1.65 1.65 0 0 0 .98 1.51 1.65 1.65 0 0 0 1.82-.33l.09-.08a2 2 0 0 1 2.83 2.83l-.08.09a1.65 1.65 0 0 0-.33 1.82V12c0 .35.07.68.2.98z"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
                   />
                 </svg>
 
@@ -160,7 +164,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/companies"
                 onClick={() => handleTabClick("/admin/companies")}
                 className={` ${
-                  activeTab === "/admin/companies" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/companies"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -234,7 +240,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/coupon"
                 onClick={() => handleTabClick("/admin/coupon")}
                 className={` ${
-                  activeTab === "/admin/coupon" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/coupon"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -253,14 +261,14 @@ export default function SidebarComp({ children }) {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M21 7a2 2 0 0 1-2 2h-.28a2 2 0 0 0-1.77 1.06l-.62 1.08a2 2 0 0 0 0 1.72l.62 1.08A2 2 0 0 0 18.72 15H19a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h.28a2 2 0 0 0 1.77-1.06l.62-1.08a2 2 0 0 0 0-1.72l-.62-1.08A2 2 0 0 0 5.28 9H5A2 2 0 0 1 3 7V4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3z"
+                    d="M4 4h16v4a2 2 0 0 1-2 2 2 2 0 0 0 0 4 2 2 0 0 1 2 2v4H4v-4a2 2 0 0 1 2-2 2 2 0 0 0 0-4 2 2 0 0 1-2-2V4z"
                   />
                   <path
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M7 15h10M7 9h10"
+                    d="M9 9l6 6m0-6l-6 6"
                   />
                 </svg>
 
@@ -273,7 +281,9 @@ export default function SidebarComp({ children }) {
                 href="/admin/ledger"
                 onClick={() => handleTabClick("/admin/ledger")}
                 className={` ${
-                  activeTab === "/admin/ledger" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/ledger"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
@@ -284,63 +294,65 @@ export default function SidebarComp({ children }) {
                   }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
-                  fill="currentColor"
-                  viewBox="0 0 20 18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m4-12H8m8 4H8m8 4H8M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                  />
                 </svg>
+
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>Ledger</span>
               </Link>
             </li>
 
-            {/* <li>
-              <Link
-                href="login"
-                to="/login"
-                onClick={() => handleTabClick("login")}
+            {/* <li className="fixed bottom-0 left-0 w-full">
+              <button
+                onClick={logOut}
                 className={` ${
-                  activeTab === "signIn" ? Styles.activeTab : Styles.inactiveTab
+                  activeTab === "/admin/logout"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "signIn" ? "" : Styles.inactiveTab
-                  }  ${
+                    activeTab === "/admin/logout" ? "" : Styles.inactiveTab
+                  } ${
                     Styles.tabSvg
-                  }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-white group-hover:text-gray-900 dark:group-hover:text-black`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
-                  viewBox="0 0 18 16"
+                  viewBox="0 0 24 24"
                 >
                   <path
                     stroke="currentColor"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth="2"
-                    d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-              </Link>
+                <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
+              </button>
             </li> */}
           </ul>
         </div>
       </aside>
 
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-          <nav className="border-gray-200 dark:bg-gray-900">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div className="">
+          <nav className="">
+            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
               <a
                 href=""
                 className="flex items-center space-x-3 rtl:space-x-reverse"
-              >
-               
-                {/* <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                  REC
-                </span> */}
-              </a>
+              ></a>
               <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <button
                   type="button"
@@ -353,9 +365,9 @@ export default function SidebarComp({ children }) {
                   <span className="sr-only">Open user menu</span>
                   <img
                     className="w-8 h-8 rounded-full"
-                    src="/images/profile-user.png"
+                    src="/images/new_user_logo.png"
                     alt="user photo"
-                    style={{ backgroundColor: 'white' }}
+                    style={{ backgroundColor: "white" }}
                   />
                 </button>
                 <div
@@ -373,15 +385,7 @@ export default function SidebarComp({ children }) {
                   <ul className="py-2" aria-labelledby="user-menu-button">
                     <li>
                       <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        My Profile
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
+                        href="/admin/changePassword"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                       >
                         Change Password
@@ -398,29 +402,11 @@ export default function SidebarComp({ children }) {
                   </ul>
                 </div>
               </div>
-              {/* <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-    <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-      <li>
-        <a href="#" className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
-      </li>
-      <li>
-        <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-      </li>
-      <li>
-        <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-      </li>
-      <li>
-        <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Pricing</a>
-      </li>
-      <li>
-        <a href="#" className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
-      </li>
-    </ul>
-  </div> */}
             </div>
           </nav>
         </div>
-        <div className="mt-3 p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+
+        <div className="mt-3 p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           {children}
           {/* Content for Dashboard tab */}
           {/* {activeTab === 'dashboard' && <Dashboard activeTab={activeTab}/>}

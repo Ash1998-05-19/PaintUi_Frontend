@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 export default function CouponFilterModal({
   modalValue,
   handleClose,
+  userOptions,
   companyOptions,
   categoryOptions,
   productOptions,
@@ -15,12 +16,14 @@ export default function CouponFilterModal({
   setPayLoad,
   setIsRefresh,
 }) {
-  console.log("modl value", modalValue);
-  console.log("handle close", handleClose);
-  console.log("CategoryOption", categoryOptions);
-  console.log("Product Option", productOptions);
+  // console.log("modl value", modalValue);
+  // console.log("handle close", handleClose);
+  // console.log("CategoryOption", categoryOptions);
+  // console.log("UserOption", userOptions);
+  // console.log("Product Option", productOptions);
   const [isOpen, setIsOpen] = useState(modalValue.modalValue);
-  console.log("open modal", isOpen);
+  const [selectProduct,setSelectProduct]=useState("")
+  //console.log("open modal", isOpen);
 
   const [selectedOrder, setSelectedOrder] = useState({
     value: "descending",
@@ -33,20 +36,38 @@ export default function CouponFilterModal({
   ];
 
   const changeHandle = (type, data) => {
-    if (type === 'productIds' && data) {
-        const product = data[0];  // Assuming single product selection, you can adjust for multiple if needed
-        setPayLoad(prev => ({
-            ...prev,
-            productCode: product?.label.match(/Code: (\S+)\)/)?.[1] || '',
-            productName: product?.label.split(' (Code:')[0] || ''
-        }));
-    } else {
-        setPayLoad(prev => ({
-            ...prev,
-            [type]: data
-        }));
+    console.log("change handle data", data)
+    console.log("change handle type", type)
+    if (type === "reedemed" && data) {
+      setPayLoad((prev) => ({
+        ...prev,
+        reedemed:data,
+        unReedemed:false
+      }));
     }
-};
+    if (type === "unReedemed" && data) {
+      setPayLoad((prev) => ({
+        ...prev,
+        reedemed:false,
+        unReedemed:data
+      }));
+    }
+
+    if (type === "productIds" && data) {
+      setSelectProduct(data)
+      const product = data; 
+      setPayLoad((prev) => ({
+        ...prev,
+        productCode: product?.label.match(/Code: (\S+)\)/)?.[1] || "",
+        productName: product?.label.split(" (Code:")[0] || "",
+      }));
+    } else {
+      setPayLoad((prev) => ({
+        ...prev,
+        [type]: data,
+      }));
+    }
+  };
 
   const handleDateChange = (type, data) => {
     setPayLoad((prev) => {
@@ -66,21 +87,25 @@ export default function CouponFilterModal({
     });
   };
 
-  
-
   const clearFilters = () => {
     setPayLoad({
       categoryIds: [],
       companyIds: [],
-      productIds: [],
-      sortBy: "createdAt",
+      redeemed: undefined, 
+      fromDate: "",
+      toDate: "",
+      fromExpiryDate: "",
+      toExpiryDate: "",
+      masonsCoupon: [],
+      retailersCoupon: [],
       sortOrder: "DESC",
     });
+    setSelectProduct("")
     setIsRefresh((prev) => prev + 1);
     handleClose();
   };
 
-  console.log("FilterModalPayload", payLoad);
+ // console.log("FilterModalPayload", payLoad);
 
   return (
     <>
@@ -124,21 +149,20 @@ export default function CouponFilterModal({
                   value: element?.ProductId,
                   label: `${element?.Name} (Code: ${element?.ProductCode})`,
                 }))}
-                value={payLoad?.productIds}
-                isMulti
+                value={selectProduct}
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
             </div>
-            <div className="mb-4">
+            <div className="flex justify-around mb-4">
               <div>
                 <input
                   type="radio"
                   id="redeemed"
                   name="status"
-                  value="redeemed"
-                  checked={payLoad?.redeemed === true}
-                  onChange={() => changeHandle("redeemed", true)}
+                  value="reedemed"
+                  checked={payLoad?.reedemed === true}
+                  onChange={() => changeHandle("reedemed", true)}
                   className="mr-2"
                 />
                 <label htmlFor="redeemed">Redeemed</label>
@@ -148,9 +172,9 @@ export default function CouponFilterModal({
                   type="radio"
                   id="unredeemed"
                   name="status"
-                  value="unredeemed"
-                  checked={payLoad?.redeemed === false}
-                  onChange={() => changeHandle("redeemed", false)}
+                  value="unReedemed"
+                  checked={payLoad?.unReedemed === true}
+                  onChange={() => changeHandle("unReedemed", true)}
                   className="mr-2"
                 />
                 <label htmlFor="unredeemed">Unredeemed</label>
@@ -161,9 +185,7 @@ export default function CouponFilterModal({
               <input
                 type="date"
                 value={payLoad?.fromDate || ""}
-                onChange={(e) =>
-                  handleDateChange("fromDate", e.target.value)
-                }
+                onChange={(e) => handleDateChange("fromDate", e.target.value)}
                 className="w-full"
               />
             </div>
@@ -172,10 +194,9 @@ export default function CouponFilterModal({
               <input
                 type="date"
                 value={payLoad?.toDate || ""}
-                onChange={(e) =>
-                  handleDateChange("toDate", e.target.value)
-                }
+                onChange={(e) => handleDateChange("toDate", e.target.value)}
                 className="w-full"
+                disabled={!payLoad?.fromDate}
               />
             </div>
             <div className="mb-4">
@@ -198,13 +219,21 @@ export default function CouponFilterModal({
                   handleDateChange("toExpiryDate", e.target.value)
                 }
                 className="w-full"
+                disabled={!payLoad?.fromExpiryDate}
               />
             </div>
             <div className="mb-4">
               <label className="block text-gray-700">Mason Coupons:</label>
               <Select
-                // onChange={(option) => changeHandle('masonCoupon', option)}
-                // options={masonCouponOptions}
+                 onChange={(option) => changeHandle('masonsCoupon', option)}
+                options={userOptions?.users
+                  ?.filter((element) => element?.RoleId === 3)
+                  ?.map((element) => ({
+                    value: element?.UserId,
+                    label: `${element?.FirstName}`,
+                  }))}
+                  value={payLoad?.masonsCoupon}
+                  isMulti
                 className="basic-single-select"
                 classNamePrefix="select"
               />
@@ -212,8 +241,15 @@ export default function CouponFilterModal({
             <div className="mb-4">
               <label className="block text-gray-700">Retailer Coupons:</label>
               <Select
-                // onChange={(option) => changeHandle('retailerCoupon', option)}
-                // options={retailerCouponOptions}
+                onChange={(option) => changeHandle('retailersCoupon', option)}
+                options={userOptions?.users
+                  ?.filter((element) => element?.RoleId === 2)
+                  ?.map((element) => ({
+                    value: element?.UserId,
+                    label: `${element?.FirstName}`,
+                  }))}
+                  value={payLoad?.retailersCoupon}
+                  isMulti
                 className="basic-single-select"
                 classNamePrefix="select"
               />

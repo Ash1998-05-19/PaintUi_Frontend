@@ -23,6 +23,7 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
          Cookies.set("firstName", resData?.admin?.FirstName);
          Cookies.set("lastName", resData?.admin?.LastName);
          Cookies.set("email", resData?.admin?.Email);
+         Cookies.set("phone", resData?.admin?.Phone);
         // Cookies.set("name", resData?.firstName);
         // Cookies.set("roles", JSON.stringify(resData?.role));
   
@@ -31,7 +32,7 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
       } else {
         //toast.error(resData.message);
         setLoading(false);
-        return {errMessage:resData.error};
+        return {errMessage:resData.message};
       }
     } catch (error) {
       setLoading(false);
@@ -76,6 +77,34 @@ export const resetPassword = async (userId,Token,payload,setLoading=()=>{}) => {
 console.log('API_BASE_URL',API_BASE_URL)
   try {
     const res = await fetch(`${API_BASE_URL}/user/resetPassword/${userId}/${Token}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    const resData = await res.json();
+
+  if (resData?.success) {
+    //toast.success("SuccessFully Login");
+    setLoading(false);
+    return {successMessage:resData};
+  } else {
+    //toast.error(resData.message);
+    setLoading(false);
+    return {errMessage:resData};
+  }
+} catch (error) {
+  setLoading(false);
+  toast.error("someting went wrong");
+}
+};
+
+export const changePassword = async (payload,setLoading=()=>{}) => {
+  setLoading(true);
+console.log('API_BASE_URL',API_BASE_URL)
+  try {
+    const res = await fetch(`${API_BASE_URL}/user/changePassword/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
