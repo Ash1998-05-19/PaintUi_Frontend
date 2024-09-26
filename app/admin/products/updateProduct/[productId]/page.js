@@ -133,17 +133,18 @@ export default function UpdateProduct(params ) {
   const submitForm = async (data) => {
     const ProductDetails = {
       Name: data.productName,
-      CategoryId: data.category.value,
-      CompanyId: data.company.value,
-      WeightInGrams: data.weight,
-      HeightInCm: data.height,
-      WidthInCm: data.width,
-      VolumeInLiter: data.volume,
-      Price: data.price,
-      DiscountPercentage: data.discountPercentage,
-      SGSTPercentage: data.sgstPercentage,
-      CGSTPercentage: data.cgstPercentage,
-      IGSTPercentage: data.igstPercentage,
+      CategoryId: data.category?.value || 0,
+      CompanyId: data.company?.value || 0,
+      WeightInGrams: data.weight || 0,
+      HeightInCm: data.height || 0,
+      WidthInCm: data.width || 0,
+      VolumeInLiter: data.volume || 0,
+      Price: data.price || 0,
+      DiscountPercentage: data.discountPercentage || 0,
+      SGSTPercentage: data.sgstPercentage || 0,
+      CGSTPercentage: data.cgstPercentage || 0,
+      IGSTPercentage: data.igstPercentage || 0,
+      ProductCode: data.productCode || 0,
     };
 
     try {
@@ -251,7 +252,7 @@ export default function UpdateProduct(params ) {
             type="number"
             id="weight"
             min = "0"
-            {...register('weight', { required: 'Weight is required' })}
+            {...register('weight')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Weight"
           />
