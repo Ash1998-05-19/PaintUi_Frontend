@@ -15,7 +15,6 @@ export default function SidebarComp({ children }) {
   const email = Cookies.get("email");
 
   const [activeTab, setActiveTab] = useState(pathname.replace("/", ""));
-
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
@@ -199,14 +198,14 @@ export default function SidebarComp({ children }) {
               <a
                 href="/admin/products"
                 className={` ${
-                  activeTab === "/admin/products"
+                  activeTab === "admin/products"
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "/admin/products" ? "" : Styles.inactiveTab
+                    activeTab === "admin/products" ? "" : Styles.inactiveTab
                   } ${
                     Styles.tabSvg
                   } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
