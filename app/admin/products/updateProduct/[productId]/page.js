@@ -56,6 +56,7 @@ export default function UpdateProduct(params ) {
       setValue("cgstPercentage", product.CGSTPercentage);
       setValue("igstPercentage", product.IGSTPercentage);
       setValue('productCode', product.ProductCode);
+      setValue('RewardPointValue', product.RewardPointValue);
     }
   }, [product]);
 
@@ -145,6 +146,7 @@ export default function UpdateProduct(params ) {
       CGSTPercentage: data.cgstPercentage || 0,
       IGSTPercentage: data.igstPercentage || 0,
       ProductCode: data.productCode || 0,
+      RewardPointValue:data.RewardPointValue ? data.RewardPointValue :0
     };
 
     try {
@@ -319,7 +321,26 @@ export default function UpdateProduct(params ) {
           />
           {errors.price && <span className="text-red-500">{errors.price.message}</span>}
         </div>
-
+        <div className="w-full">
+            <label
+              htmlFor="RewardPointValue"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Reward Point
+            </label>
+            <input
+              type="number"
+              step="0.01"
+              id="price"
+              min="0"
+              {...register("RewardPointValue")}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Reward Point"
+            />
+            {errors.RewardPointValue && (
+              <span className="text-red-500">{errors.RewardPointValue.message}</span>
+            )}
+          </div>
         <div className="w-full">
             <label
               htmlFor="discountPercentage"
