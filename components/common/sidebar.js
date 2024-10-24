@@ -100,14 +100,14 @@ export default function SidebarComp({ children }) {
                 href="/admin/users"
                 onClick={() => handleTabClick("/admin/users")}
                 className={` ${
-                  activeTab === "/admin/users"
+                  activeTab === "admin/users"
                     ? Styles.activeTab
                     : Styles.inactiveTab
                 } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
               >
                 <svg
                   className={`${
-                    activeTab === "/admin/users" ? "" : Styles.inactiveTab
+                    activeTab === "admin/users" ? "" : Styles.inactiveTab
                   }  ${
                     Styles.tabSvg
                   }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
@@ -308,7 +308,41 @@ export default function SidebarComp({ children }) {
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>Ledger</span>
               </Link>
             </li>
+            <li>
+              <Link
+                href="/admin/masonSo"
+                onClick={() => handleTabClick("/admin/masonSo")}
+                className={` ${
+                  activeTab === "/admin/masonSo"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
+                } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
+              >
+                <svg
+                  className={`${
+                    activeTab === "/admin/masonSo" ? "" : Styles.inactiveTab
+                  } ${
+                    Styles.tabSvg
+                  } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                  />
+                </svg>
 
+                <span className={` flex-1 ms-3 whitespace-nowrap`}>
+                  Mason So
+                </span>
+              </Link>
+            </li>
             {/* <li className="fixed bottom-0 left-0 w-full">
               <button
                 onClick={logOut}

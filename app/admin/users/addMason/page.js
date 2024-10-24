@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
 
-export default function AddUser() {
+export default function AddMasonUser() {
   const {
     register,
     handleSubmit,
@@ -30,11 +30,11 @@ export default function AddUser() {
       FirstName: data.firstName,
       LastName: data.lastName,
       Email: data.email ,
-      ShopName: data.shopName,
-      Address: data.address,
+      // ShopName: data.shopName,
+      // Address: data.address,
       Phone: data.phone,
       // Password: data.password,
-      Role: "Retailer",
+      Role: "Mason",
     };
     console.log("userDetails", UserDetails);
     let res = await addUser(UserDetails);
@@ -52,7 +52,7 @@ export default function AddUser() {
   return (
     <section>
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
-        Add Your Retailer User Details
+        Add Your Mason User Details
       </h1>
       <Link href="/admin/users">
         <div className="mb-5 mt-5">
@@ -107,7 +107,7 @@ export default function AddUser() {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label
               htmlFor="shopName"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
@@ -126,7 +126,7 @@ export default function AddUser() {
             {errors.shopName && (
               <span className="text-red-600">Shop Name is required</span>
             )}
-          </div>
+          </div> */}
 
           <div>
             <label
@@ -219,7 +219,7 @@ export default function AddUser() {
               <span className="text-red-600">{errors.password.message}</span>
             )}
           </div> */}
-          <div className="w-full">
+          {/* <div className="w-full">
             <label
               htmlFor="address"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -236,7 +236,7 @@ export default function AddUser() {
             {errors.address && (
               <span className="text-red-500">{errors.address.message}</span>
             )}
-          </div>
+          </div> */}
         </div>
         <button
           type="submit"
