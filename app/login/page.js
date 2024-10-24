@@ -69,7 +69,7 @@ export default function Login() {
     let res = await LoginAdmin(LoginData)
     console.log(res);
    
-    if(res.token){
+    if(res?.token){
       toast.success("LogIn Successfully")
       setIsLoading(false);
       router.push("/admin/dashboard");
@@ -97,16 +97,15 @@ export default function Login() {
     >
       {isLoading &&    <SpinnerComp/>  }
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className={` ${Styles.mt7} flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
+        <div
+          className={` ${Styles.mt7} bg-white  flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
         >
           <img
-            className="w-28 h-28 mr-2 rounded"
-            src="/images/logo-4.png"
+            className="w-48 h-32 mr-2 rounded"
+            src="/images/trubsond-logo-png.png"
             alt="logo"
           />
-        </a>
+        </div>
         <div
           className={`${Styles.loginBoxMain} bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700`}
         >

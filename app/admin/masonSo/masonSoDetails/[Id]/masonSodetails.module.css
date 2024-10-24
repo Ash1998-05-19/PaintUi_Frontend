@@ -1,0 +1,133 @@
+.heroSectionVL {
+    border-left: 3px solid;
+    height: auto;
+    border-color: rgb(194, 187, 187);
+  }
+  .firstDetailsBox {
+    height: auto;
+    background-color: white;
+    /* margin-left: 14rem; */
+    /* margin-right: 14rem; */
+    border-radius: 0.35rem;
+    /* margin-top: 1rem; */
+    /* display: flex; */
+    padding: 1rem 1rem 1rem 1rem;
+    /* justify-content: space-around; */
+  }
+
+  .firstDetailsDiv {
+    flex: 0 0 40%; /* 40% of the available space */
+    display: flex;
+     justify-content: center; 
+  }
+  
+  .secondDetailsDiv {
+    flex: 0 0 60%; /* 60% of the available space */
+    margin-left: 1rem;
+    display: flex;
+    /* justify-content: center;  */
+    align-content: center;
+  }
+
+  /* secon section */
+  .secondSection{
+    width: 100%;
+    margin-top: 2rem;
+    /* display: flex; */
+    height: 100%;
+    /* margin-right: 1rem; */
+  }
+  .secondSectionLeft{
+    /* flex: 0 0 40%;  */
+    height: auto;
+    background-color: white;
+     /* margin-right: 1rem;  */
+    /* margin-right: 14rem; */
+    border-radius: 0.35rem;
+    /* margin-top: 1rem; */
+   
+    padding: 1rem 1rem 1rem 1rem;
+
+  }
+  
+  .secondSectionRight{
+    flex: 0 0 60%;
+    height: auto;
+  }
+  .secondSectionRightTop{
+    height: auto;
+    background-color: white;
+     /* margin-right: 1rem;  */
+    /* margin-right: 14rem; */
+    border-radius: 0.35rem;
+     margin-bottom: 1rem; 
+   
+    padding: 1rem 1rem 1rem 1rem;
+  }
+  .secondSectionRightBottom{
+    height: auto;
+    background-color: white;
+     /* margin-right: 1rem;  */
+    /* margin-right: 14rem; */
+    border-radius: 0.35rem;
+    /* margin-top: 1rem; */
+   
+    padding: 1rem 1rem 1rem 1rem;
+  }
+  .horizontalLine{
+    border-bottom: 3px solid;
+    width: 100%;
+    border-color: rgb(194, 187, 187);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .headingcontainer{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+.hoverText {
+    visibility: hidden;
+    /* width: auto; */
+    background-color: #054d5f;
+    color: #fff;
+    font-size: 1rem;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 106%;
+    left: 0%;
+    margin-left: -4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+ 
+  .headingcontainer:hover .hoverText {
+    visibility: visible;
+    opacity: 1;
+  }
+  @media screen and (max-width:1025px) {
+    /* .firstDetailsBox {
+      flex-direction: column;
+    } */
+    .secondDetailsDiv {
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .secondSection{
+      flex-direction: column;
+      margin-right: 0;
+    }
+    .secondSectionLeft{
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+  @media screen and (max-width:450px) {
+
+    .secondDetailsGridDiv{
+      grid-template-columns: auto  !important;
+    }
+  }

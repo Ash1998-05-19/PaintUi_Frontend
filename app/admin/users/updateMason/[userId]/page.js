@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
 
 
-export default function UpdateUser(params) {
+export default function UpdateMasonUser(params) {
     const [userObj, setUserObj] = useState(null);
     const {
         register,
@@ -68,8 +68,8 @@ export default function UpdateUser(params) {
       FirstName: data?.firstName,
       LastName: data?.lastName,
       Email: data?.email,
-      Address : data?.address?data?.address:"",
-      ShopName : data?.shopName?data?.shopName:"",
+      // Address : data?.address?data?.address:"",
+      // ShopName : data?.shopName?data?.shopName:"",
       // Password : data?.password
     };
 
@@ -92,7 +92,7 @@ export default function UpdateUser(params) {
   return (
     <section>
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
-        Update Your Retailer User Details
+        Update Your Mason User Details
       </h1>
       <Link href="/admin/users">
         <div className="mb-5 mt-5">
@@ -139,7 +139,7 @@ export default function UpdateUser(params) {
           {errors.lastName && <span className="text-red-600">Last Name is required</span>}
         </div>
 
-        <div>
+        {/* <div>
           <label
             htmlFor="shopName"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white required"
@@ -154,7 +154,7 @@ export default function UpdateUser(params) {
             placeholder="Shop Name"
           />
           {errors.shopName && <span className="text-red-600">Shop Name is required</span>}
-        </div>
+        </div> */}
         <div>
           <label
             htmlFor="email"
@@ -234,7 +234,7 @@ export default function UpdateUser(params) {
           />
           {errors.password && <span className="text-red-600">{errors.password.message}</span>}
         </div> */}
-        <div className="w-full">
+        {/* <div className="w-full">
             <label
               htmlFor="address"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -251,7 +251,7 @@ export default function UpdateUser(params) {
             {errors.address && (
               <span className="text-red-500">{errors.address.message}</span>
             )}
-          </div>
+          </div> */}
       </div>
       <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     </form>

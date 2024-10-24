@@ -6,6 +6,7 @@ import Styles from "./dashboard.module.css";
 import { getdashboardData } from "@/apiFunction/dashboard/dashboardApi";
 import { useEffect, useState } from "react";
 import SpinnerComp from "@/components/common/spinner";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Dashboard(params) {
   const [dashboardData, setDashboardData] = useState(false);
