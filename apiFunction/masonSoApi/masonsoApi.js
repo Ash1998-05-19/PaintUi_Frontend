@@ -11,7 +11,7 @@ export const getAllMasonSo = async (page, fromDate, toDate,selectedMason ,limit,
   setLoading(true);
   try {
     const res = await fetch(
-      `${API_BASE_URL}/masonso/getAllMasonSoDetails?page=${page}${limit?`&limit=${limit}`:`&limit=${PAGE_LIMIT}`}&${fromDate ? `&fromDate=${fromDate}` : ""}${toDate ? `&toDate=${toDate}` : ""}${selectedMason ? `&masonId=${selectedMason}` : ""}`,
+      `${API_BASE_URL}/masonso/getAllMasonSoDetails?page=${page}${limit?`&limit=${limit}`:`&limit=${PAGE_LIMIT}`}&${fromDate ? `&fromDate=${fromDate}` : ""}${toDate ? `&toDate=${toDate}` : ""}${selectedMason ? `&masonName=${selectedMason}` : ""}`,
       {
         method: "GET",
         headers: {
