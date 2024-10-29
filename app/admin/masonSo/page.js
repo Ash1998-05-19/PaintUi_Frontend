@@ -74,6 +74,7 @@ export default function MasonSODetails() {
   
   const searchInputChange = (e) => {
     setSearchData(e);
+    setSelectedMason(e);
   };
   const handlePageChange = (newPage) => {
     console.log(newPage);
@@ -142,10 +143,9 @@ export default function MasonSODetails() {
             endDate={toDate}
             setIsRefresh={setIsRefresh}
           />
-           {masonUserlistData.length >0 && (
+           {/* {masonUserlistData.length >0 && (
             <li className="me-2 list-none relative">
               {" "}
-              {/* Ensure relative positioning */}
               <button
                 ref={buttonRef}
                 id="dropdownPossessionButton"
@@ -194,7 +194,7 @@ export default function MasonSODetails() {
                 </ul>
               </div>
             </li>
-          )}
+          )} */}
           {/* <div>
             <Link href={"/admin/categories/addCategory"}>
               {" "}
@@ -206,9 +206,10 @@ export default function MasonSODetails() {
               </button>
             </Link>
           </div>
+          */}
           <div>
             <SearchInput setSearchData={searchInputChange} />
-          </div> */}
+          </div> 
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -232,12 +233,12 @@ export default function MasonSODetails() {
             {listData?.data?.length > 0 &&
               listData?.data?.map((item, index) => (
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <Link href={`/admin/products?categoryId=${item?.CategoryId}`}>
-                    <td className="px-6 py-4 text-blue-600 cursor-pointer hover:font-semibold capitalize">
+                  {/* <Link href={`/admin/products?categoryId=${item?.CategoryId}`}> */}
+                    <td className="px-6 py-4 text-black  capitalize">
                       {item?.masonDetails?.FirstName}{" "}
                       <span>{item?.masonDetails?.LastName}</span>
                     </td>
-                  </Link>
+                  {/* </Link> */}
                   <td className="px-6 py-4">{item?.TotalRewardPoint}</td>
                   <td className="px-6 py-4">{item?.createdAt?.slice(0, 10)}</td>
 

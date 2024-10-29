@@ -1,15 +1,15 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { getretailerDetailById } from "@/apiFunction/userApi/userApi";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 
-
-const MasonsPage = ( params ) => {
+const MasonsPage = (params) => {
   const [retailerData, setRetailerData] = useState(null);
-  const [userId, setUserId] = useState(params?.searchParams?.id ?params?.searchParams?.id:null);
-  console.log("masons params", params)
+  const [userId, setUserId] = useState(
+    params?.searchParams?.id ? params?.searchParams?.id : null
+  );
+  console.log("masons params", params);
 
   useEffect(() => {
     fetchRetailer();
@@ -20,7 +20,7 @@ const MasonsPage = ( params ) => {
     let retailer = await getretailerDetailById(userId);
     if (retailer?.resData?.success) {
       console.log("retailer data", retailer);
-      setRetailerData(retailer.resData.response);
+      setRetailerData(retailer.resData.response2);
     } else {
       toast.error(retailer?.message);
       return false;
@@ -29,9 +29,12 @@ const MasonsPage = ( params ) => {
 
   return (
     <div>
-      <h1>Related Masons</h1>
+       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
+       Related Masons
+        </h1>
       {retailerData ? (
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        retailerData?.relatedMasons?.length > 0 ? (
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
@@ -60,18 +63,28 @@ const MasonsPage = ( params ) => {
                   key={mason.UserId}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  <td className="px-6 py-4">{mason.FirstName} {mason.LastName}</td>
+                  <td className="px-6 py-4">
+                    {mason.FirstName} {mason.LastName}
+                  </td>
                   <td className="px-6 py-4">{mason.Email}</td>
                   <td className="px-6 py-4">{mason.Phone}</td>
                   <td className="px-6 py-4">{mason.IsActive ? "Yes" : "No"}</td>
-                  <td className="px-6 py-4">{new Date(mason.createdAt).toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    {new Date(mason.createdAt).toLocaleString()}
+                  </td>
                   <td className="px-6 py-4">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                          <th scope="col" className="px-6 py-3">Coupon Code</th>
-                          <th scope="col" className="px-6 py-3">Amount</th>
-                          <th scope="col" className="px-6 py-3">Redeem Date</th>
+                          <th scope="col" className="px-6 py-3">
+                            Coupon Code
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Amount
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Redeem Date
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -82,7 +95,9 @@ const MasonsPage = ( params ) => {
                           >
                             <td className="px-6 py-4">{coupon.CouponCode}</td>
                             <td className="px-6 py-4">{coupon.Amount}</td>
-                            <td className="px-6 py-4">{new Date(coupon.RedeemDateTime).toLocaleString()}</td>
+                            <td className="px-6 py-4">
+                              {new Date(coupon.RedeemDateTime).toLocaleString()}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -92,6 +107,11 @@ const MasonsPage = ( params ) => {
               ))}
             </tbody>
           </table>
+        ) : (
+          <p className="text-center text-2xl font-bold text-gray-500">
+            No data found
+          </p>
+        )
       ) : (
         <p>Loading...</p>
       )}
