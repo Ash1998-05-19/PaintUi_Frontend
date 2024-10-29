@@ -21,10 +21,8 @@ export const getAllMasonSo = async (page, fromDate, toDate,selectedMason ,limit,
       }
     );
     const resData = await res.json();
-    console.log("resData", resData);
 
     if (resData) {
-      console.log("working");
       setLoading(false);
       return { resData };
     } else {
@@ -34,7 +32,6 @@ export const getAllMasonSo = async (page, fromDate, toDate,selectedMason ,limit,
   } catch (error) {
     setLoading(false);
     toast.error("something went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -42,7 +39,6 @@ export const getAllMasonSo = async (page, fromDate, toDate,selectedMason ,limit,
 export const deleteUser = async (id,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
-  console.log(id)
   try {
     const res = await fetch(`${API_BASE_URL}/user/deleteUser/${id}`, {
       method: "DELETE",
@@ -52,10 +48,8 @@ export const deleteUser = async (id,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -66,7 +60,6 @@ export const deleteUser = async (id,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
 };
 export const getMasonSoById = async (id,setLoading=()=>{}) => {
@@ -81,10 +74,8 @@ export const getMasonSoById = async (id,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resIdData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -95,7 +86,6 @@ export const getMasonSoById = async (id,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 export const getAllMasonUserforDropDown = async (setLoading = () => {}) => {
@@ -113,10 +103,8 @@ export const getAllMasonUserforDropDown = async (setLoading = () => {}) => {
       }
     );
     const resData = await res.json();
-    console.log("resData", resData);
 
     if (resData) {
-      console.log("working");
       setLoading(false);
       return { resData };
     } else {
@@ -126,7 +114,6 @@ export const getAllMasonUserforDropDown = async (setLoading = () => {}) => {
   } catch (error) {
     setLoading(false);
     toast.error("something went wrong");
-    console.log("error message ", error);
   }
 };
 

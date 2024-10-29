@@ -36,8 +36,6 @@ export default function CouponFilterModal({
   ];
 
   const changeHandle = (type, data) => {
-    console.log("change handle data", data)
-    console.log("change handle type", type)
     if (type === "reedemed" && data) {
       setPayLoad((prev) => ({
         ...prev,

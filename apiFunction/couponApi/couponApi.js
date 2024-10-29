@@ -18,10 +18,8 @@ export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -32,7 +30,6 @@ export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -40,7 +37,6 @@ export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
 export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
-  console.log("coupon api payload", payLoadData)
   try {
     const res = await fetch(`${API_BASE_URL}/coupon/getCoupons`, {
       method: "POST",
@@ -72,10 +68,8 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
       })
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -86,14 +80,12 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
 };
 
   export const deleteCoupon = async (id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
-    console.log(id)
     try {
       const res = await fetch(`${API_BASE_URL}/coupon/deleteCoupon/${id}`, {
         method: "DELETE",
@@ -103,10 +95,8 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -117,14 +107,12 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
   export const updateCoupon = async (payload,id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
-    console.log(id)
     try {
       const res = await fetch(`${API_BASE_URL}/coupon/updateCoupon/${id}`, {
         method: "PUT",
@@ -135,10 +123,8 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         body: JSON.stringify(payload),
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -149,7 +135,6 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
   };
 
@@ -165,10 +150,8 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         },
       });
       const resData = await res.json();
-      console.log('resIdData',resData)
   
       if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -179,6 +162,5 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
   };

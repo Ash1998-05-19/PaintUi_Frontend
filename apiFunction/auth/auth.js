@@ -17,7 +17,6 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
         body: JSON.stringify(payload),
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData?.token) {
         //toast.success("SuccessFully Login");
@@ -39,7 +38,6 @@ export const LoginAdmin = async (payload,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
   };
 
@@ -76,7 +74,6 @@ export const UserForgotPassword = async (payload,setLoading=()=>{}) => {
 
 export const resetPassword = async (userId,Token,payload,setLoading=()=>{}) => {
   setLoading(true);
-console.log('API_BASE_URL',API_BASE_URL)
   try {
     const res = await fetch(`${API_BASE_URL}/user/resetPassword/${userId}/${Token}`, {
       method: "POST",
@@ -104,7 +101,6 @@ console.log('API_BASE_URL',API_BASE_URL)
 
 export const changePassword = async (payload,setLoading=()=>{}) => {
   setLoading(true);
-console.log('API_BASE_URL',API_BASE_URL)
   try {
     const res = await fetch(`${API_BASE_URL}/user/changePassword/`, {
       method: "POST",

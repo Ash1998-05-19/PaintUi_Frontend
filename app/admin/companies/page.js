@@ -28,7 +28,6 @@ export default function Company() {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState("");
-  console.log("listData", listData);
 
   useEffect(() => {
     getAllCompanies();
@@ -50,13 +49,11 @@ export default function Company() {
     setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
   const handleDelete = async () => {
     try {
       const res = await deleteCompany(deleteId);
-      console.log("delete response", res);
       if (res.resData.message == "Company deleted successfully") {
         toast.success("Company deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -79,12 +76,10 @@ export default function Company() {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let companies = await updateCompany(payload, id);
-    console.log("toggleCompany", companies);
     if (!companies?.resData?.message) {
       setIsRefresh((prev) => prev + 1);
       return false;

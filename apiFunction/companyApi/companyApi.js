@@ -18,10 +18,8 @@ export const addCompany = async (payload,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -32,7 +30,6 @@ export const addCompany = async (payload,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -49,10 +46,8 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -63,7 +58,6 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
@@ -79,10 +73,8 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resIdData',resData)
   
       if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -93,7 +85,6 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
   };
 
@@ -109,10 +100,8 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -123,14 +112,12 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
   export const deleteCompany = async (id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
-    console.log(id)
     try {
       const res = await fetch(`${API_BASE_URL}/company/deleteCompany/${id}`, {
         method: "DELETE",
@@ -140,10 +127,8 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -154,14 +139,12 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
   export const updateCompany = async (payload,id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
-    console.log(id)
     try {
       const res = await fetch(`${API_BASE_URL}/company/updateCompany/${id}`, {
         method: "PUT",
@@ -172,10 +155,8 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
         body: JSON.stringify(payload),
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -186,6 +167,5 @@ export const getCompany = async (page,searchData,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
   };

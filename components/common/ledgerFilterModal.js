@@ -21,8 +21,6 @@ export default function LedgerFilterModal({
   sortOrderValue,
   setSortBy
 }) {
-  console.log("modl value", modalValue);
-  console.log("handle close", handleClose);
 
   const [isOpen, setIsOpen] = useState(modalValue.modalValue);
   const [userList, setUserList] = useState([]);
@@ -35,7 +33,6 @@ export default function LedgerFilterModal({
     getAllUsers();
   }, []);
   const getAllUsers = async () => {
-    console.log("userType", userType);
     const limit = 100000;
     const fromDate = undefined;
     const toDate = undefined;
@@ -47,7 +44,6 @@ export default function LedgerFilterModal({
       toDate,
       limit
     );
-    console.log("user list data", users);
     if (!users?.resData?.message) {
       setUserList(users?.resData);
       return false;
@@ -72,7 +68,6 @@ export default function LedgerFilterModal({
   };
 
   const changeSortHandle = (type, data) => {
-    console.log("change sort handle data", data)
     setSortOrder(data);
     setSortBy("TransactionDate")
   };
@@ -90,7 +85,6 @@ export default function LedgerFilterModal({
     setIsRefresh((prev) => prev + 1);
     handleClose();
   };
-  console.log("set user Id", userValue);
   return (
     <>
       <Drawer open={modalValue} onClose={handleClose} position="right">

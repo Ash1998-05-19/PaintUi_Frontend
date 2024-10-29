@@ -59,13 +59,11 @@ export default function Coupon(params) {
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
   //console.log("listData", listData);
-  console.log("Coupon params data", params);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const inquiryItem = [10, 50, 100, 500];
-  console.log("listData", listData);
   const handleClickOutside = (event) => {
     if (
       dropdownRef.current &&

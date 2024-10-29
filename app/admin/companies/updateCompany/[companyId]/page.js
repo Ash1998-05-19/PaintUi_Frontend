@@ -17,7 +17,6 @@ export default function UpdateCompany(params) {
         watch,
         formState: { errors },
       } = useForm();
-  const onSubmit = data => console.log(data);
   
   const router = useRouter();
 
@@ -27,7 +26,6 @@ export default function UpdateCompany(params) {
 
   useEffect(() => {
     if (companyObj) {
-      console.log("Company object data", companyObj)
       setValue("companyName", companyObj?.company?.Name);
     }
   }, [companyObj]);
@@ -36,7 +34,6 @@ export default function UpdateCompany(params) {
     try {
       const companyData = await getCompanyById(params?.params?.companyId);
       setCompanyObj(companyData?.resData);
-      console.log("company data", companyData);
   
     } catch (error) {
       console.error("Error fetching company:", error);
@@ -45,17 +42,14 @@ export default function UpdateCompany(params) {
 
 
   const submitForm = async (data) => {
-    console.log("company payload data", data);
     const CompanyDetails = {
       Name: data?.companyName,
      
     };
 
-    console.log("user details", CompanyDetails);
 
     try {
       const res = await updateCompany(CompanyDetails, params?.params?.companyId);
-      console.log("company response", res);
       if (!res.resData.message) {
         router.push("/admin/companies");
         toast.success("Company Updated Successfully");

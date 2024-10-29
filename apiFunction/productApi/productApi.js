@@ -18,10 +18,8 @@ export const addProduct = async (payload,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData?.success) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -32,7 +30,6 @@ export const addProduct = async (payload,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -60,10 +57,8 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
         })
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -74,7 +69,6 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
@@ -103,10 +97,8 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
         })
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -117,7 +109,6 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
@@ -125,7 +116,6 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
   export const deleteProduct = async (id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
-    console.log(id)
     try {
       const res = await fetch(`${API_BASE_URL}/product/deleteProduct/${id}`, {
         method: "DELETE",
@@ -135,10 +125,8 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -149,7 +137,6 @@ export const getProduct = async (page,searchData,payLoad,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };
 
@@ -167,10 +154,8 @@ export const getProductById = async (id,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resIdData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -181,7 +166,6 @@ export const getProductById = async (id,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -189,7 +173,6 @@ export const getProductById = async (id,setLoading=()=>{}) => {
 export const updateProduct = async (payload,id,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
-  console.log(id)
   try {
     const res = await fetch(`${API_BASE_URL}/product/updateProduct/${id}`, {
       method: "PUT",
@@ -200,10 +183,8 @@ export const updateProduct = async (payload,id,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData?.success) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -214,7 +195,6 @@ export const updateProduct = async (payload,id,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 

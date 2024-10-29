@@ -36,7 +36,6 @@ export default function ForgotPassword() {
     setIsLoading(true)
     const Email = email;
     let res = await  UserForgotPassword({ Email });
-    console.log("forgotPassword data", res)
     if (res.successMessage?.success == true) {
       toast.success(res?.successMessage?.message);
       setIsLoading(false)
@@ -55,16 +54,15 @@ export default function ForgotPassword() {
     >
       {isLoading &&    <SpinnerComp/>  }
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className={` ${Styles.mt7} flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
+      <div
+          className={` ${Styles.mt7} bg-white  flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
         >
           <img
-            className="w-28 h-28 mr-2 rounded-full"
-            src="/images/logo-3.jpg"
+            className="w-48 h-32 mr-2 rounded"
+            src="/images/trubsond-logo-png.png"
             alt="logo"
           />
-        </a>
+        </div>
         <div
           className={`${Styles.loginBoxMain} bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700`}
         >

@@ -28,7 +28,6 @@ export default function Category() {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [searchData, setSearchData] = useState("");
-  console.log("listData", listData);
 
   useEffect(() => {
     getAllCategories();
@@ -50,13 +49,11 @@ export default function Category() {
     setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
   const handleDelete = async () => {
     try {
       const res = await deleteCategory(deleteId);
-      console.log("delete response", res);
       if (res.resData.message == "Category deleted successfully") {
         toast.success("Category deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -79,12 +76,10 @@ export default function Category() {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let categories = await updateCategory(payload, id);
-    console.log("toggle Categories", categories);
     if (!categories?.resData?.message) {
       setIsRefresh((prev) => prev + 1);
       return false;

@@ -12,14 +12,12 @@ export default function Dashboard(params) {
   const [dashboardData, setDashboardData] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("params data of dashboard", params);
   useEffect(() => {
     getAllDashboardData();
   }, []);
   const getAllDashboardData = async () => {
     setIsLoading(true);
     let dashboardData = await getdashboardData();
-    console.log("dashboardData", dashboardData);
     if (dashboardData?.resData?.success) {
       setDashboardData(dashboardData?.resData?.data);
       setIsLoading(false);

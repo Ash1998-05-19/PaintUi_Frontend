@@ -23,7 +23,6 @@ export default function User(params) {
   //   const roleData = Cookies.get("roles") ?? "";
   //   const name = Cookies.get("name");
   //   const roles = roleData && JSON.parse(roleData);
-  console.log("params data of user", params)
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [fromDate, setFromDate] = useState("");
@@ -38,7 +37,6 @@ export default function User(params) {
   const [modalUserId, setModalUserId] = useState("");
   const [userExcelData, setLedgerExcelData] = useState("");
   const [userType, setUserType] = useState(params.searchParams.Type?params.searchParams.Type:"Retailer");
-  console.log("listData", listData);
   useEffect(() => {
     if (listData?.users) {
       const retailerkeys = [
@@ -74,7 +72,6 @@ export default function User(params) {
   
       // Uncomment to set the data to state if needed
       setLedgerExcelData(filteredData);
-      console.log(filteredData); // For debugging
     }
   }, [listData]);
   
@@ -83,7 +80,6 @@ export default function User(params) {
   }, [page, searchData, isRefresh, userType]);
   const getAllUsers = async () => {
     setIsLoading(true);
-    console.log("userType", userType);
     let users = await getUser(page, searchData, userType, fromDate, toDate);
     if (!users?.resData?.message) {
       setListData(users?.resData);
@@ -108,14 +104,12 @@ export default function User(params) {
   };
 
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
 
   const handleDelete = async () => {
     try {
       const res = await deleteUser(deleteId);
-      console.log("delete response", res);
       if (res.resData.message == "User deleted successfully") {
         toast.success("User deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -129,12 +123,10 @@ export default function User(params) {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let users = await updateUser(payload, id);
-    console.log("toggle Users", users);
     if (!users?.resData?.message) {
       setIsRefresh((prev) => prev + 1);
       return false;

@@ -70,9 +70,7 @@ export default function UpdateCoupon(params) {
 
   useEffect(() => {
     if (couponObj) {
-      console.log("Coupon data", couponObj)
       setValue("couponCode", couponObj.coupon.CouponCode);
-      console.log("couponCode", couponObj.coupon.CouponCode);
       setValue("productName", {
         value: couponObj.coupon?.ProductId,
         label: couponObj.coupon?.Product?.Name,
@@ -92,7 +90,6 @@ export default function UpdateCoupon(params) {
     try {
       const couponData = await getCouponById(params?.params?.couponId);
       setCouponObj(couponData?.resData);
-      console.log("coupon data", couponData);
 
       // Pre-fill form fields with product data
     } catch (error) {
@@ -119,11 +116,9 @@ export default function UpdateCoupon(params) {
       Amount: parseInt(data?.amount),
     };
 
-    console.log("coupon details", CouponDetails);
 
     try {
       const res = await updateCoupon(CouponDetails, params?.params?.couponId);
-      console.log("coupon response", res);
       if (res.resData.success) {
         router.push("/admin/coupon");
         toast.success(res.resData.message);

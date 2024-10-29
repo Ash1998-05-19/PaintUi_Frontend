@@ -9,17 +9,14 @@ const MasonsPage = (params) => {
   const [userId, setUserId] = useState(
     params?.searchParams?.id ? params?.searchParams?.id : null
   );
-  console.log("masons params", params);
 
   useEffect(() => {
     fetchRetailer();
-    console.log("use effect worked");
   }, []);
 
   const fetchRetailer = async () => {
     let retailer = await getretailerDetailById(userId);
     if (retailer?.resData?.success) {
-      console.log("retailer data", retailer);
       setRetailerData(retailer.resData.response2);
     } else {
       toast.error(retailer?.message);

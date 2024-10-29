@@ -42,8 +42,6 @@ const [sortBy, setSortBy] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  console.log("listData", listData);
-  console.log("ledger params data", params);
 
   useEffect(() => {
     getAllLedgers();
@@ -51,7 +49,6 @@ const [sortBy, setSortBy] = useState("");
   const getAllLedgers = async () => {
     setIsLoading(true);
     let ledgers = await getLedger(page, searchData, userId, fromDate, toDate, sortOrder, sortBy);
-    console.log("ledger details", ledgers);
     if (!ledgers?.resData?.message) {
       setListData(ledgers?.resData);
       setIsLoading(false);
@@ -109,13 +106,11 @@ const [sortBy, setSortBy] = useState("");
     setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
 
   const openFilterModal = async () => {
     setFilterModalValue(true);
-    console.log("filter");
   };
 
   const closeFilterModal = async () => {
@@ -125,7 +120,6 @@ const [sortBy, setSortBy] = useState("");
   const handleDelete = async () => {
     try {
       const res = await deleteLedger(deleteId);
-      console.log("delete response", res);
       if (!res?.message) {
         toast.success("Ledger deleted successfully");
         setIsPopupOpen(false);

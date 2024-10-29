@@ -6,11 +6,7 @@ import { useState } from "react";
 import Select from 'react-select';
 
 export default function FilterModal({modalValue, handleClose, companyOptions, categoryOptions, productOptions, payLoad, setPayLoad, setIsRefresh}) {
-    console.log("modl value", modalValue)
-    console.log("handle close",handleClose)
-    console.log("CategoryOption", categoryOptions)
   const [isOpen, setIsOpen ] = useState(modalValue.modalValue);
-console.log("open modal", isOpen)
 
 const [selectedOrder, setSelectedOrder] = useState({ value: 'descending', label: 'Descending' });
 
@@ -59,7 +55,6 @@ const [selectedOrder, setSelectedOrder] = useState({ value: 'descending', label:
         handleClose();
       };
 
-      console.log("FilterModalPayload", payLoad);
   
 
   return (
