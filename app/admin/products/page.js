@@ -46,7 +46,6 @@ export default function Product(params) {
   const [isLoading, setIsLoading] = useState(false);
   const [filterModalvalue, setFilterModalValue] = useState(false);
   const [searchData, setSearchData] = useState("");
-  console.log("listData", listData);
 
   useEffect(() => {
     getAllProducts();
@@ -57,7 +56,6 @@ export default function Product(params) {
   const getAllProducts = async () => {
     setIsLoading(true);
     let products = await getProduct(page, searchData, payLoad);
-    console.log("product data", products);
     if (!products?.resData?.message) {
       setListData(products?.resData);
       setIsLoading(false);
@@ -90,19 +88,16 @@ export default function Product(params) {
     }
   };
 
-  console.log("productPayload", payLoad);
 
   const searchInputChange = (e) => {
     setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
   const handleDelete = async () => {
     try {
       const res = await deleteProduct(deleteId);
-      console.log("delete response", res);
       if (res.resData.message == "Product deleted successfully") {
         toast.success("Product deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -125,12 +120,10 @@ export default function Product(params) {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let products = await updateProduct(payload, id);
-    console.log("toggleProduct", products);
     if (!products?.resData?.message) {
       if (products?.resData?.product?.IsActive === true) {
         toast.success("Product Activated successfully");
@@ -150,14 +143,12 @@ export default function Product(params) {
 
   const openFilterModal = async () => {
     setFilterModalValue(true);
-    console.log("filter");
   };
 
   const closeFilterModal = async () => {
     setFilterModalValue(false);
   };
 
-  console.log("filterModalValue", filterModalvalue);
 
   return (
     <section>

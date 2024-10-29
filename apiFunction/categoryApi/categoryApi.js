@@ -18,10 +18,8 @@ export const addCategory = async (payload,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -32,7 +30,6 @@ export const addCategory = async (payload,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -51,10 +48,8 @@ export const getCategory = async (page,searchData,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -65,7 +60,6 @@ export const getCategory = async (page,searchData,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
 };
 
@@ -81,10 +75,8 @@ export const getCategoryById = async (id,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resIdData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -95,7 +87,6 @@ export const getCategoryById = async (id,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 
@@ -111,10 +102,8 @@ export const getCategoryListForProduct = async (page,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -125,7 +114,6 @@ export const getCategoryListForProduct = async (page,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
 };
 
@@ -133,7 +121,6 @@ export const getCategoryListForProduct = async (page,setLoading=()=>{}) => {
 export const deleteCategory = async (id,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
-  console.log(id)
   try {
     const res = await fetch(`${API_BASE_URL}/category/deleteCategory/${id}`, {
       method: "DELETE",
@@ -143,10 +130,8 @@ export const deleteCategory = async (id,setLoading=()=>{}) => {
       },
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-        console.log('working')
         setLoading(false);
         return {resData};
       } else {
@@ -157,14 +142,12 @@ export const deleteCategory = async (id,setLoading=()=>{}) => {
     } catch (error) {
       setLoading(false);
       toast.error("someting went wrong");
-      console.log("error message ", error);
     }
 };
 
 export const updateCategory = async (payload,id,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
-  console.log(id)
   try {
     const res = await fetch(`${API_BASE_URL}/category/updateCategory/${id}`, {
       method: "PUT",
@@ -175,10 +158,8 @@ export const updateCategory = async (payload,id,setLoading=()=>{}) => {
       body: JSON.stringify(payload),
     });
     const resData = await res.json();
-    console.log('resData',resData)
 
     if (resData) {
-      console.log('working')
       setLoading(false);
       return {resData};
     } else {
@@ -189,7 +170,6 @@ export const updateCategory = async (payload,id,setLoading=()=>{}) => {
   } catch (error) {
     setLoading(false);
     toast.error("someting went wrong");
-    console.log("error message ", error);
   }
 };
 

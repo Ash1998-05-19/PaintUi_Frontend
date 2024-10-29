@@ -67,7 +67,6 @@ export default function Login() {
       Password : Password
     }
     let res = await LoginAdmin(LoginData)
-    console.log(res);
    
     if(res?.token){
       toast.success("LogIn Successfully")

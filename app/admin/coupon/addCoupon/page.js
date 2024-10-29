@@ -18,9 +18,7 @@ export default function AddCoupon() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+ 
   const [couponCode, setCouponCode] = useState("AUTO_GENERATED_CODE");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [expiryDateTime, setExpiryDateTime] = useState(null);
@@ -78,9 +76,7 @@ export default function AddCoupon() {
       ExpiryDateTime: data.expiryDateTime,
       Amount: parseInt(data.amount),
     };
-    console.log("couponDetails", CouponDetails);
     let res = await addCoupon(CouponDetails, data.quantity);
-    console.log("Response data", res);
     if (!res?.message) {
       router.push("/admin/coupon");
       toast.success("Coupon Added Succefully");

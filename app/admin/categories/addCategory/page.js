@@ -7,21 +7,16 @@ import { useForm } from 'react-hook-form';
 import { addCategory } from "@/apiFunction/categoryApi/categoryApi";
 export default function AddCategory() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
   
   const router = useRouter();
 
   
   const submitForm = async (data) => {
-    console.log("register data",data);
     const CategoryDetails={
       Name : data.categoryName
     }
-    console.log("categoryDetails",CategoryDetails)
     let res = await addCategory(CategoryDetails)
-    console.log("Response data", res);
      if(!res?.resData?.message){
-      console.log("Response",res?.resData?.message )
        router.push("/admin/categories");
        toast.success("Category Added Succesfully");
       }else{

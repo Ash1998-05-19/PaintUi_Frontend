@@ -27,11 +27,7 @@ export default function UpdateProduct(params ) {
 
   const { register, handleSubmit, setValue, getValues, watch,  formState: { errors } } = useForm();
 
-  console.log("params",params);
-
-  const onSubmit = data => {
-    console.log(data);
-  };
+  
 
   useEffect(() => {
     getAllCompanies();
@@ -43,7 +39,6 @@ export default function UpdateProduct(params ) {
     if(product){
 
       setValue("productName", product.Name);
-      console.log("ProductName", product.Name);
       setValue("category", { value: product.CategoryId, label: product?.Category?.Name });
       setValue("company", { value: product.CompanyId, label: product?.Company?.Name });
       setValue("weight", product.WeightInGrams);
@@ -64,7 +59,6 @@ export default function UpdateProduct(params ) {
     try {
       const productData = await getProductById(params?.params?.productId);
       setProduct(productData?.resData?.product);
-      console.log("product data", productData);
 
       // Pre-fill form fields with product data
       
@@ -96,8 +90,6 @@ export default function UpdateProduct(params ) {
     }
   };
 
-  console.log("categoryList",categoryList);
-  console.log("companyList",companyList);
 
   
 
@@ -116,20 +108,17 @@ export default function UpdateProduct(params ) {
 
   const handleCategoryChange = (selectedOption) => {
     
-    console.log("selectedOption", selectedOption)
     setValue("category", selectedOption);
     
   };
 
   const handleCompanyChange = (selectedOption) => {
    
-    console.log("selectedOption", selectedOption)
     setValue("company", selectedOption);
   };
 
 
   const router = useRouter();
-  console.log("Router", router);
 
   const submitForm = async (data) => {
     const ProductDetails = {

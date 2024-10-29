@@ -40,7 +40,6 @@ export default function MasonSODetails() {
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
   const [selectedMason,setSelectedMason]=useState("")
-  console.log("listData", listData);
 
   useEffect(() => {
     getAllMasonSoDetails();
@@ -77,13 +76,11 @@ export default function MasonSODetails() {
     setSelectedMason(e);
   };
   const handlePageChange = (newPage) => {
-    console.log(newPage);
     setPage(newPage);
   };
   const handleDelete = async () => {
     try {
       const res = await deleteCategory(deleteId);
-      console.log("delete response", res);
       if (res.resData.message == "Category deleted successfully") {
         toast.success("Category deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -106,12 +103,10 @@ export default function MasonSODetails() {
   };
 
   const toggleChange = async (id, isActive) => {
-    console.log("toggle change id", id);
     const payload = {
       IsActive: !isActive,
     };
     let categories = await updateCategory(payload, id);
-    console.log("toggle Categories", categories);
     if (!categories?.resData?.message) {
       setIsRefresh((prev) => prev + 1);
       return false;

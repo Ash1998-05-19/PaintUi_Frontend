@@ -72,7 +72,6 @@ export default function AddProduct() {
       const volumeCode = (volume * 1000).toString();
       const randomDigits = Math.floor(1000 + Math.random() * 9000);
       const code = `${companyCode}${prodCode}${volumeCode}-${randomDigits}`;
-      console.log("code inside generateProductCode", code);
       setProductCode(code);
       return code;
     } else {
@@ -106,9 +105,7 @@ export default function AddProduct() {
   const submitForm = async (data) => {
     const myProdCode = generateProductCode();
 
-    console.log("ProductCode", myProdCode);
 
-    console.log("register data", data);
     const ProductDetails = {
       Name: data.productName,
       CategoryId: category.value,
@@ -129,7 +126,6 @@ export default function AddProduct() {
     };
     //console.log("productDetails",ProductDetails)
     let res = await addProduct(ProductDetails);
-    console.log("Response data", res);
     if (res?.resData?.success) {
       router.push("/admin/products");
       toast.success("Product Added Successfully");

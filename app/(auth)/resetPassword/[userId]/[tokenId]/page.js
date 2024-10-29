@@ -18,7 +18,6 @@ export default function ResetPassword(params) {
 const [passwordShow,setPasswordShow]=useState(false)
 const [isLoading, setIsLoading] = useState(false);
 
-console.log("reset password params", params)
   const handlePassword = useCallback((value) => {
     const pvalue = value.target.value;
     setNewPassword(pvalue);
@@ -85,16 +84,15 @@ const submitForm = async () => {
     >
       {isLoading &&    <SpinnerComp/>  }
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a
-          href="#"
-          className={` ${Styles.mt7} flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
+      <div
+          className={` ${Styles.mt7} bg-white  flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white`}
         >
           <img
-            className="w-28 h-28 mr-2 rounded-full"
-            src="/images/logo-3.jpg"
+            className="w-48 h-32 mr-2 rounded"
+            src="/images/trubsond-logo-png.png"
             alt="logo"
           />
-        </a>
+        </div>
         <div
           className={`${Styles.loginBoxMain} bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700`}
         >
@@ -129,7 +127,7 @@ const submitForm = async () => {
                   
                   </button>
                 </div>
-              <div>
+              <div className="relative">
                 <label
                   htmlFor="confirmPassword"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -137,15 +135,22 @@ const submitForm = async () => {
                   Confirm New Password
                 </label>
                 <input
-                  type="password"
+                 type={passwordShow ? "text" :"password"}
                   value={confirmPassword}
                   onChange={handleConfirmPasswordChange}
                   name="confirmPassword"
                   id="confirmPassword"
                   placeholder="Confirm Password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full  p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
                 />
+                <button
+                  onClick={handelPasswordShow}
+                    type="button"
+                    className={`text-black absolute end-2.5 bottom-2.5 font-bold rounded-lg text-xl px-4 py-2 ${Styles.eyeButton}`}
+                  >{passwordShow ? (<i className="bi bi-eye-slash-fill"></i>):(<i className="bi bi-eye-fill"></i>)}
+                  
+                  </button>
                 {!passwordsMatch && (
                             <p className="text-red-500 text-sm mt-1">Password should match.</p>
                         )}

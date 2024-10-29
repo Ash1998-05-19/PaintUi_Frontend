@@ -9,7 +9,6 @@ import SpinnerComp from "@/components/common/spinner";
 import BigNoDataFound from "@/components/common/noDataFound/noDataFound";
 import { getMasonSoById } from "@/apiFunction/masonSoApi/masonsoApi";
 export default function MasonSoDetails(params) {
-  console.log("params", params);
   const {
     register,
     handleSubmit,
@@ -27,7 +26,6 @@ export default function MasonSoDetails(params) {
       setIsLoading(true)
       try {
         const Databyid = await getMasonSoById(params?.params?.Id);
-        console.log("Databyid",Databyid)
         SpecificDataObj(Databyid?.resData?.data);
         setIsLoading(false)
       } catch (error) {
@@ -37,7 +35,6 @@ export default function MasonSoDetails(params) {
     };
     fetchData();
   }, []);
-console.log("specificDataObj",specificDataObj)
   return (
     <>
       {isLoading && <SpinnerComp />}

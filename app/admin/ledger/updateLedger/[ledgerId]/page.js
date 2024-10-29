@@ -24,7 +24,6 @@ export default function UpdateLedger(params) {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
 
   const router = useRouter();
 
@@ -34,7 +33,6 @@ export default function UpdateLedger(params) {
 
   useEffect(() => {
     if (ledgerObj) {
-      console.log("User object data", ledgerObj);
       setValue("entryType", ledgerObj?.ledgerEntry?.EntryType);
       setValue("amount", ledgerObj?.ledgerEntry?.Amount);
       setValue("note", ledgerObj?.ledgerEntry?.Note);
@@ -54,14 +52,12 @@ export default function UpdateLedger(params) {
     try {
       const ledgerData = await getLedgerById(params?.params?.ledgerId);
       setLedgerObj(ledgerData?.resData);
-      console.log("ledger data", ledgerData);
     } catch (error) {
       console.error("Error fetching ledger:", error);
     }
   };
 
   const submitForm = async (data) => {
-    console.log("user payload data", data);
     const LedgerDetails = {
       EntryType: data?.entryType,
       Amount: data?.amount,
@@ -71,11 +67,9 @@ export default function UpdateLedger(params) {
       Unit: data.unit,
     };
 
-    console.log("user details", LedgerDetails);
 
     try {
       const res = await updateLedger(LedgerDetails, params?.params?.ledgerId);
-      console.log("ledger response", res);
       if (res?.resData?.success) {
         router.push("/admin/ledger");
         toast.success("Ledger Updated Successfully");

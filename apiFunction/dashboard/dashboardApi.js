@@ -14,10 +14,8 @@ export const getdashboardData = async (page,searchData,setLoading=()=>{}) => {
         },
       });
       const resData = await res.json();
-      console.log('resData',resData)
   
       if (resData) {
-          console.log('working')
           setLoading(false);
           return {resData};
         } else {
@@ -28,6 +26,5 @@ export const getdashboardData = async (page,searchData,setLoading=()=>{}) => {
       } catch (error) {
         setLoading(false);
         toast.error("someting went wrong");
-        console.log("error message ", error);
       }
   };

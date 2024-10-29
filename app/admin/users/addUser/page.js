@@ -15,17 +15,14 @@ export default function AddUser() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
 
   const router = useRouter();
 
   const handleEnabledChange = (e) => {
-    console.log("isEnabled Value", e.target.value);
     setIsEnabled(e.target.value === "true");
   };
 
   const submitForm = async (data) => {
-    console.log("register data", data);
     const UserDetails = {
       FirstName: data.firstName,
       LastName: data.lastName,
@@ -36,11 +33,8 @@ export default function AddUser() {
       // Password: data.password,
       Role: "Retailer",
     };
-    console.log("userDetails", UserDetails);
     let res = await addUser(UserDetails);
-    console.log("Response data", res);
     if (res?.resData?.success) {
-      console.log("Response", res?.resData?.message);
       router.push("/admin/users");
       toast.success("User Added Succesfully");
     } else {

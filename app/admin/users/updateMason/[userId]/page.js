@@ -21,7 +21,6 @@ export default function UpdateMasonUser(params) {
         watch,
         formState: { errors },
       } = useForm();
-  const onSubmit = data => console.log(data);
   
   const router = useRouter();
 
@@ -31,7 +30,6 @@ export default function UpdateMasonUser(params) {
 
   useEffect(() => {
     if (userObj) {
-      console.log("User object data", userObj)
       setValue("firstName", userObj.response.FirstName);
       setValue("lastName", userObj.response.LastName);
       setValue("email", userObj.response.Email);
@@ -46,7 +44,6 @@ export default function UpdateMasonUser(params) {
     try {
       const userData = await getUserById(params?.params?.userId);
       setUserObj(userData?.resData);
-      console.log("user data", userData);
 
       // Pre-fill form fields with product data
       
@@ -58,12 +55,10 @@ export default function UpdateMasonUser(params) {
 
 
   const handleEnabledChange = (e) => {
-    console.log("isEnabled Value",e.target.value)
     setIsEnabled(e.target.value==="true");
   };
 
   const submitForm = async (data) => {
-    console.log("user payload data", data);
     const UserDetails = {
       FirstName: data?.firstName,
       LastName: data?.lastName,
@@ -73,11 +68,9 @@ export default function UpdateMasonUser(params) {
       // Password : data?.password
     };
 
-    console.log("user details", UserDetails);
 
     try {
       const res = await updateUser(UserDetails, params?.params?.userId);
-      console.log("user response", res);
       if (res?.resData?.success) {
         router.push("/admin/users");
         toast.success("User Updated Successfully");

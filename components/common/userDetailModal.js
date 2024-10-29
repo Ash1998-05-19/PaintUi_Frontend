@@ -7,7 +7,6 @@ import { getretailerDetailById } from "@/apiFunction/userApi/userApi";
 import { ToastContainer, toast } from "react-toastify";
 
 export function UserDetailModal({modalValue, setOpenUserModal, userIdValue}) {
-  console.log("UserDetailModal useridValue", userIdValue);
   const [retailerData, setRetailerData] = useState(null);
 
   // useEffect(()=>{

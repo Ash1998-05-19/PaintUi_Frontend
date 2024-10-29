@@ -36,15 +36,12 @@ export default function AddLedger(params) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  
 
   useEffect(() => {
     getAllUsers();
   }, [page, searchData, userType]);
   const getAllUsers = async () => {
-    console.log("userType", userType);
     const limit = 100000;
     const fromDate = undefined;
     const toDate = undefined;
@@ -65,7 +62,6 @@ export default function AddLedger(params) {
     }
   };
 
-  console.log("User List data", userList);
 
   const handleUserChange = (selectedOption) => {
     setUsers(selectedOption);
@@ -74,7 +70,6 @@ export default function AddLedger(params) {
   const router = useRouter();
 
   const submitForm = async (data) => {
-    console.log("register data", data);
     const LedgerDetails = {
       EntryType: data.entryType,
       RetailerUserId: users.value,
@@ -84,9 +79,7 @@ export default function AddLedger(params) {
       TransactionDate: data.transactionDate,
       Unit: data.unit,
     };
-    console.log("LedgerDetails", LedgerDetails);
     let res = await addLedger(LedgerDetails);
-    console.log("Response data", res);
     if (res?.resData?.success) {
       router.push("/admin/ledger");
       toast.success("Ledger Added Successfully");

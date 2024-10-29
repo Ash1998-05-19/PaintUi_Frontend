@@ -8,20 +8,16 @@ import { useForm } from 'react-hook-form';
 
 export default function AddCompany() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => console.log(data);
 
   
   const router = useRouter();
 
 
   const submitForm = async (data) => {
-    console.log("register data",data);
     const CompanyDetails={
       Name : data.companyName
     }
-    console.log("companyDetails",CompanyDetails)
     let res = await addCompany(CompanyDetails)
-    console.log("Response data", res);
      if(!res?.resData?.message){
 
        router.push("/admin/companies");

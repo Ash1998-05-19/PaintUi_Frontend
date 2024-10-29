@@ -17,7 +17,6 @@ export default function UpdateCategory(params) {
         watch,
         formState: { errors },
       } = useForm();
-  const onSubmit = data => console.log(data);
   
   const router = useRouter();
 
@@ -27,7 +26,6 @@ export default function UpdateCategory(params) {
 
   useEffect(() => {
     if (categoryObj) {
-      console.log("Category object data", categoryObj)
       setValue("categoryName", categoryObj?.category?.Name);
     }
   }, [categoryObj]);
@@ -36,7 +34,6 @@ export default function UpdateCategory(params) {
     try {
       const categoryData = await getCategoryById(params?.params?.categoryId);
       setCategoryObj(categoryData?.resData);
-      console.log("category data", categoryData);
   
     } catch (error) {
       console.error("Error fetching category:", error);
@@ -45,17 +42,14 @@ export default function UpdateCategory(params) {
 
 
   const submitForm = async (data) => {
-    console.log("category payload data", data);
     const CategoryDetails = {
       Name: data?.categoryName,
      
     };
 
-    console.log("user details", CategoryDetails);
 
     try {
       const res = await updateCategory(CategoryDetails, params?.params?.categoryId);
-      console.log("category response", res);
       if (!res.resData.message) {
         router.push("/admin/categories");
         toast.success("Category Updated Successfully");
