@@ -41,10 +41,10 @@ export default function UpdateProduct(params ) {
       setValue("productName", product.Name);
       setValue("category", { value: product.CategoryId, label: product?.Category?.Name });
       setValue("company", { value: product.CompanyId, label: product?.Company?.Name });
-      setValue("weight", product.WeightInGrams);
+      setValue("weight", product.WeightOrLitre);
       setValue("height", product.HeightInCm);
       setValue("width", product.WidthInCm);
-      setValue("volume", product.VolumeInLiter);
+      // setValue("volume", product.VolumeInLiter);
       setValue("price", product.Price);
       setValue("discountPercentage", product.DiscountPercentage);
       setValue("sgstPercentage", product.SGSTPercentage);
@@ -125,10 +125,10 @@ export default function UpdateProduct(params ) {
       Name: data.productName,
       CategoryId: data.category?.value || 0,
       CompanyId: data.company?.value || 0,
-      WeightInGrams: data.weight || 0,
+      WeightOrLitre: data.weight || 0,
       HeightInCm: data.height || 0,
       WidthInCm: data.width || 0,
-      VolumeInLiter: data.volume || 0,
+      // VolumeInLiter: data.volume || 0,
       Price: data.price || 0,
       DiscountPercentage: data.discountPercentage || 0,
       SGSTPercentage: data.sgstPercentage || 0,
@@ -237,15 +237,15 @@ export default function UpdateProduct(params ) {
         
         <div className="w-full">
           <label htmlFor="weight" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Weight (in grams)
+          Weight/Volume
           </label>
           <input
-            type="number"
+            type="text"
             id="weight"
             min = "0"
             {...register('weight')}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Weight"
+             placeholder="Eg:-1kg / 1L"
           />
           {errors.weight && <span className="text-red-500">{errors.weight.message}</span>}
         </div>
@@ -280,7 +280,7 @@ export default function UpdateProduct(params ) {
           />
         </div>
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <label htmlFor="volume" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             Volume (in liters) <span className="text-red-600">*</span>
           </label>
@@ -293,7 +293,7 @@ export default function UpdateProduct(params ) {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Volume"
           />
-        </div>
+        </div> */}
 
         <div className="w-full">
           <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

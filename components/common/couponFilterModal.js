@@ -221,6 +221,29 @@ export default function CouponFilterModal({
               />
             </div>
             <div className="mb-4">
+              <label className="block text-gray-700">From Redeemed Date:</label>
+              <input
+                type="date"
+                value={payLoad?.fromRedeemDate || ""}
+                onChange={(e) =>
+                  handleDateChange("fromRedeemDate", e.target.value)
+                }
+                className="w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">To Redeemed Date:</label>
+              <input
+                type="date"
+                value={payLoad?.toRedeemDate  || ""}
+                onChange={(e) =>
+                  handleDateChange("toRedeemDate", e.target.value)
+                }
+                className="w-full"
+                disabled={!payLoad?.fromRedeemDate}
+              />
+            </div>
+            <div className="mb-4">
               <label className="block text-gray-700">Mason Coupons:</label>
               <Select
                  onChange={(option) => changeHandle('masonsCoupon', option)}

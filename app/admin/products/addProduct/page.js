@@ -65,13 +65,13 @@ export default function AddProduct() {
 
   const generateProductCode = () => {
     const productName = watch("productName");
-    const volume = watch("volume");
-    if (company && productName && volume) {
+    // const volume = watch("volume");
+    if (company && productName) {
       const companyCode = company.label.slice(0, 3).toUpperCase();
       const prodCode = productName.slice(0, 3).toUpperCase();
-      const volumeCode = (volume * 1000).toString();
+      // const volumeCode = (volume * 1000).toString();
       const randomDigits = Math.floor(1000 + Math.random() * 9000);
-      const code = `${companyCode}${prodCode}${volumeCode}-${randomDigits}`;
+      const code = `${companyCode}${prodCode}-${randomDigits}`;
       setProductCode(code);
       return code;
     } else {
@@ -105,15 +105,15 @@ export default function AddProduct() {
   const submitForm = async (data) => {
     const myProdCode = generateProductCode();
 
-
+console.log("myProdCode",myProdCode)
     const ProductDetails = {
       Name: data.productName,
       CategoryId: category.value,
       CompanyId: company.value,
-      WeightInGrams: data.weight ? data.weight : undefined,
+      WeightOrLitre: data.weight ? data.weight : undefined,
       HeightInCm: data.height ? data.height : undefined,
       WidthInCm: data.width ? data.width : undefined,
-      VolumeInLiter: data.volume,
+      // VolumeInLiter: data.volume,
       Price: data.price,
       DiscountPercentage: data.discountPercentage
         ? data.discountPercentage
@@ -124,7 +124,7 @@ export default function AddProduct() {
       ProductCode: myProdCode,
       RewardPointValue:data.RewardPointValue ? data.RewardPointValue :undefined
     };
-    //console.log("productDetails",ProductDetails)
+    console.log("productDetails",ProductDetails)
     let res = await addProduct(ProductDetails);
     if (res?.resData?.success) {
       router.push("/admin/products");
@@ -262,15 +262,15 @@ export default function AddProduct() {
               htmlFor="weight"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Weight (in grams)
+              Weight/Volume
             </label>
             <input
-              type="number"
+              type="text"
               id="weight"
               min="0"
               {...register("weight")}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Weight"
+              placeholder="Eg:-1kg / 1L"
             />
             {errors.weight && (
               <span className="text-red-500">{errors.weight.message}</span>
@@ -313,7 +313,7 @@ export default function AddProduct() {
             />
           </div>
 
-          <div className="w-full">
+          {/* <div className="w-full">
             <label
               htmlFor="volume"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -329,7 +329,7 @@ export default function AddProduct() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Volume"
             />
-          </div>
+          </div> */}
 
           <div className="w-full">
             <label

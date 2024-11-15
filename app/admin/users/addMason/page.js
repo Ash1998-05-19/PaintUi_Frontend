@@ -25,8 +25,8 @@ export default function AddMasonUser() {
   const submitForm = async (data) => {
     const UserDetails = {
       FirstName: data.firstName,
-      LastName: data.lastName,
-      Email: data.email ,
+      LastName: data.lastName ? data.lastName : "" ,
+      Email: data.email ? data.email : "" ,
       // ShopName: data.shopName,
       // Address: data.address,
       Phone: data.phone,
@@ -34,6 +34,7 @@ export default function AddMasonUser() {
       Role: "Mason",
     };
     let res = await addUser(UserDetails);
+    console.log("user res",res)
     if (res?.resData?.success) {
       router.push("/admin/users");
       toast.success("User Added Succesfully");

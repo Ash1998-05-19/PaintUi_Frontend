@@ -46,12 +46,12 @@ const MasonsPage = (params) => {
                 <th scope="col" className="px-6 py-3">
                   Active
                 </th>
-                <th scope="col" className="px-6 py-3">
+                {/* <th scope="col" className="px-6 py-3">
                   Created At
-                </th>
-                <th scope="col" className="px-6 py-3">
+                </th> */}
+                {/* <th scope="col" className="px-6 py-3">
                   Scanned Coupons
-                </th>
+                </th> */}
               </tr>
             </thead>
             <tbody>
@@ -66,10 +66,10 @@ const MasonsPage = (params) => {
                   <td className="px-6 py-4">{mason.Email}</td>
                   <td className="px-6 py-4">{mason.Phone}</td>
                   <td className="px-6 py-4">{mason.IsActive ? "Yes" : "No"}</td>
-                  <td className="px-6 py-4">
+                  {/* <td className="px-6 py-4">
                     {new Date(mason.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4">
+                  </td> */}
+                  {/* <td className="px-6 py-4">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -99,7 +99,7 @@ const MasonsPage = (params) => {
                         ))}
                       </tbody>
                     </table>
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

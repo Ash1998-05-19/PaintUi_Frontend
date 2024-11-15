@@ -180,6 +180,7 @@ export default function UpdateUser(params) {
           <input
             type="tel"
             id="phone"
+            disabled
             {...register("phone", {
               required: "Phone Number is required",
               pattern: {
@@ -200,7 +201,7 @@ export default function UpdateUser(params) {
                   "First digit must be 7, 8, or 9",
               },
             })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+            className={`bg-gray-200 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Phone"
           />
           {errors.phone && <span className="text-red-600">{errors.phone.message}</span>}

@@ -186,7 +186,7 @@ export default function AddCoupon() {
               type="number"
               id="quantity"
               min = "0"
-               max = "100"
+               max = "1000"
               {...register("quantity", {
                 required: "Quantity is required",
               })}
