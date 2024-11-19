@@ -420,7 +420,7 @@ export default function User(params) {
 
                       
                         <td className="px-6 py-4">{item?.Phone}</td>
-                        <td className="px-6 py-4">{item?.Email}</td>
+                        <td className="px-6 py-4">{item?.Email || "-"}</td>
                         <td className="px-6 py-4">{item?.rewardPoints}</td>
                         {/* <td className="px-6 py-4">{item?.redeemAmount}</td> */}
 

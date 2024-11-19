@@ -5,9 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useForm } from 'react-hook-form';
 import { addCategory } from "@/apiFunction/categoryApi/categoryApi";
+import SpinnerComp from "@/components/common/spinner";
 export default function AddCategory() {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   
@@ -15,7 +17,7 @@ export default function AddCategory() {
     const CategoryDetails={
       Name : data.categoryName
     }
-    let res = await addCategory(CategoryDetails)
+    let res = await addCategory(CategoryDetails,setIsLoading)
      if(!res?.resData?.message){
        router.push("/admin/categories");
        toast.success("Category Added Succesfully");
@@ -27,6 +29,7 @@ export default function AddCategory() {
   
   return (
     <section>
+      {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Category Details
       </h1>

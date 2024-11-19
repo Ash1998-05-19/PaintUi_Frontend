@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SpinnerComp from "@/components/common/spinner";
 
 export default function UpdateCoupon(params) {
   const {
@@ -22,6 +23,7 @@ export default function UpdateCoupon(params) {
     watch,
     formState: { errors },
   } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [couponCode, setCouponCode] = useState("AUTO_GENERATED_CODE");
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -118,7 +120,7 @@ export default function UpdateCoupon(params) {
 
 
     try {
-      const res = await updateCoupon(CouponDetails, params?.params?.couponId);
+      const res = await updateCoupon(CouponDetails, params?.params?.couponId,setIsLoading);
       if (res.resData.success) {
         router.push("/admin/coupon");
         toast.success(res.resData.message);
@@ -132,6 +134,7 @@ export default function UpdateCoupon(params) {
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Coupon Details
       </h1>
@@ -158,7 +161,7 @@ export default function UpdateCoupon(params) {
               type="text"
               id="couponCode"
               {...register("couponCode")}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              className="bg-gray-200 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               disabled
             />
           </div>

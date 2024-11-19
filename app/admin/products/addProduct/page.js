@@ -9,6 +9,7 @@ import { addProduct } from "@/apiFunction/productApi/productApi";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -21,6 +22,7 @@ export default function AddProduct() {
   const [category, setCategory] = useState(null);
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -56,12 +58,7 @@ export default function AddProduct() {
     }
   };
 
-  //console.log("categoryList",categoryList);
-  //console.log("companyList",companyList);
 
-  // useEffect(() => {
-  //   generateProductCode();
-  // }, [company, watch('productName'), watch('volume')]);
 
   const generateProductCode = () => {
     const productName = watch("productName");
@@ -80,17 +77,6 @@ export default function AddProduct() {
     }
   };
 
-  // const [productName, setProductName] = useState('');
-
-  // const [weight, setWeight] = useState('');
-  // const [height, setHeight] = useState('');
-  // const [width, setWidth] = useState('');
-  // const [volume, setVolume] = useState('');
-  // const [price, setPrice] = useState('');
-  // const [discountPercentage, setDiscountPercentage] = useState('');
-  // const [sgstPercentage, setSgstPercentage] = useState('');
-  // const [cgstPercentage, setCgstPercentage] = useState('');
-  // const [igstPercentage, setIgstPercentage] = useState('');
 
   const handleCategoryChange = (selectedOption) => {
     setCategory(selectedOption);
@@ -105,7 +91,7 @@ export default function AddProduct() {
   const submitForm = async (data) => {
     const myProdCode = generateProductCode();
 
-console.log("myProdCode",myProdCode)
+// console.log("myProdCode",myProdCode)
     const ProductDetails = {
       Name: data.productName,
       CategoryId: category.value,
@@ -124,8 +110,8 @@ console.log("myProdCode",myProdCode)
       ProductCode: myProdCode,
       RewardPointValue:data.RewardPointValue ? data.RewardPointValue :undefined
     };
-    console.log("productDetails",ProductDetails)
-    let res = await addProduct(ProductDetails);
+    // console.log("productDetails",ProductDetails)
+    let res = await addProduct(ProductDetails,setIsLoading);
     if (res?.resData?.success) {
       router.push("/admin/products");
       toast.success("Product Added Successfully");
@@ -137,6 +123,7 @@ console.log("myProdCode",myProdCode)
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Product Details
       </h1>

@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { getUserById } from "@/apiFunction/userApi/userApi";
 import { updateUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -21,7 +22,8 @@ export default function UpdateMasonUser(params) {
         watch,
         formState: { errors },
       } = useForm();
-  
+      const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function UpdateMasonUser(params) {
 
 
     try {
-      const res = await updateUser(UserDetails, params?.params?.userId);
+      const res = await updateUser(UserDetails, params?.params?.userId,setIsLoading);
       if (res?.resData?.success) {
         router.push("/admin/users");
         toast.success("User Updated Successfully");
@@ -84,6 +86,7 @@ export default function UpdateMasonUser(params) {
   
   return (
     <section>
+             {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Mason User Details
       </h1>

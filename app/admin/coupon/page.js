@@ -437,7 +437,7 @@ export default function Coupon(params) {
                 listData?.coupons?.map((item, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4">{item?.CouponCode}</td>
-                    <td className="px-6 py-4">{item?.Product?.Name}</td>
+                    <td className="px-6 py-4 capitalize">{item?.Product?.Name}</td>
                     <td className="px-6 py-4">
                       {item?.createdAt?.slice(0, 10)}
                     </td>
@@ -445,7 +445,7 @@ export default function Coupon(params) {
                       {item?.ExpiryDateTime?.slice(0, 10)}
                     </td>
                     <td className="px-6 py-4">
-                      {item?.RedeemDateTime?.slice(0, 10)}
+                      {item?.RedeemDateTime?.slice(0, 10)|| "-"}
                     </td>
                     <td className="px-6 py-4">{item?.Amount}</td>
                     <td className="px-6 py-4">

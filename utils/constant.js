@@ -8,3 +8,4 @@ export const apiActions = {
     SET_ERROR: "set-error",
   };
 export const UI_URL = 'http://localhost:3000'
+// export const UI_URL = 'http://admin.srgenterprises.in'

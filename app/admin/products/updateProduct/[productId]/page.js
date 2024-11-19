@@ -10,6 +10,7 @@ import { updateProduct } from "@/apiFunction/productApi/productApi";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Select from 'react-select';
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -24,6 +25,7 @@ export default function UpdateProduct(params ) {
   const [categoryList, setCategoryList] = useState([]);
   const [companyList, setCompanyList] = useState([]);
   const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { register, handleSubmit, setValue, getValues, watch,  formState: { errors } } = useForm();
 
@@ -91,21 +93,6 @@ export default function UpdateProduct(params ) {
   };
 
 
-  
-
-  const [productName, setProductName] = useState('');
-  const [category, setCategory] = useState(null);
-  const [company, setCompany] = useState(null);
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [width, setWidth] = useState('');
-  const [volume, setVolume] = useState('');
-  const [price, setPrice] = useState('');
-  const [discountPercentage, setDiscountPercentage] = useState('');
-  const [sgstPercentage, setSgstPercentage] = useState('');
-  const [cgstPercentage, setCgstPercentage] = useState('');
-  const [igstPercentage, setIgstPercentage] = useState('');
-
   const handleCategoryChange = (selectedOption) => {
     
     setValue("category", selectedOption);
@@ -125,7 +112,7 @@ export default function UpdateProduct(params ) {
       Name: data.productName,
       CategoryId: data.category?.value || 0,
       CompanyId: data.company?.value || 0,
-      WeightOrLitre: data.weight || 0,
+      WeightOrLitre: data.weight || "",
       HeightInCm: data.height || 0,
       WidthInCm: data.width || 0,
       // VolumeInLiter: data.volume || 0,
@@ -139,7 +126,7 @@ export default function UpdateProduct(params ) {
     };
 
     try {
-      const res = await updateProduct(ProductDetails, params?.params?.productId);
+      const res = await updateProduct(ProductDetails, params?.params?.productId,setIsLoading);
       if (res?.resData?.success) {
         router.push("/admin/products");
         toast.success("Product Updated Successfully");
@@ -154,6 +141,7 @@ export default function UpdateProduct(params ) {
   
   return (
     <section>
+      {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Product Details
       </h1>
