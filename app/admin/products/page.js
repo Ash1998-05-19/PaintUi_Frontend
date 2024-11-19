@@ -62,6 +62,7 @@ export default function Product(params) {
       return false;
     } else {
       toast.error(products?.message);
+      setIsLoading(false);
       return false;
     }
   };

@@ -25,7 +25,7 @@ export const addProduct = async (payload,setLoading=()=>{}) => {
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.error};
+      return {errMessage:resData.message};
     }
   } catch (error) {
     setLoading(false);
@@ -190,7 +190,7 @@ export const updateProduct = async (payload,id,setLoading=()=>{}) => {
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.error};
+      return {errMessage:resData.message};
     }
   } catch (error) {
     setLoading(false);

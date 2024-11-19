@@ -24,7 +24,7 @@ export const addUser = async (payload,setLoading=()=>{}) => {
     } else {
       //toast.error(resData.message);
       setLoading(false);
-      return {errMessage:resData.error};
+      return {errMessage:resData.message};
     }
   } catch (error) {
     setLoading(false);
@@ -118,11 +118,11 @@ export const getUserById = async (id,setLoading=()=>{}) => {
   }
 };
 
-export const getretailerDetailById = async (id,setLoading=()=>{}) => {
+export const getretailerDetailById = async (id,page,searchData,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
   try {
-    const res = await fetch(`${API_BASE_URL}/user/getRetailerDetailById/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/user/getRetailerDetailById/${id}?${page?`page=${page}`:``}${`&limit=${PAGE_LIMIT}`}${searchData?`&search=${searchData}`:``}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

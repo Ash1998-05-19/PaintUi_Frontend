@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { getUserById } from "@/apiFunction/userApi/userApi";
 import { updateUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -21,7 +22,8 @@ export default function UpdateUser(params) {
         watch,
         formState: { errors },
       } = useForm();
-  
+      const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function UpdateUser(params) {
 
 
     try {
-      const res = await updateUser(UserDetails, params?.params?.userId);
+      const res = await updateUser(UserDetails, params?.params?.userId,setIsLoading);
       if (res?.resData?.success) {
         router.push("/admin/users");
         toast.success("User Updated Successfully");
@@ -84,6 +86,7 @@ export default function UpdateUser(params) {
   
   return (
     <section>
+       {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Retailer User Details
       </h1>
@@ -180,6 +183,7 @@ export default function UpdateUser(params) {
           <input
             type="tel"
             id="phone"
+            disabled
             {...register("phone", {
               required: "Phone Number is required",
               pattern: {
@@ -200,7 +204,7 @@ export default function UpdateUser(params) {
                   "First digit must be 7, 8, or 9",
               },
             })}
-            className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
+            className={`bg-gray-200 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${errors.phone ? 'border-red-500' : 'border-gray-300'}`}
             placeholder="Phone"
           />
           {errors.phone && <span className="text-red-600">{errors.phone.message}</span>}

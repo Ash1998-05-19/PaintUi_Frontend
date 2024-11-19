@@ -5,9 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import { addCompany } from "@/apiFunction/companyApi/companyApi";
 import { useRouter } from "next/navigation";
 import { useForm } from 'react-hook-form';
+import SpinnerComp from "@/components/common/spinner";
 
 export default function AddCompany() {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   
   const router = useRouter();
@@ -17,7 +19,7 @@ export default function AddCompany() {
     const CompanyDetails={
       Name : data.companyName
     }
-    let res = await addCompany(CompanyDetails)
+    let res = await addCompany(CompanyDetails,setIsLoading)
      if(!res?.resData?.message){
 
        router.push("/admin/companies");
@@ -30,6 +32,7 @@ export default function AddCompany() {
     
   return (
     <section>
+      {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Company Details
       </h1>

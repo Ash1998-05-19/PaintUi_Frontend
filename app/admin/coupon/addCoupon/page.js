@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SpinnerComp from "@/components/common/spinner";
 
 export default function AddCoupon() {
   const {
@@ -18,7 +19,8 @@ export default function AddCoupon() {
     formState: { errors },
   } = useForm();
 
- 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [couponCode, setCouponCode] = useState("AUTO_GENERATED_CODE");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [expiryDateTime, setExpiryDateTime] = useState(null);
@@ -76,7 +78,7 @@ export default function AddCoupon() {
       ExpiryDateTime: data.expiryDateTime,
       Amount: parseInt(data.amount),
     };
-    let res = await addCoupon(CouponDetails, data.quantity);
+    let res = await addCoupon(CouponDetails, data.quantity,setIsLoading);
     if (!res?.message) {
       router.push("/admin/coupon");
       toast.success("Coupon Added Succefully");
@@ -88,6 +90,7 @@ export default function AddCoupon() {
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Coupon Details
       </h1>
@@ -186,7 +189,7 @@ export default function AddCoupon() {
               type="number"
               id="quantity"
               min = "0"
-               max = "100"
+               max = "5000"
               {...register("quantity", {
                 required: "Quantity is required",
               })}

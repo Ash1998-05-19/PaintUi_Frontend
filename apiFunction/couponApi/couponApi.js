@@ -60,6 +60,8 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         toDate : payLoadData?.toDate,
         fromExpiryDate : payLoadData?.fromExpiryDate,
         toExpiryDate : payLoadData?.toExpiryDate,
+        fromRedeemDate  : payLoadData?.fromRedeemDate ,
+        toRedeemDate  : payLoadData?.toRedeemDate ,
         masonsCoupon : payLoadData?.masonsCoupon?.map(mas => mas.value),
         retailersCoupon : payLoadData?.retailersCoupon?.map(ret => ret.value ? ret.value : ret),
         sortOrder : payLoadData.sortOrder,

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { addUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -17,6 +18,7 @@ export default function AddMasonUser() {
   } = useForm();
 
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEnabledChange = (e) => {
     setIsEnabled(e.target.value === "true");
@@ -25,15 +27,16 @@ export default function AddMasonUser() {
   const submitForm = async (data) => {
     const UserDetails = {
       FirstName: data.firstName,
-      LastName: data.lastName,
-      Email: data.email ,
+      LastName: data.lastName ? data.lastName : "" ,
+      Email: data.email ? data.email : "" ,
       // ShopName: data.shopName,
       // Address: data.address,
       Phone: data.phone,
       // Password: data.password,
       Role: "Mason",
     };
-    let res = await addUser(UserDetails);
+    let res = await addUser(UserDetails,setIsLoading);
+    console.log("user res",res)
     if (res?.resData?.success) {
       router.push("/admin/users");
       toast.success("User Added Succesfully");
@@ -45,6 +48,7 @@ export default function AddMasonUser() {
 
   return (
     <section>
+             {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Mason User Details
       </h1>

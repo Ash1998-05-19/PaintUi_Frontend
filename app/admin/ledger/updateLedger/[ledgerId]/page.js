@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -24,6 +25,7 @@ export default function UpdateLedger(params) {
     watch,
     formState: { errors },
   } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -61,15 +63,15 @@ export default function UpdateLedger(params) {
     const LedgerDetails = {
       EntryType: data?.entryType,
       Amount: data?.amount,
-      Note: data?.note,
-      PersonalNote: data.personalNote,
-      TransactionDate: data.transactionDate,
-      Unit: data.unit,
+      Note: data.note ? data.note:"",
+      PersonalNote: data.personalNote? data.personalNote:"",
+      TransactionDate: data.transactionDate ? data.transactionDate : new Date(),
+      Unit: data.unit ? data.unit : 0 ,
     };
 
 
     try {
-      const res = await updateLedger(LedgerDetails, params?.params?.ledgerId);
+      const res = await updateLedger(LedgerDetails, params?.params?.ledgerId,setIsLoading);
       if (res?.resData?.success) {
         router.push("/admin/ledger");
         toast.success("Ledger Updated Successfully");
@@ -83,6 +85,7 @@ export default function UpdateLedger(params) {
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Ledger Details
       </h1>

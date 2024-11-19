@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import { addUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -15,6 +16,7 @@ export default function AddUser() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -23,6 +25,7 @@ export default function AddUser() {
   };
 
   const submitForm = async (data) => {
+    setIsLoading(true)
     const UserDetails = {
       FirstName: data.firstName,
       LastName: data.lastName,
@@ -37,14 +40,17 @@ export default function AddUser() {
     if (res?.resData?.success) {
       router.push("/admin/users");
       toast.success("User Added Succesfully");
+      setIsLoading(false)
     } else {
       toast.error(res?.errMessage);
+      setIsLoading(false)
       return false;
     }
   };
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Retailer User Details
       </h1>
