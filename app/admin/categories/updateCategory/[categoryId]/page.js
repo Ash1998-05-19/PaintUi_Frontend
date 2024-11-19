@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from 'react-hook-form';
 import { getCategoryById } from "@/apiFunction/categoryApi/categoryApi";
 import { updateCategory } from "@/apiFunction/categoryApi/categoryApi";
+import SpinnerComp from "@/components/common/spinner";
 
 export default function UpdateCategory(params) {
     const [categoryObj, setCategoryObj] = useState(null);
@@ -17,7 +18,7 @@ export default function UpdateCategory(params) {
         watch,
         formState: { errors },
       } = useForm();
-  
+      const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function UpdateCategory(params) {
 
 
     try {
-      const res = await updateCategory(CategoryDetails, params?.params?.categoryId);
+      const res = await updateCategory(CategoryDetails, params?.params?.categoryId,setIsLoading);
       if (!res.resData.message) {
         router.push("/admin/categories");
         toast.success("Category Updated Successfully");
@@ -63,6 +64,7 @@ export default function UpdateCategory(params) {
   
   return (
     <section>
+      {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Category Details
       </h1>

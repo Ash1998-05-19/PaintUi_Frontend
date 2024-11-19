@@ -383,9 +383,9 @@ export default function User(params) {
                   <th scope="col" className="px-6 py-3">
                     Reward Points
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  {/* <th scope="col" className="px-6 py-3">
                     Redeemed Amounts
-                  </th>
+                  </th> */}
                   <th scope="col" className="px-6 py-3">
                     Action
                   </th>
@@ -420,9 +420,9 @@ export default function User(params) {
 
                       
                         <td className="px-6 py-4">{item?.Phone}</td>
-                        <td className="px-6 py-4">{item?.Email}</td>
+                        <td className="px-6 py-4">{item?.Email || "-"}</td>
                         <td className="px-6 py-4">{item?.rewardPoints}</td>
-                        <td className="px-6 py-4">{item?.redeemAmount}</td>
+                        {/* <td className="px-6 py-4">{item?.redeemAmount}</td> */}
 
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-2">

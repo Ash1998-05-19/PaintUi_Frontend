@@ -12,6 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -27,6 +28,7 @@ export default function AddLedger(params) {
   );
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -74,12 +76,12 @@ export default function AddLedger(params) {
       EntryType: data.entryType,
       RetailerUserId: users.value,
       Amount: data.amount,
-      Note: data.note,
-      PersonalNote: data.personalNote,
-      TransactionDate: data.transactionDate,
-      Unit: data.unit,
+      Note: data.note ? data.note:"",
+      PersonalNote: data.personalNote? data.personalNote:"",
+      TransactionDate: data.transactionDate ? data.transactionDate : new Date(),
+      Unit: data.unit ? data.unit : 0 ,
     };
-    let res = await addLedger(LedgerDetails);
+    let res = await addLedger(LedgerDetails,setIsLoading);
     if (res?.resData?.success) {
       router.push("/admin/ledger");
       toast.success("Ledger Added Successfully");
@@ -91,6 +93,7 @@ export default function AddLedger(params) {
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Ledger Details
       </h1>

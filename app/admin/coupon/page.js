@@ -211,14 +211,11 @@ export default function Coupon(params) {
     setDeleteId(id);
     setIsPopupOpen(true);
   };
-
-  const toggleChange = async (id, isActive) => {
-    //console.log("toggle change id", id);
-    const payload = {
-      IsActive: !isActive,
-    };
+  const updateCouponDetails = async (id, payload) => {
+      // console.log("id", id);
+        // console.log("payload", payload);
     let coupons = await updateCoupon(payload, id);
-    //console.log("toggleCoupon", coupons);
+    // console.log("responseCoupon", coupons);
     if (!coupons?.message) {
       toast.success(coupons?.resData?.message);
       setIsRefresh((prev) => prev + 1);
@@ -227,6 +224,14 @@ export default function Coupon(params) {
       toast.error(coupons?.message);
       return false;
     }
+  };
+  const toggleChange = async (id, isActive) => {
+    //console.log("toggle change id", id);
+    // console.log("toggleChange run")
+    const payload = {
+      IsActive: !isActive,
+    };
+    updateCouponDetails(id,payload)
   };
 
   const generatePDF = async () => {
@@ -271,7 +276,17 @@ export default function Coupon(params) {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
+  const handleCheckboxChange =  (selectedId)  => async (event) => {
+    // console.log("handleCheckboxChange run")
+    setIsLoading(true)
+    const newValue = event.target.checked;
+    const payload={
+      Paid: newValue
+      };
+      const id=selectedId;
+      updateCouponDetails(id,payload)
+     
+  };
   return (
     <section>
       {isLoading && <SpinnerComp />}
@@ -389,6 +404,9 @@ export default function Coupon(params) {
                   Expiry Date
                 </th>
                 <th scope="col" className="px-6 py-3">
+                  Redeemed Date
+                </th>
+                <th scope="col" className="px-6 py-3">
                   Amount
                 </th>
                 <th scope="col" className="px-6 py-3">
@@ -403,9 +421,12 @@ export default function Coupon(params) {
                 <th scope="col" className="px-6 py-3">
                   Redeemed By User
                 </th>
-                <th scope="col" className="px-6 py-3">
+                {/* <th scope="col" className="px-6 py-3">
                   Redeemed To User
-                </th>
+                </th> */}
+                <th scope="col" className="px-6 py-3">
+                Paid
+              </th>
                 <th scope="col" className="px-6 py-3">
                   Action
                 </th>
@@ -416,12 +437,15 @@ export default function Coupon(params) {
                 listData?.coupons?.map((item, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4">{item?.CouponCode}</td>
-                    <td className="px-6 py-4">{item?.Product?.Name}</td>
+                    <td className="px-6 py-4 capitalize">{item?.Product?.Name}</td>
                     <td className="px-6 py-4">
                       {item?.createdAt?.slice(0, 10)}
                     </td>
                     <td className="px-6 py-4">
                       {item?.ExpiryDateTime?.slice(0, 10)}
+                    </td>
+                    <td className="px-6 py-4">
+                      {item?.RedeemDateTime?.slice(0, 10)|| "-"}
                     </td>
                     <td className="px-6 py-4">{item?.Amount}</td>
                     <td className="px-6 py-4">
@@ -436,9 +460,23 @@ export default function Coupon(params) {
                     <td className="px-6 py-4">
                       {item?.RedeemByUser?.FirstName || "-"}
                     </td>
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       {item?.RedeemToUser?.FirstName || "-"}
-                    </td>
+                    </td> */}
+                     <td className="px-6 py-4">
+                     {item?.RedeemByUser ?  <div
+                 className="flex items-center justify-center"
+                  >
+                    <input
+                  type="checkbox"
+                  checked={item.Paid}
+                  onChange={handleCheckboxChange(item.CouponId)}
+                  className="w-5 h-5 text-blue-600 bg-gray-300 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none"
+                />
+
+                  </div> : "-"}
+                 
+                </td>
 
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">

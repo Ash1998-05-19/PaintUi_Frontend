@@ -6,6 +6,7 @@ import { updateCompany } from "@/apiFunction/companyApi/companyApi";
 import { getCompanyById } from "@/apiFunction/companyApi/companyApi";
 import { useRouter } from "next/navigation";
 import { useForm } from 'react-hook-form';
+import SpinnerComp from "@/components/common/spinner";
 
 export default function UpdateCompany(params) {
     const [companyObj, setCompanyObj] = useState(null);
@@ -17,7 +18,8 @@ export default function UpdateCompany(params) {
         watch,
         formState: { errors },
       } = useForm();
-  
+      const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -49,7 +51,7 @@ export default function UpdateCompany(params) {
 
 
     try {
-      const res = await updateCompany(CompanyDetails, params?.params?.companyId);
+      const res = await updateCompany(CompanyDetails, params?.params?.companyId,setIsLoading);
       if (!res.resData.message) {
         router.push("/admin/companies");
         toast.success("Company Updated Successfully");
@@ -64,6 +66,7 @@ export default function UpdateCompany(params) {
     
   return (
     <section>
+      {isLoading && <SpinnerComp />}
        <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Update Your Company Details
       </h1>

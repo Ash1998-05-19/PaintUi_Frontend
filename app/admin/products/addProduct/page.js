@@ -9,6 +9,7 @@ import { addProduct } from "@/apiFunction/productApi/productApi";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
+import SpinnerComp from "@/components/common/spinner";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -21,6 +22,7 @@ export default function AddProduct() {
   const [category, setCategory] = useState(null);
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -56,22 +58,17 @@ export default function AddProduct() {
     }
   };
 
-  //console.log("categoryList",categoryList);
-  //console.log("companyList",companyList);
 
-  // useEffect(() => {
-  //   generateProductCode();
-  // }, [company, watch('productName'), watch('volume')]);
 
   const generateProductCode = () => {
     const productName = watch("productName");
-    const volume = watch("volume");
-    if (company && productName && volume) {
+    // const volume = watch("volume");
+    if (company && productName) {
       const companyCode = company.label.slice(0, 3).toUpperCase();
       const prodCode = productName.slice(0, 3).toUpperCase();
-      const volumeCode = (volume * 1000).toString();
+      // const volumeCode = (volume * 1000).toString();
       const randomDigits = Math.floor(1000 + Math.random() * 9000);
-      const code = `${companyCode}${prodCode}${volumeCode}-${randomDigits}`;
+      const code = `${companyCode}${prodCode}-${randomDigits}`;
       setProductCode(code);
       return code;
     } else {
@@ -80,17 +77,6 @@ export default function AddProduct() {
     }
   };
 
-  // const [productName, setProductName] = useState('');
-
-  // const [weight, setWeight] = useState('');
-  // const [height, setHeight] = useState('');
-  // const [width, setWidth] = useState('');
-  // const [volume, setVolume] = useState('');
-  // const [price, setPrice] = useState('');
-  // const [discountPercentage, setDiscountPercentage] = useState('');
-  // const [sgstPercentage, setSgstPercentage] = useState('');
-  // const [cgstPercentage, setCgstPercentage] = useState('');
-  // const [igstPercentage, setIgstPercentage] = useState('');
 
   const handleCategoryChange = (selectedOption) => {
     setCategory(selectedOption);
@@ -105,15 +91,15 @@ export default function AddProduct() {
   const submitForm = async (data) => {
     const myProdCode = generateProductCode();
 
-
+// console.log("myProdCode",myProdCode)
     const ProductDetails = {
       Name: data.productName,
       CategoryId: category.value,
       CompanyId: company.value,
-      WeightInGrams: data.weight ? data.weight : undefined,
+      WeightOrLitre: data.weight ? data.weight : undefined,
       HeightInCm: data.height ? data.height : undefined,
       WidthInCm: data.width ? data.width : undefined,
-      VolumeInLiter: data.volume,
+      // VolumeInLiter: data.volume,
       Price: data.price,
       DiscountPercentage: data.discountPercentage
         ? data.discountPercentage
@@ -124,8 +110,8 @@ export default function AddProduct() {
       ProductCode: myProdCode,
       RewardPointValue:data.RewardPointValue ? data.RewardPointValue :undefined
     };
-    //console.log("productDetails",ProductDetails)
-    let res = await addProduct(ProductDetails);
+    // console.log("productDetails",ProductDetails)
+    let res = await addProduct(ProductDetails,setIsLoading);
     if (res?.resData?.success) {
       router.push("/admin/products");
       toast.success("Product Added Successfully");
@@ -137,6 +123,7 @@ export default function AddProduct() {
 
   return (
     <section>
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Product Details
       </h1>
@@ -262,15 +249,15 @@ export default function AddProduct() {
               htmlFor="weight"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Weight (in grams)
+              Weight/Volume
             </label>
             <input
-              type="number"
+              type="text"
               id="weight"
               min="0"
               {...register("weight")}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Weight"
+              placeholder="Eg:-1kg / 1L"
             />
             {errors.weight && (
               <span className="text-red-500">{errors.weight.message}</span>
@@ -313,7 +300,7 @@ export default function AddProduct() {
             />
           </div>
 
-          <div className="w-full">
+          {/* <div className="w-full">
             <label
               htmlFor="volume"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -329,7 +316,7 @@ export default function AddProduct() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Volume"
             />
-          </div>
+          </div> */}
 
           <div className="w-full">
             <label
