@@ -6,7 +6,10 @@ import Link from "next/link";
 //import Popup from "@/components/common/popup";
 import { useEffect, useRef, useState } from "react";
 import Switch from "react-switch";
-import { getCoupon } from "@/apiFunction/couponApi/couponApi";
+import {
+  getCoupon,
+  updateCouponPaidStatus,
+} from "@/apiFunction/couponApi/couponApi";
 import { deleteCoupon } from "@/apiFunction/couponApi/couponApi";
 import { updateCoupon } from "@/apiFunction/couponApi/couponApi";
 import { getCategory } from "@/apiFunction/categoryApi/categoryApi";
@@ -39,8 +42,8 @@ export default function Coupon(params) {
       ? params?.searchParams?.productCode
       : "",
     productName: "",
-    reedemed: params?.searchParams?.Redeemed?true:false, 
-    flag : params?.searchParams?.flag?true:false,
+    reedemed: params?.searchParams?.Redeemed ? true : false,
+    flag: params?.searchParams?.flag ? true : false,
     unReedemed: false,
     fromDate: "",
     toDate: "",
@@ -105,6 +108,10 @@ export default function Coupon(params) {
 
   //console.log("Outside get all coupon payload data", payLoad)
 
+  const [coupons, setCoupons] = useState([]);
+  const [selectedCoupons, setSelectedCoupons] = useState([]);
+  const [masterCheckbox, setMasterCheckbox] = useState(false);
+
   const getAllCoupons = async (payLoadData) => {
     // console.log("Inside get all coupon payload data", payLoadData)
     setIsLoading(true);
@@ -112,6 +119,7 @@ export default function Coupon(params) {
     // console.log ("coupons data", coupons)
     if (!coupons?.resData?.message) {
       setListData(coupons?.resData);
+      setCoupons(coupons?.resData?.coupons);
       //   const codes = coupons.resData.coupons.map(coupon => coupon.CouponCode);
       // setCouponCodes(codes);
       setIsLoading(false);
@@ -122,6 +130,47 @@ export default function Coupon(params) {
       return false;
     }
   };
+
+  // Update the Paid status for selected coupons
+  const handleUpdateStatus = async () => {
+    setIsLoading(true);
+    const data = {
+      couponIds: selectedCoupons,
+      Paid: true,
+    };
+
+    const response = await updateCouponPaidStatus(data);
+
+    if (response?.resData.success) {
+      toast.success(response?.resData.message);
+      return false;
+    } else {
+      toast.error("Failed to update coupon statuses");
+    }
+  };
+
+  const handleMasterCheckboxChange = (e) => {
+    const isChecked = e.target.checked;
+    setMasterCheckbox(isChecked);
+    if (isChecked) {
+      setSelectedCoupons(coupons.map((coupon) => coupon.CouponId));
+    } else {
+      setSelectedCoupons([]);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedCoupons.length > 0) {
+      handleUpdateStatus();
+    }
+  }, [selectedCoupons]);
+
+  // Check if all coupons are selected
+  useEffect(() => {
+    setMasterCheckbox(
+      coupons.every((coupon) => selectedCoupons.includes(coupon.CouponId))
+    );
+  }, [selectedCoupons, coupons]);
 
   const getAllUsers = async () => {
     //const roleId = 2;
@@ -212,8 +261,8 @@ export default function Coupon(params) {
     setIsPopupOpen(true);
   };
   const updateCouponDetails = async (id, payload) => {
-      // console.log("id", id);
-        // console.log("payload", payload);
+    // console.log("id", id);
+    // console.log("payload", payload);
     let coupons = await updateCoupon(payload, id);
     // console.log("responseCoupon", coupons);
     if (!coupons?.message) {
@@ -231,7 +280,7 @@ export default function Coupon(params) {
     const payload = {
       IsActive: !isActive,
     };
-    updateCouponDetails(id,payload)
+    updateCouponDetails(id, payload);
   };
 
   const generatePDF = async () => {
@@ -239,25 +288,56 @@ export default function Coupon(params) {
     let yOffset = 20; // Initial Y offset
     const qrSize = 50; // Size of the QR code
     const pageHeight = doc.internal.pageSize.height; // Page height
-    const xOffset = (doc.internal.pageSize.width - qrSize) / 2; // Center alignment for X
+    const pageWidth = doc.internal.pageSize.width; // Page width
+    const qrX = pageWidth - qrSize - 10; // Right-aligned QR Code (10px margin from right side)
+    const leftMargin = 10; // Left margin for text content
 
     for (let i = 0; i < listData?.coupons?.length; i++) {
       const coupon = listData.coupons[i];
       const qrData = `${coupon.CouponCode}`;
 
+      // Create the QR code as an image
       const qrCanvas = document.createElement("canvas");
       await QRCode.toCanvas(qrCanvas, qrData, { width: qrSize });
 
       const qrImage = qrCanvas.toDataURL("image/jpeg", 1.0);
-      doc.addImage(qrImage, "JPEG", xOffset, yOffset, qrSize, qrSize);
-      doc.text(
-        `${coupon.CouponCode} (${coupon.Product.Name})`,
-        doc.internal.pageSize.width / 2,
-        yOffset + qrSize + 10,
-        { align: "center" }
-      );
 
-      yOffset += qrSize + 30; // Increment Y offset for next QR code
+      // Heading (on the left)
+      const heading = `${coupon.CouponCode}`;
+      // Points paragraph as a list
+      const points = [
+        `Product: ${coupon.Product.Name}`,
+        `Discount: ${coupon.Discount}`,
+        `Expiration: ${coupon.ExpirationDate}`,
+        // Add more points as needed
+      ];
+
+      const additionalDetails = `More details about this coupon...`;
+
+      // Render heading (left-aligned)
+      doc.setFontSize(16);
+      doc.text(heading, leftMargin, yOffset);
+
+      // Render points as list (left-aligned)
+      doc.setFontSize(12);
+      let listYOffset = yOffset + 10; // Adjust the starting Y for the list
+      points.forEach((point, index) => {
+        doc.text(`• ${point}`, leftMargin, listYOffset);
+        listYOffset += 10; // Add space between list items
+      });
+
+      // Render the QR code (right-aligned)
+      doc.addImage(qrImage, "JPEG", qrX, yOffset, qrSize, qrSize);
+
+      // Adjust yOffset after points list and QR
+      let afterListYOffset = listYOffset; // This keeps the yOffset below the points list
+
+      // Now render the additional details below both points and QR code
+      doc.setFontSize(10);
+      doc.text(additionalDetails, leftMargin, afterListYOffset + 10); // Additional details below points list and QR code
+
+      // Update yOffset for the next coupon (spacing between coupons)
+      yOffset = afterListYOffset + 30; // Adjust this value if necessary
 
       // Check if a new page is needed
       if (yOffset + qrSize + 20 > pageHeight) {
@@ -266,8 +346,10 @@ export default function Coupon(params) {
       }
     }
 
+    // Save the document as a PDF
     doc.save("coupons.pdf");
   };
+
   const enquiryType = (pageValue) => {
     setPageSize(pageValue);
 
@@ -276,16 +358,15 @@ export default function Coupon(params) {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const handleCheckboxChange =  (selectedId)  => async (event) => {
+  const handleCheckboxChange = (selectedId) => async (event) => {
     // console.log("handleCheckboxChange run")
-    setIsLoading(true)
+    setIsLoading(true);
     const newValue = event.target.checked;
-    const payload={
-      Paid: newValue
-      };
-      const id=selectedId;
-      updateCouponDetails(id,payload)
-     
+    const payload = {
+      Paid: newValue,
+    };
+    const id = selectedId;
+    updateCouponDetails(id, payload);
   };
   return (
     <section>
@@ -307,7 +388,6 @@ export default function Coupon(params) {
                   </button>
                 </Link>
               </div>
-              
             </>
           ) : (
             <>
@@ -315,14 +395,14 @@ export default function Coupon(params) {
             </>
           )}
           {listData?.coupons?.length != 0 && (
-                <button
-                  onClick={generatePDF}
-                  className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                  type="button"
-                >
-                  Generate QR
-                </button>
-              )}
+            <button
+              onClick={generatePDF}
+              className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              type="button"
+            >
+              Generate QR
+            </button>
+          )}
           {listData?.coupons?.length != 0 && (
             <li className="me-2 list-none relative">
               {" "}
@@ -424,9 +504,15 @@ export default function Coupon(params) {
                 {/* <th scope="col" className="px-6 py-3">
                   Redeemed To User
                 </th> */}
-                <th scope="col" className="px-6 py-3">
-                Paid
-              </th>
+                <th scope="col" className="px-6 py-3 flex">
+                  Paid
+                  <input
+                    className="w-5 h-5 text-blue-600 ml-2 bg-gray-300 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none"
+                    type="checkbox"
+                    checked={masterCheckbox}
+                    onChange={handleMasterCheckboxChange}
+                  />
+                </th>
                 <th scope="col" className="px-6 py-3">
                   Action
                 </th>
@@ -437,7 +523,9 @@ export default function Coupon(params) {
                 listData?.coupons?.map((item, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="px-6 py-4">{item?.CouponCode}</td>
-                    <td className="px-6 py-4 capitalize">{item?.Product?.Name}</td>
+                    <td className="px-6 py-4 capitalize">
+                      {item?.Product?.Name}
+                    </td>
                     <td className="px-6 py-4">
                       {item?.createdAt?.slice(0, 10)}
                     </td>
@@ -445,7 +533,7 @@ export default function Coupon(params) {
                       {item?.ExpiryDateTime?.slice(0, 10)}
                     </td>
                     <td className="px-6 py-4">
-                      {item?.RedeemDateTime?.slice(0, 10)|| "-"}
+                      {item?.RedeemDateTime?.slice(0, 10) || "-"}
                     </td>
                     <td className="px-6 py-4">{item?.Amount}</td>
                     <td className="px-6 py-4">
@@ -463,20 +551,20 @@ export default function Coupon(params) {
                     {/* <td className="px-6 py-4">
                       {item?.RedeemToUser?.FirstName || "-"}
                     </td> */}
-                     <td className="px-6 py-4">
-                     {item?.RedeemByUser ?  <div
-                 className="flex items-center justify-center"
-                  >
-                    <input
-                  type="checkbox"
-                  checked={item.Paid}
-                  onChange={handleCheckboxChange(item.CouponId)}
-                  className="w-5 h-5 text-blue-600 bg-gray-300 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none"
-                />
-
-                  </div> : "-"}
-                 
-                </td>
+                    <td className="px-6 py-4">
+                      {item?.RedeemByUser ? (
+                        <div className="flex items-center justify-center">
+                          <input
+                            type="checkbox"
+                            checked={item.Paid}
+                            onChange={handleCheckboxChange(item.CouponId)}
+                            className="w-5 h-5 text-blue-600 bg-gray-300 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 focus:outline-none"
+                          />
+                        </div>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
 
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-2">
@@ -542,24 +630,22 @@ export default function Coupon(params) {
             </tbody>
           </table>
           {listData?.coupons?.length === 0 && (
-          <h1 className="text-center text-3xl font-bold text-gray-500 mt-16">
-            No data found
-          </h1>
-        )}
+            <h1 className="text-center text-3xl font-bold text-gray-500 mt-16">
+              No data found
+            </h1>
+          )}
         </div>
-
-        
       </div>
       {listData?.coupons?.length > 0 && (
-          <div className="mt-4">
+        <div className="mt-4">
           <ListPagination
             data={listData}
             pageNo={handlePageChange}
             pageVal={page}
           />
         </div>
-        )}
-      
+      )}
+
       <DeleteModal
         isOpen={isPopupOpen}
         title="Are you sure you want to delete this Coupon ?"

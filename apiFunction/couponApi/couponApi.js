@@ -140,6 +140,34 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
     }
   };
 
+  export const updateCouponPaidStatus = async (payload,setLoading=()=>{}) => {
+    const token = Cookies.get("token");
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/coupon/updateCouponPaidStatus`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      const resData = await res.json();
+  
+      if (resData) {
+        setLoading(false);
+        return {resData};
+      } else {
+        //toast.error(resData.message);
+        setLoading(false);
+        return {errMessage:resData.message};
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("someting went wrong");
+    }
+  };
+
   export const getCouponById = async (id,setLoading=()=>{}) => {
     const token = Cookies.get("token");
     setLoading(true);
