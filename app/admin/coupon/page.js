@@ -143,9 +143,14 @@ export default function Coupon(params) {
 
     if (response?.resData.success) {
       toast.success(response?.resData.message);
+      setIsLoading(false);
+      setIsRefresh((prev) => prev + 1);
       return false;
     } else {
       toast.error("Failed to update coupon statuses");
+      setIsLoading(false);
+      setIsRefresh((prev) => prev + 1);
+      return false;
     }
   };
 
