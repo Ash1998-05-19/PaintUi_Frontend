@@ -40,3 +40,18 @@
     text-wrap: balance;
   }
 }
+
+
+@font-face {
+  font-family: 'NotoSansDevanagari';
+  src: url('/fonts/NotoSansDevanagari-Regular.ttf') format('truetype');
+}
+
+#rep1 {
+  font-family: 'NotoSansDevanagari', 'Devanagari MT', 'Mangal', sans-serif;
+  font-size: 12pt; 
+  width: 600px;
+  margin: 0 auto;
+  text-align: justify;
+  
+}
