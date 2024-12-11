@@ -6,6 +6,8 @@ import Link from "next/link";
 //import Popup from "@/components/common/popup";
 import { useEffect, useRef, useState } from "react";
 import Switch from "react-switch";
+import html2canvas from "html2canvas"; // Import html2canvas for rendering HTML to canvas
+import style from "./pdf.module.css";
 import {
   getCoupon,
   updateCouponPaidStatus,
@@ -27,8 +29,6 @@ import SpinnerComp from "@/components/common/spinner";
 import SearchInput from "@/components/common/searchDebounceInput";
 //import Cookies from "js-cookie";
 import "flowbite/dist/flowbite.min.css";
-import HtmlToPdfComponent from "@/components/common/PdfConvert";
-import html2pdf from "html2pdf.js";
 import GeneratePDF from "@/components/common/PdfConvert";
 export default function Coupon(params) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -136,12 +136,12 @@ export default function Coupon(params) {
     coupons.length > 0 &&
     coupons.some((coupon) => coupon.Paid == true);
 
-  const [isChecked, setIsChecked] = useState(hasPaidCoupons ? false : true); 
+  const [isChecked, setIsChecked] = useState(hasPaidCoupons ? false : true);
 
   const handleMasterCheckboxChange = (e) => {
     const isCheckedIn = e.target.checked;
-    setIsChecked(isCheckedIn)
-    console.log(isChecked)
+    setIsChecked(isCheckedIn);
+    console.log(isChecked);
     setMasterCheckbox(isChecked);
 
     if (isChecked) {
@@ -310,73 +310,6 @@ export default function Coupon(params) {
     updateCouponDetails(id, payload);
   };
 
-  const generatePDF = async () => {
-    const doc = new jsPDF();
-    let yOffset = 20; // Initial Y offset
-    const qrSize = 50; // Size of the QR code
-    const pageHeight = doc.internal.pageSize.height; // Page height
-    const pageWidth = doc.internal.pageSize.width; // Page width
-    const qrX = pageWidth - qrSize - 10; // Right-aligned QR Code (10px margin from right side)
-    const leftMargin = 10; // Left margin for text content
-
-    for (let i = 0; i < listData?.coupons?.length; i++) {
-      const coupon = listData.coupons[i];
-      const qrData = `${coupon.CouponCode}`;
-
-      // Create the QR code as an image
-      const qrCanvas = document.createElement("canvas");
-      await QRCode.toCanvas(qrCanvas, qrData, { width: qrSize });
-
-      const qrImage = qrCanvas.toDataURL("image/jpeg", 1.0);
-
-      // Heading (on the left)
-      const heading = `${coupon.CouponCode}`;
-      // Points paragraph as a list
-      const points = [
-        `Product: ${coupon.Product.Name}`,
-        `Discount: ${coupon.Discount}`,
-        `Expiration: ${coupon.ExpirationDate}`,
-        // Add more points as needed
-      ];
-
-      const additionalDetails = `More details about this coupon...`;
-
-      // Render heading (left-aligned)
-      doc.setFontSize(16);
-      doc.text(heading, leftMargin, yOffset);
-
-      // Render points as list (left-aligned)
-      doc.setFontSize(12);
-      let listYOffset = yOffset + 10; // Adjust the starting Y for the list
-      points.forEach((point, index) => {
-        doc.text(`• ${point}`, leftMargin, listYOffset);
-        listYOffset += 10; // Add space between list items
-      });
-
-      // Render the QR code (right-aligned)
-      doc.addImage(qrImage, "JPEG", qrX, yOffset, qrSize, qrSize);
-
-      // Adjust yOffset after points list and QR
-      let afterListYOffset = listYOffset; // This keeps the yOffset below the points list
-
-      // Now render the additional details below both points and QR code
-      doc.setFontSize(10);
-      doc.text(additionalDetails, leftMargin, afterListYOffset + 10); // Additional details below points list and QR code
-
-      // Update yOffset for the next coupon (spacing between coupons)
-      yOffset = afterListYOffset + 30; // Adjust this value if necessary
-
-      // Check if a new page is needed
-      if (yOffset + qrSize + 20 > pageHeight) {
-        doc.addPage();
-        yOffset = 20; // Reset Y offset for new page
-      }
-    }
-
-    // Save the document as a PDF
-    doc.save("coupons.pdf");
-  };
-
   const enquiryType = (pageValue) => {
     setPageSize(pageValue);
 
@@ -405,6 +338,109 @@ export default function Coupon(params) {
     coupons &&
     coupons.length > 0 &&
     coupons.some((coupon) => coupon.RedeemDateTime);
+
+  const contentRef = useRef();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [qrCodes, setQrCodes] = useState([]); // Store generated QR codes
+
+  // Generate QR codes for each coupon
+  useEffect(() => {
+    const generateQrCodes = async () => {
+      const generatedQrCodes = await Promise.all(
+        listData.coupons.map(async (coupon) => {
+          try {
+            const qrCode = await QRCode.toDataURL(coupon.CouponCode);
+            return qrCode;
+          } catch (error) {
+            console.error(
+              "Error generating QR Code for coupon:",
+              coupon.CouponCode,
+              error
+            );
+            return ""; // Return empty string if error occurs
+          }
+        })
+      );
+      setQrCodes(generatedQrCodes);
+    };
+
+    if (listData && listData.coupons) {
+      generateQrCodes();
+    }
+  }, [listData]);
+
+  // Check if all QR codes are loaded
+  useEffect(() => {
+    if (
+      qrCodes.length === listData?.coupons?.length &&
+      qrCodes.every((qr) => qr)
+    ) {
+      setIsImageLoaded(true); // Enable the button when all QR codes are loaded
+    }
+  }, [qrCodes, listData.coupons]);
+
+  // Handle PDF generation for two coupons per page
+  const handleDownload = async () => {
+    setIsGenerating(true); // Set generating state to true
+
+    // Temporarily make content visible and on-screen
+    const contentDiv = document.getElementById("main");
+    contentDiv.style.visibility = "visible"; // Temporarily make it visible for PDF capture
+    contentDiv.style.position = "relative"; // Ensure it is in normal position for rendering
+
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    try {
+      // Loop through each coupon, but two coupons per page
+      for (let i = 0; i < listData.coupons.length; i += 2) {
+        const coupon1 = listData.coupons[i];
+        const coupon2 = listData.coupons[i + 1]; // Get the second coupon (if available)
+
+        // Create references for the current coupon elements (i and i+1)
+        const couponElement1 = contentRef.current.children[i];
+        const couponElement2 = contentRef.current.children[i + 1];
+
+        const canvas1 = await html2canvas(couponElement1, {
+          scale: 1.5, // Lower resolution for smaller size
+          useCORS: true, // Ensure external images like QR codes are loaded
+        });
+
+        const imgData1 = canvas1.toDataURL("image/jpeg", 0.7); // Use JPEG with compression (0.7 is 70% quality)
+
+        // Add the first coupon to the PDF
+        if (i > 0) {
+          pdf.addPage();
+        }
+
+        const canvas2 = couponElement2
+          ? await html2canvas(couponElement2, {
+              scale: 1.5, // Lower resolution
+              useCORS: true,
+            })
+          : null;
+
+        const imgData2 = canvas2 ? canvas2.toDataURL("image/jpeg", 0.8) : null; // Compress the second image
+
+        // Add the first coupon (top half of the page)
+        pdf.addImage(imgData1, "JPEG", 0, 0, 595, 360); // Adjusted for the upper half of the page (421px height)
+
+        if (imgData2) {
+          // Add the second coupon (bottom half of the page)
+          pdf.addImage(imgData2, "JPEG", 0, 421, 595, 360); // Adjusted for the lower half of the page
+        }
+      }
+
+      // Save the generated PDF
+      pdf.save("coupons.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      setIsGenerating(false); // Reset generating state
+      contentDiv.style.visibility = "hidden"; // Hide the content again after the PDF is generated
+    }
+  };
+
   return (
     <>
       <section>
@@ -433,10 +469,18 @@ export default function Coupon(params) {
               </>
             )}
             {listData?.coupons?.length != 0 && (
+              // <button
+              //   onClick={generatePDF}
+              //   className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              //   type="button"
+              // >
+              //   Generate QR
+              // </button>
               <button
-                onClick={generatePDF}
-                className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 type="button"
+                onClick={handleDownload}
+                disabled={!isImageLoaded}
               >
                 Generate QR
               </button>
@@ -706,7 +750,124 @@ export default function Coupon(params) {
         />
       </section>
 
-      <GeneratePDF data={listData} />
+      <>
+        {/* Loading Screen */}
+        {isGenerating && (
+          <div className={`${style.loadingOverlay}`}>
+            <div className={`${style.loadingSpinner}`}>Generating PDF...</div>
+          </div>
+        )}
+
+        <div
+          id="main"
+          style={{
+            visibility: "hidden",
+            position: "absolute",
+            left: "-9999px", // Move off-screen
+          }}
+        >
+          <div id="rep1" ref={contentRef}>
+            {listData.coupons?.length > 0 ? (
+              listData.coupons.map((coupon, index) => (
+                <div
+                  key={coupon.CouponId}
+                  className={`${style.bgColor} text-white mb-8 my-14 pb-2`}
+                >
+                  <div className="bg-white">
+                    <img
+                      src="/images/trubsond-logo-png.png"
+                      alt="Logo"
+                      width={150}
+                      height={150}
+                    />
+                  </div>
+                  <div className="flex justify-between px-6">
+                    <div className="w-2/3 text-sm mr-4 mt-4 mb-2">
+                      <h1 className="underline">प्रक्रिया:</h1>
+                      <p className="text-justify">
+                        अपना कूपन रिडीम करने के लिए अपने नज़दीकी ट्रूबॉन्ड
+                        रिटेलर से संपर्क करें और तुरंत कूपन का भुगतान प्राप्त
+                        करें।
+                      </p>
+                    </div>
+                    <div className="py-5">
+                      <h1 className="text-nowrap text-xl">
+                        Coupon Code: {coupon.CouponCode}
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="flex justify-between px-6 text-sm">
+                    <div className="w-2/3">
+                      <h2 className={`${style.underLineText}`}>
+                        नियम और शर्ते &nbsp;:
+                      </h2>
+                      <ol>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>यह योजना केवल चुनिंदा उत्पादों पर ही उपलब्ध है।</p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>
+                            यह कूपन केवल अधिकृत डिस्ट्रीब्यूटर पर ही रिडीम किया
+                            जा सकेगा।
+                          </p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>
+                            एक QR कोड केवल एक ही बार स्कैन करने के लिए मान्य
+                            होगा।
+                          </p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>इस कूपन को नकद राशि नहीं माना जा सकता।</p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>कटे-फटे कूपन मान्य नहीं होंगे।</p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>अन्य सभी सामान्य नियम और शर्तें लागू होंगी।</p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>
+                            इस कूपन को रिडीम करने की शर्तें कंपनी के पास
+                            सुरक्षित हैं, और कंपनी इस योजना में परिवर्तन करने का
+                            अधिकार रखती है।
+                          </p>
+                        </li>
+                        <li className="flex">
+                          <span className={`${style.dot}`}>&#x2022;</span>
+                          <p>कंपनी का निर्णय ही सर्वमान्य होगा।</p>
+                        </li>
+                      </ol>
+                    </div>
+                    <div className="px-5">
+                      {qrCodes[index] && (
+                        <img
+                          src={qrCodes[index]}
+                          alt={`QR Code for ${coupon.CouponCode}`}
+                          className="mt-4"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  <small className={`${style.smallText} px-6 pb-2`}>
+                    *किसी भी सहायता के लिए हमारी हेल्पलाइन पर संपर्क करें - [
+                    +91 79765 74376]*
+                  </small>
+                </div>
+              ))
+            ) : (
+              <p>No coupons available</p>
+            )}
+          </div>
+        </div>
+      </>
     </>
   );
 }

@@ -16,24 +16,22 @@
   }
 }
 
+body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  overflow-x: hidden;
+}
 
-  body {
-    --tw-bg-opacity: 1;
-    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
-    overflow-x: hidden;
-  }
-
-  .couponTable{
-    height: 500px;
-    overflow-y: scroll;
-  }
-  /* background: linear-gradient(
+.couponTable {
+  height: 500px;
+  overflow-y: scroll;
+}
+/* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-
 
 @layer utilities {
   .text-balance {
@@ -41,17 +39,25 @@
   }
 }
 
-
 @font-face {
-  font-family: 'NotoSansDevanagari';
-  src: url('/fonts/NotoSansDevanagari-Regular.ttf') format('truetype');
+  font-family: 'FreeSans';
+  src: url('/fonts/FreeSans.ttf') format('truetype');
+}
+
+/* @font-face {
+  font-family: Kruti Dev;
+  src: url("/fonts/KRDEV010.TTF") format("truetype");
+} */
+
+.KrutiDev_hindi_text {
+  font-family: Kruti Dev !important;
+  font-size: 18px !important;
 }
 
 #rep1 {
-  font-family: 'NotoSansDevanagari', 'Devanagari MT', 'Mangal', sans-serif;
-  font-size: 12pt; 
+  font-family: "Robert";
+  font-size: 12pt;
   width: 600px;
   margin: 0 auto;
   text-align: justify;
-  
 }
