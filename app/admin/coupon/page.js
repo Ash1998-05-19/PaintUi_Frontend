@@ -136,13 +136,12 @@ export default function Coupon(params) {
     coupons.length > 0 &&
     coupons.some((coupon) => coupon.Paid == true);
 
-  const [isChecked, setIsChecked] = useState(hasPaidCoupons ? false : true);
+  const [isChecked, setIsChecked] = useState(hasPaidCoupons ? true : false);
 
   const handleMasterCheckboxChange = (e) => {
     const isCheckedIn = e.target.checked;
     setIsChecked(isCheckedIn);
-    console.log(isChecked);
-    setMasterCheckbox(isChecked);
+    setMasterCheckbox(!isChecked);
 
     if (isChecked) {
       const couponsWithRedeemDate = coupons.filter(
@@ -169,6 +168,7 @@ export default function Coupon(params) {
       couponIds: selectedCoupons,
       Paid: masterCheckbox,
     };
+
 
     const response = await updateCouponPaidStatus(data);
 
