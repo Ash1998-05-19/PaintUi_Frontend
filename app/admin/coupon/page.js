@@ -69,7 +69,7 @@ export default function Coupon(params) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
-  const inquiryItem = [10, 50, 100, 500];
+  const inquiryItem = [10, 20, 30, 40, 50];
   const handleClickOutside = (event) => {
     if (
       dropdownRef.current &&
