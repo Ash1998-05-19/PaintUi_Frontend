@@ -145,9 +145,9 @@ export default function SidebarComp({ children }) {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 6h16M4 10h16M4 14h16M4 18h16"
                   />
                 </svg>
@@ -298,9 +298,9 @@ export default function SidebarComp({ children }) {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M12 4v16m4-12H8m8 4H8m8 4H8M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
                   />
                 </svg>
@@ -331,9 +331,9 @@ export default function SidebarComp({ children }) {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M4 6h16M4 10h16M4 14h16M4 18h16"
                   />
                 </svg>

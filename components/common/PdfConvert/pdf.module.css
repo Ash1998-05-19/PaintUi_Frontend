@@ -1,0 +1,49 @@
+.dot {
+  margin-top: 1px;
+  margin-right: 7px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.smallText {
+  font-size: 0.5rem;
+}
+
+
+.bgColor{
+  background-color: #215064;
+  font-size: 12pt;
+  width: 600px;
+  margin: 0 auto;
+  text-align: justify;
+}
+
+.underLineText{
+  text-decoration: underline;
+  text-underline-offset: 10px;
+}
+
+.rep1 {
+  font-family: "FreeSans" !important;
+  font-size: 12pt;
+  width: 600px;
+  margin: 0 auto;
+  text-align: justify;
+}
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loadingSpinner {
+  color: white;
+  font-size: 20px;
+}
