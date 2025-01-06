@@ -1,8 +1,12 @@
 "use client";
 
 import Link from "next/link";
+//import Spinner from "@/components/common/loading";
+//import Pagination from "@/components/common/pagination";
+//import Popup from "@/components/common/popup";
 import { useEffect, useRef, useState } from "react";
 import Switch from "react-switch";
+import html2canvas from "html2canvas";
 import {
   getCoupon,
   updateCouponPaidStatus,
@@ -13,6 +17,8 @@ import { getCategory } from "@/apiFunction/categoryApi/categoryApi";
 import { getCompany } from "@/apiFunction/companyApi/companyApi";
 import { getProduct } from "@/apiFunction/productApi/productApi";
 import { getUser } from "@/apiFunction/userApi/userApi";
+import { jsPDF } from "jspdf";
+import QRCode from "qrcode";
 import { ToastContainer, toast } from "react-toastify";
 import ListPagination from "@/components/common/pagination";
 import DeleteModal from "@/components/common/deleteModal";
@@ -22,6 +28,8 @@ import SpinnerComp from "@/components/common/spinner";
 import SearchInput from "@/components/common/searchDebounceInput";
 //import Cookies from "js-cookie";
 import "flowbite/dist/flowbite.min.css";
+import GeneratePDF from "@/components/common/PdfConvert";
+import { couponMasterGetById } from "@/apiFunction/mastercoupons/masterapi";
 export default function Coupon(params) {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [categoryList, setCategoryList] = useState([]);
@@ -37,16 +45,12 @@ export default function Coupon(params) {
       ? params?.searchParams?.productCode
       : "",
     productName: "",
-    reedemed: params?.searchParams?.Redeemed ? true : false,
-    flag: params?.searchParams?.flag ? true : false,
-    unReedemed: false,
     fromDate: "",
     toDate: "",
     fromExpiryDate: "",
     toExpiryDate: "",
-    masonsCoupon: [],
-    retailersCoupon: params?.searchParams?.id ? [params?.searchParams?.id] : [],
     sortOrder: "DESC",
+    couponMasterId: params?.params?.id,
   });
   const [isRefresh, setIsRefresh] = useState(0);
   const [deleteId, setDeleteId] = useState();
@@ -61,7 +65,7 @@ export default function Coupon(params) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const buttonRef = useRef(null);
-  const inquiryItem = [10, 20, 50, 500, 1000];
+  const inquiryItem = [10, 20, 30, 40, 50];
   const handleClickOutside = (event) => {
     if (
       dropdownRef.current &&
@@ -83,6 +87,12 @@ export default function Coupon(params) {
   useEffect(() => {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
+
+  useEffect(() => {
+    if (searchData) {
+      getAllCoupons(payLoad); // Pass the current payload to the function
+    }
+  }, [searchData]);
 
   useEffect(() => {
     // console.log("params data", params?.searchParams?.id)
@@ -107,10 +117,18 @@ export default function Coupon(params) {
   const [selectedCoupons, setSelectedCoupons] = useState([]);
   const [masterCheckbox, setMasterCheckbox] = useState(false);
 
+  // console.log("paramsId ----->", params);
+
   // Get Coupons including checking redeem date
   const getAllCoupons = async (payLoadData) => {
     setIsLoading(true);
-    let coupons = await getCoupon(page, searchData, payLoadData, pageSize);
+    let coupons = await couponMasterGetById(
+      page,
+      searchData,
+      payLoadData,
+      pageSize
+    );
+    // console.log("coupons ---->", coupons);
     if (!coupons?.resData?.message) {
       setListData(coupons?.resData);
       setCoupons(coupons?.resData?.coupons);
@@ -160,7 +178,6 @@ export default function Coupon(params) {
       couponIds: selectedCoupons,
       Paid: masterCheckbox,
     };
-
 
     const response = await updateCouponPaidStatus(data);
 
@@ -320,12 +337,51 @@ export default function Coupon(params) {
     const id = selectedId;
     updateCouponDetails(id, payload);
   };
-
   const hasRedeemDateCoupons =
     coupons &&
     coupons.length > 0 &&
     coupons.some((coupon) => coupon.RedeemDateTime);
 
+  const contentRef = useRef();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [qrCodes, setQrCodes] = useState([]); // Store generated QR codes
+
+  // Generate QR codes for each coupon
+  useEffect(() => {
+    const generateQrCodes = async () => {
+      const generatedQrCodes = await Promise.all(
+        listData.coupons.map(async (coupon) => {
+          try {
+            const qrCode = await QRCode.toDataURL(coupon.CouponCode);
+            return qrCode;
+          } catch (error) {
+            console.error(
+              "Error generating QR Code for coupon:",
+              coupon.CouponCode,
+              error
+            );
+            return ""; // Return empty string if error occurs
+          }
+        })
+      );
+      setQrCodes(generatedQrCodes);
+    };
+
+    if (listData && listData.coupons) {
+      generateQrCodes();
+    }
+  }, [listData]);
+
+  // Check if all QR codes are loaded
+  useEffect(() => {
+    if (
+      qrCodes.length === listData?.coupons?.length &&
+      qrCodes.every((qr) => qr)
+    ) {
+      setIsImageLoaded(true); // Enable the button when all QR codes are loaded
+    }
+  }, [qrCodes, listData.coupons]);
 
   return (
     <>
@@ -336,24 +392,34 @@ export default function Coupon(params) {
             Coupons
           </h1>
           <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-            {Object.keys(params?.searchParams || {}).length === 0 ? (
-              <>
-                <div>
-                  <Link href={"/admin/coupon/addCoupon"}>
-                    <button
-                      className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                      type="button"
-                    >
-                      + Generate Coupons
-                    </button>
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <>
-                <div></div> <div></div>
-              </>
-            )}
+            <div>
+              <Link href={"/admin/master/coupons"}>
+                <button
+                  className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                  type="button"
+                >
+                  Back
+                </button>
+              </Link>
+            </div>
+            <GeneratePDF data={listData} />
+            {/* {listData?.coupons?.length != 0 && (
+              // <button
+              //   onClick={generatePDF}
+              //   className="py-2.5 px-5 me-2 mb-2 mr-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+              //   type="button"
+              // >
+              //   Generate QR
+              // </button>
+              <button
+                className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                type="button"
+                onClick={handleDownload}
+                disabled={!isImageLoaded}
+              >
+                Generate QR
+              </button>
+            )} */}
             {listData?.coupons?.length != 0 && (
               <li className="me-2 list-none relative">
                 {" "}
@@ -521,7 +587,7 @@ export default function Coupon(params) {
 
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
-                          {item?.IsActive ? (
+                          {/* {item?.IsActive ? (
                             <Link
                               href={`/admin/coupon/updateCoupon/${item.CouponId}`}
                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -541,7 +607,7 @@ export default function Coupon(params) {
                                 style={{ fontSize: "1.5em" }}
                               ></i>
                             </button>
-                          )}
+                          )} */}
 
                           {/* <Link
                       href="#"
@@ -617,8 +683,9 @@ export default function Coupon(params) {
           productOptions={productList}
           {...{ payLoad, setPayLoad, setIsRefresh }}
         />
-      </section>
 
+        
+      </section>
     </>
   );
 }
