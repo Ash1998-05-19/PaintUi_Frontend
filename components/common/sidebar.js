@@ -15,9 +15,11 @@ export default function SidebarComp({ children }) {
   const email = Cookies.get("email");
 
   const [activeTab, setActiveTab] = useState(pathname.replace("/", ""));
+
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+
   useEffect(() => {
     initFlowbite(); // Call initCarousels() when component mounts
   }, []);
@@ -71,7 +73,7 @@ export default function SidebarComp({ children }) {
               <Link
                 href="/admin/dashboard"
                 onClick={() => handleTabClick("/admin/dashboard")}
-                className={` ${
+                className={`${
                   activeTab === "/admin/dashboard"
                     ? Styles.activeTab
                     : Styles.inactiveTab
@@ -80,9 +82,9 @@ export default function SidebarComp({ children }) {
                 <svg
                   className={`${
                     activeTab === "/admin/dashboard" ? "" : Styles.inactiveTab
-                  }  ${
+                  } ${
                     Styles.tabSvg
-                  }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -234,7 +236,7 @@ export default function SidebarComp({ children }) {
               </a>
             </li>
 
-            <li>
+            {/* <li>
               <Link
                 href="/admin/coupon"
                 onClick={() => handleTabClick("/admin/coupon")}
@@ -273,7 +275,7 @@ export default function SidebarComp({ children }) {
 
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>Coupon</span>
               </Link>
-            </li>
+            </li> */}
 
             <li>
               <Link
@@ -340,6 +342,57 @@ export default function SidebarComp({ children }) {
 
                 <span className={` flex-1 ms-3 whitespace-nowrap`}>
                   Mason So
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/master/coupons"
+                onClick={() => handleTabClick("/admin/master/coupons")}
+                className={` ${
+                  activeTab?.includes("/admin/master/coupons") ||
+                  activeTab?.includes("/admin/coupon/addCoupon") ||
+                  activeTab?.includes("/admin/coupon") ||
+                  activeTab?.includes("/admin/master/updatecoupons")
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
+                } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
+              >
+                <svg
+                  className={`${
+                    activeTab?.includes("/admin/master/coupons") ||
+                    activeTab?.includes("/admin/coupon/addCoupon") ||
+                    activeTab?.includes("/admin/coupon") ||
+                    activeTab?.includes("/admin/master/updatecoupons")
+                      ? ""
+                      : Styles.inactiveTab
+                  } ${
+                    Styles.tabSvg
+                  } flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 4h16v4a2 2 0 0 1-2 2 2 2 0 0 0 0 4 2 2 0 0 1 2 2v4H4v-4a2 2 0 0 1 2-2 2 2 0 0 0 0-4 2 2 0 0 1-2-2V4z"
+                  />
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 9l6 6m0-6l-6 6"
+                  />
+                </svg>
+
+                <span className={` flex-1 ms-3 whitespace-nowrap`}>
+                  Coupon Master
                 </span>
               </Link>
             </li>

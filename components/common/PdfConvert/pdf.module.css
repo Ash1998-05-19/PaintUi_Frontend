@@ -1,35 +1,32 @@
-.dot {
+/* .dot {
   margin-top: 1px;
   margin-right: 7px;
   font-size: 12px;
   font-weight: 900;
-}
+} */
 
 .smallText {
   font-size: 0.5rem;
+}
+
+.smallTextSecond{
+  font-size: 0.7rem;
+  padding-left: 0.5rem;
 }
 
 
 .bgColor{
   background-color: #215064;
   font-size: 12pt;
-  width: 600px;
-  margin: 0 auto;
-  text-align: justify;
+  width: 800px;
+  margin-top: 7.8rem;
 }
 
 .underLineText{
   text-decoration: underline;
-  text-underline-offset: 10px;
+  text-underline-offset: 1px;
 }
 
-.rep1 {
-  font-family: "FreeSans" !important;
-  font-size: 12pt;
-  width: 600px;
-  margin: 0 auto;
-  text-align: justify;
-}
 .loadingOverlay {
   position: fixed;
   top: 0;
@@ -47,3 +44,17 @@
   color: white;
   font-size: 20px;
 }
+
+@media print {
+  .page-break {
+    page-break-before: always;
+  }
+}
+
+
+
+/* style={{
+  visibility: "visible", // Ensure the content is visible for rendering
+  position: "absolute",
+  left: "-9999px", // Move off-screen if needed
+}} */

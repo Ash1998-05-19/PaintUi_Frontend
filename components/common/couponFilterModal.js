@@ -243,7 +243,7 @@ export default function CouponFilterModal({
                 disabled={!payLoad?.fromRedeemDate}
               />
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block text-gray-700">Mason Coupons:</label>
               <Select
                  onChange={(option) => changeHandle('masonsCoupon', option)}
@@ -258,7 +258,7 @@ export default function CouponFilterModal({
                 className="basic-single-select"
                 classNamePrefix="select"
               />
-            </div>
+            </div> */}
             <div className="mb-4">
               <label className="block text-gray-700">Retailer Coupons:</label>
               <Select

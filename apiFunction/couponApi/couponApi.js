@@ -5,11 +5,11 @@ import { PAGE_LIMIT } from "@/utils/constant";
 
 
 
-export const addCoupon = async (payload,quantity,setLoading=()=>{}) => {
+export const addCoupon = async (payload,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
   try {
-    const res = await fetch(`${API_BASE_URL}/coupon/addCoupon?quantity=${quantity}`, {
+    const res = await fetch(`${API_BASE_URL}/coupon/addCoupon`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,8 +65,6 @@ export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=
         masonsCoupon : payLoadData?.masonsCoupon?.map(mas => mas.value),
         retailersCoupon : payLoadData?.retailersCoupon?.map(ret => ret.value ? ret.value : ret),
         sortOrder : payLoadData.sortOrder,
-
-
       })
     });
     const resData = await res.json();
