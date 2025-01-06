@@ -3,22 +3,27 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-import { getProductListForCoupon } from "@/apiFunction/productApi/productApi";
+import { getProduct } from "@/apiFunction/productApi/productApi";
 import { addCoupon } from "@/apiFunction/couponApi/couponApi";
+import { updateCoupon } from "@/apiFunction/couponApi/couponApi";
+import { getCouponById } from "@/apiFunction/couponApi/couponApi";
 import { useRouter } from "next/navigation";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SpinnerComp from "@/components/common/spinner";
+import { getMasterCouponById, updateMasterCoupon } from "@/apiFunction/mastercoupons/masterapi";
 
-export default function AddCoupon() {
+export default function UpdateCoupon(params) {
   const {
     register,
-    handleSubmit,
     control,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
     formState: { errors },
   } = useForm();
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [couponCode, setCouponCode] = useState("AUTO_GENERATED_CODE");
@@ -26,6 +31,7 @@ export default function AddCoupon() {
   const [expiryDateTime, setExpiryDateTime] = useState(null);
   const [amount, setAmount] = useState("");
   const [product, setProduct] = useState(null);
+  const [couponObj, setCouponObj] = useState(null);
   const [listData, setListData] = useState(false);
   const [payLoad, setPayLoad] = useState({
     categoryIds: [],
@@ -41,16 +47,23 @@ export default function AddCoupon() {
   const [redeemBy, setRedeemBy] = useState("");
   const [redeemDateTime, setRedeemDateTime] = useState(null);
 
+  // console.log("params --->", params?.params?.id);
+
   const handleProductChange = (selectedOption) => {
-    setSelectedProduct(selectedOption);
+    setValue("productName", selectedOption);
+  };
+
+  const handleTimeChange = (date) => {
+    setValue("expiryDateTime", date);
   };
 
   useEffect(() => {
     getAllProducts();
+    fetchCoupon();
   }, [page, searchData, payLoad]);
 
   const getAllProducts = async () => {
-    let products = await getProductListForCoupon(page, searchData, payLoad);
+    let products = await getProduct(page, searchData, payLoad);
     if (!products?.resData?.message) {
       setProductList(products?.resData);
       return false;
@@ -60,32 +73,71 @@ export default function AddCoupon() {
     }
   };
 
+  const fetchCoupon = async () => {
+    try {
+      const couponData = await getMasterCouponById(params?.params?.id);
+      setCouponObj(couponData.resData);
+    } catch (error) {
+      console.error("Error fetching coupon:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (couponObj) {
+      setValue("couponCode", "couponObj");
+      setValue("productName", {
+        value: couponObj.couponMaster?.ProductId,
+        label: couponObj.couponMaster?.Product?.Name,
+      });
+
+      setValue("amount", couponObj.couponMaster?.Amount);
+      const expiryDateTime = couponObj.couponMaster?.ExpiryDateTime
+        ? new Date(couponObj.couponMaster?.ExpiryDateTime)
+            .toISOString()
+            .slice(0, 16)
+        : "";
+
+      setValue("expiryDateTime", expiryDateTime);
+      setValue("quantity", couponObj.couponMaster?.Quantity);
+    }
+  }, [couponObj]);
+
   const router = useRouter();
 
+  // console.log("copupons Obj ----->", couponObj);
+
   const submitForm = async (data) => {
-    const selectProductAmount = productList?.data
-      ?.filter((item) => item.ProductId === selectedProduct.value)
+    const selectProductAmount = productList?.products
+      ?.filter((item) => item.ProductId === data?.productName.value)
       .map((item) => item.Price);
+
     if (parseInt(data.amount) > parseInt(selectProductAmount[0])) {
       toast.warning(
-        `Amount should be less then from product Amount ${selectProductAmount[0]} `
+        `Amount should less then from product Amount ${selectProductAmount[0]} `
       );
       return false;
     }
 
     const CouponDetails = {
-      ProductId: selectedProduct.value,
-      ExpiryDateTime: data.expiryDateTime,
-      Amount: parseInt(data.amount),
-      Quantity: parseInt(data.quantity)
+      ProductId: data?.productName.value,
+      ExpiryDateTime: data?.expiryDateTime,
+      Amount: parseInt(data?.amount),
     };
-    let res = await addCoupon(CouponDetails,setIsLoading);
-    if (!res?.message) {
-      router.push("/admin/master/coupons");
-      toast.success("Coupon Added Succefully");
-    } else {
-      toast.error(res?.resData?.message);
-      return false;
+
+    try {
+      const res = await updateMasterCoupon(
+        CouponDetails,
+        params?.params?.id,
+        setIsLoading
+      );
+      if (res.resData.success) {
+        router.push("/admin/master/coupons");
+        toast.success(res.resData.message);
+      } else {
+        console.error(res?.message);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
     }
   };
 
@@ -93,7 +145,7 @@ export default function AddCoupon() {
     <section>
       {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
-        Add Your Coupon Details
+        Update Your Coupon Details
       </h1>
       <Link href="/admin/master/coupons">
         <div className="mb-5 mt-5">
@@ -107,54 +159,28 @@ export default function AddCoupon() {
       </Link>
       <form className="mb-5" onSubmit={handleSubmit(submitForm)}>
         <div className="grid gap-4 mb-4 md:grid-cols-2">
-          {/* <div className="w-full">
-          <label htmlFor="couponCode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Coupon Code
-          </label>
-          <input
-            type="text"
-            id="couponCode"
-            {...register('couponCode')}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-            disabled
-          />
-        </div> */}
-
           <div className="w-full">
             <label
               htmlFor="productName"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Name <span className="text-red-600">*</span>
+              Product Name
             </label>
 
-            <Controller
-              name="productName"
-              control={control}
-              rules={{ required: "Product Name is required" }}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  value={selectedProduct}
-                  onChange={(value) => {
-                    field.onChange(value);
-                    handleProductChange(value);
-                  }}
-                  options={productList?.data?.map((element) => ({
-                    value: element?.ProductId,
-                    label: element?.Name,
-                  }))}
-                  id="productName"
-                  className="text-gray-900 text-sm rounded-lg dark:text-white"
-                  placeholder="Select Product"
-                  isClearable
-                />
-              )}
-            />
-
-            {errors.productName && (
-              <span className="text-red-500">{errors.productName.message}</span>
-            )}
+            {
+              <Select
+                value={watch("productName")}
+                onChange={handleProductChange}
+                options={productList?.products?.map((element) => ({
+                  value: element?.ProductId,
+                  label: element?.Name,
+                }))}
+                id="productName"
+                className="text-gray-900 text-sm rounded-lg dark:text-white"
+                placeholder="Select Product"
+                isClearable
+              />
+            }
           </div>
 
           <div className="w-full">
@@ -168,8 +194,7 @@ export default function AddCoupon() {
               type="number"
               step="0.01"
               id="amount"
-              min = "0"
-               
+              min="0"
               {...register("amount", { required: "Amount is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Amount"
@@ -184,16 +209,13 @@ export default function AddCoupon() {
               htmlFor="quantity"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Quantity <span className="text-red-600">*</span>
+              Quantity
             </label>
             <input
+            disabled
               type="number"
               id="quantity"
-              min = "0"
-               max = "25000"
-              {...register("quantity", {
-                required: "Quantity is required",
-              })}
+              {...register("quantity", { required: "Quantity is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               placeholder="Quantity"
             />
@@ -215,10 +237,7 @@ export default function AddCoupon() {
               render={({ field }) => (
                 <input
                   type="datetime-local"
-                  value={
-                    field.value
-                      
-                  }
+                  value={field.value}
                   onChange={(e) => field.onChange(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
                   placeholder="Select Expiry Date & Time"
