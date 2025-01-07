@@ -70,20 +70,19 @@ const CouponsSection = ({ params }) => {
   }, [page, searchData, isRefresh, pageSize,isdeleted]);
 
   useEffect(() => {
-    const getAllProducts = async (payLoadData) => {
+    const getAllProducts = async () => {
       try {
-        setIsLoading(true); // Set loading to true when the request starts
-
+        setIsLoading(true);
+  
         const products = await couponMasterGetAll(
           page,
           searchData,
-          payLoadData,
+          payLoad,
           pageSize
         );
-        // console.log("products --->", products);
-
+  
         if (products?.resData?.coupons) {
-          setListData({ coupons: products.resData.coupons }); // Set the list of coupons
+          setListData(products.resData);
           setPageData(products.resData);
         } else {
           toast.error(products?.message || "Error: No coupons data found.");
@@ -92,13 +91,12 @@ const CouponsSection = ({ params }) => {
         console.error("Error fetching products:", error);
         toast.error("An error occurred while fetching products");
       } finally {
-        setIsLoading(false); // Set loading to false once the request finishes
+        setIsLoading(false);
       }
     };
-
-    getAllProducts(); // Call the function to load the products
-  }, [searchData, isdeleted]); // Empty dependency array ensures this runs once when the component mounts
-  // console.log("pageData ----->", pageData);
+  
+    getAllProducts();
+  }, [page, searchData, pageSize, isdeleted]);
 
   const searchInputChange = (e) => {
     setSearchData(e);
@@ -356,7 +354,7 @@ const CouponsSection = ({ params }) => {
           {pageData && (
             <div className="mt-4">
               <ListPagination
-                data={pageData} // Using coupons data
+                data={listData} // Using coupons data
                 pageNo={handlePageChange}
                 pageVal={page} // Current page number
               />
