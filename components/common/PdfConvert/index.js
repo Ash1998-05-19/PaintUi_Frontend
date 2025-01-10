@@ -185,9 +185,6 @@ const GeneratePDF = ({ data }) => {
                         )}
                       </div>
                     </div>
-                    <small className={`${style.smallText} px-6 pb-2`}>
-                      *For any assistance, please contact our helpline - [ +91 79765 74376]*
-                    </small>
                   </div>
                 </div>
               </div>
