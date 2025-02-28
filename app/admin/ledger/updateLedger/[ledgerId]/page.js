@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { getLedgerById } from "@/apiFunction/ledgerApi/ledgerApi";
 import { updateLedger } from "@/apiFunction/ledgerApi/ledgerApi";
 import { ToastContainer, toast } from "react-toastify";
+import { addProduct, getProductListForCoupon } from "@/apiFunction/productApi/productApi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useRouter } from "next/navigation";
@@ -15,12 +16,30 @@ import SpinnerComp from "@/components/common/spinner";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
 
 export default function UpdateLedger(params) {
+  const [page, setPage] = useState(1);
   const [ledgerObj, setLedgerObj] = useState(null);
+  const [searchData, setSearchData] = useState("");
   const [transactionDate, setTransactionDate] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productList, setProductList] = useState([]);
+
+  const [payLoad, setPayLoad] = useState({
+    categoryIds: [],
+    companyIds: [],
+    productIds: [],
+    sortBy: "createdAt",
+    sortOrder: "DESC",
+  });
+
+  const handleProductChange = (selectedOption) => {
+    setSelectedProduct(selectedOption);
+  };
+
   const {
     register,
     handleSubmit,
     setValue,
+    control,
     getValues,
     watch,
     formState: { errors },
@@ -29,14 +48,36 @@ export default function UpdateLedger(params) {
 
   const router = useRouter();
 
+  const getAllProducts = async () => {
+    
+    let products = await getProductListForCoupon(page, searchData, payLoad);
+    
+    if (!products?.resData?.message) {
+      setProductList(products?.resData);
+      return false;
+    } else {
+      toast.error(products?.message);
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchLedger();
+    getAllProducts();
   }, []);
 
   useEffect(() => {
     if (ledgerObj) {
+      setSelectedProduct({
+        value: ledgerObj.ledgerEntry?.ProductId,
+        label: ledgerObj.ledgerEntry?.ProductDetail?.Name,
+      })
       setValue("entryType", ledgerObj?.ledgerEntry?.EntryType);
       setValue("amount", ledgerObj?.ledgerEntry?.Amount);
+      setValue("productName", {
+        value: ledgerObj.ledgerEntry?.ProductId,
+        label: ledgerObj.ledgerEntry?.ProductDetail?.Name,
+      });
       setValue("note", ledgerObj?.ledgerEntry?.Note);
       setValue("unit", ledgerObj?.ledgerEntry?.Unit);
       const transactionDate = ledgerObj?.ledgerEntry?.TransactionDate
@@ -63,12 +104,12 @@ export default function UpdateLedger(params) {
     const LedgerDetails = {
       EntryType: data?.entryType,
       Amount: data?.amount,
+      ProductId: selectedProduct.value,
       Note: data.note ? data.note:"",
       PersonalNote: data.personalNote? data.personalNote:"",
       TransactionDate: data.transactionDate ? data.transactionDate : new Date(),
       Unit: data.unit ? data.unit : 0 ,
     };
-
 
     try {
       const res = await updateLedger(LedgerDetails, params?.params?.ledgerId,setIsLoading);
@@ -191,22 +232,59 @@ export default function UpdateLedger(params) {
 
           <div className="w-full">
             <label
+              htmlFor="productName"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Product Name <span className="text-red-600">*</span>
+            </label>
+
+            <Controller
+              name="productName"
+              control={control}
+              rules={{ required: "Product Name is required" }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={selectedProduct}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleProductChange(value);
+                  }}
+                  options={productList?.data?.map((element) => ({
+                    value: element?.ProductId,
+                    label: element?.Name,
+                  }))}
+                  id="productName"
+                  className="text-gray-900 text-sm rounded-lg dark:text-white"
+                  placeholder="Select Product"
+                  isClearable
+                />
+              )}
+            />
+
+            {errors.productName && (
+              <span className="text-red-500">{errors.productName.message}</span>
+            )}
+          </div>
+
+          <div className="w-full">
+            <label
               htmlFor="unit"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Unit
+              Product Unit <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
               step="0.01"
-              id="unit"
+              name="unit"
               min="0"
-              {...register("unit", { required: false })}
+              {...register("unit", { required: "Product Unit is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Product Unit"
             />
             {errors.unit && (
-              <span className="text-red-500">{errors.amount.message}</span>
+              <span className="text-red-500">{errors.unit.message}</span>
             )}
           </div>
 
