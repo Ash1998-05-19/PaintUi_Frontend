@@ -16,39 +16,33 @@ const GeneratePDF = ({ data }) => {
     setIsClient(typeof window !== "undefined");
   }, []);
 
-  const handleDownload = () => {
-    if (!isClient) return; // Prevent executing on the server side
+  const handleDownload = async () => {
+    if (!isClient) return;
 
     setShowLoadingScreen(true);
     setIsGenerating(true);
 
-    setTimeout(() => {
+    try {
       const contentDiv = document.getElementById("main");
-
-      contentDiv.style.visibility = "visible";
+      contentDiv.style.display = "block";
       contentDiv.style.position = "relative";
 
       const element = contentRef.current;
+      const options = {
+        filename: "coupons_report.pdf",
+        image: { type: "jpeg", quality: 0.8 },
+        html2canvas: { scale: 2, logging: false, useCORS: true },
+        jsPDF: { unit: "mm", format: "a3", orientation: "portrait" },
+      };
 
-      try {
-        const options = {
-          filename: "coupons_report.pdf",
-          image: { type: "jpeg", quality: 0.5 },
-          html2canvas: { scale: 2, logging: true },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        };
-
-        html2pdf().from(element).set(options).save();
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-      } finally {
-        contentDiv.style.display = "none";
-        contentDiv.style.position = "absolute";
-
-        setIsGenerating(false);
-        setShowLoadingScreen(false);
-      }
-    }, 1000);
+      await html2pdf().from(element).set(options).save();
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } finally {
+      document.getElementById("main").style.display = "none";
+      setIsGenerating(false);
+      setShowLoadingScreen(false);
+    }
   };
 
   const generateQrCode = async (couponCode) => {
@@ -92,102 +86,71 @@ const GeneratePDF = ({ data }) => {
 
       <div
         id="main"
-        style={{
-          display: "none",
-          position: "absolute",
-        }}
+        style={
+          {
+            display: "none", position: "absolute"
+          }
+        }
       >
-        <div ref={contentRef}>
+        <div ref={contentRef} className="grid grid-cols-5 gap-1 p-1">
           {couponList.length > 0 ? (
             couponList.map((coupon, index) => (
-              <div
-                key={coupon.CouponId}
-                className={`${style.bgColor} text-white`}
-                style={{ pageBreakAfter: "always" }}
-              >
-                <div className="flex flex-wrap">
-                  <div
-                    key={coupon.CouponId}
-                    className="w-full"
-                    style={{
-                      marginBottom: "32px",
-                      pageBreakInside: "avoid",
-                    }}
-                  >
-                    <div className="bg-white">
-                      <img
-                        src="/images/trubsond-logo-png.png"
-                        alt="Logo"
-                        width={150}
-                        height={150}
-                      />
-                    </div>
-                    <div className="flex justify-between px-6">
-                      <div className="text-sm mr-4 mt-4 mb-2">
-                        <h1 className="underline">Process:</h1>
-                        <p className="text-justify">
-                          To redeem your coupon, contact your nearest Trubond retailer to receive the coupon payment immediately.
-                        </p>
-                      </div>
-                      <div className="py-5">
-                        <h1 className="text-nowrap text-xl">
-                          Coupon Code: {coupon.CouponCode}
-                        </h1>
-                      </div>
-                    </div>
-                    <div className="flex justify-between px-6 text-sm">
-                      <div className="w-2/3">
-                        <h2 className={`${style.underLineText}`}>
-                          Terms and Conditions:
-                        </h2>
-                        <ol>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>This offer is valid only on select products.</p>
+              <>
+                <div
+                  key={coupon.CouponId}
+                  className="p-1 text-white h-48 flex flex-col"
+                  style={{ pageBreakInside: "avoid" }} // Prevents splitting coupons across pages
+                >
+                  {/* Logo */}
+                  <img
+                    src="/images/trubsond-logo-png.png"
+                    alt="Logo"
+                    className="w-10 h-10 mt-1"
+                  />
+                  <div className="bg-[#215064] flex p-1 h-40">
+                    <div>
+                      {/* Coupon Info */}
+                      <p className="text-[7px]">
+                        <strong className="text-xs">Procedure:</strong>
+                        <br />
+                        To redeem your coupon, contact your nearest Truebond
+                        retailer.
+                      </p>
+
+                      {/* Terms */}
+                      <p className="text-xs">
+                        <strong>Terms and Conditions:</strong>
+                        <ol className="text-[7px] list-decimal ml-4" type="1">
+                          <li>Valid for selected products.</li>
+                          <li className="-mt-2">
+                            Redeem at authorized stores.
                           </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>This coupon can only be redeemed at authorized distributors.</p>
+                          <li className="-mt-2">
+                            Cannot be exchanged for cash.
                           </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>The QR code can only be scanned once.</p>
-                          </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>This coupon cannot be exchanged for cash.</p>
-                          </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>Torn or damaged coupons will not be accepted.</p>
-                          </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>All general terms and conditions of the company apply.</p>
-                          </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>The company reserves the right to modify or cancel this offer without prior notice.</p>
-                          </li>
-                          <li className="flex">
-                            <span className={`${style.dot}`}>&#x2022;</span>
-                            <p>The company’s decision regarding the coupon redemption process will be final and binding.</p>
+                          <li className="-mt-2">Valid until expiry date.</li>
+                          <li className="-mt-2">
+                            Damaged coupons not accepted.
                           </li>
                         </ol>
-                      </div>
-                      <div className="px-5">
-                        {qrCodeUrls[coupon.CouponCode] && (
-                          <img
-                            src={qrCodeUrls[coupon.CouponCode]}
-                            alt={`QR Code for ${coupon.CouponCode}`}
-                            className="mt-4 w-48 h-48"
-                          />
-                        )}
-                      </div>
+                      </p>
+                    </div>
+                    <div>
+                      {/* QR Code */}
+                      {qrCodeUrls[coupon.CouponCode] && (
+                        <img
+                          src={qrCodeUrls[coupon.CouponCode]}
+                          alt="QR Code"
+                          className="w-24 h-24 mt-2 float-right"
+                        />
+                      )}
+                      <p className="text-[7px] w-16">
+                       <strong>Code:</strong><span className="text-[7px] break-all">{coupon.CouponCode}</span>
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
+              </>
             ))
           ) : (
             <p>No coupons available</p>
