@@ -6,7 +6,7 @@ import { getCategoryListForProduct } from "@/apiFunction/categoryApi/categoryApi
 import { getUser } from "@/apiFunction/userApi/userApi";
 import { addLedger } from "@/apiFunction/ledgerApi/ledgerApi";
 import { getCompanyListForProduct } from "@/apiFunction/companyApi/companyApi";
-import { addProduct } from "@/apiFunction/productApi/productApi";
+import { addProduct, getProductListForCoupon } from "@/apiFunction/productApi/productApi";
 import { ToastContainer, toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -19,6 +19,7 @@ import SpinnerComp from "@/components/common/spinner";
 
 export default function AddLedger(params) {
   const [page, setPage] = useState(1);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchData, setSearchData] = useState("");
   const [userList, setUserList] = useState([]);
   const [users, setUsers] = useState(null);
@@ -29,6 +30,19 @@ export default function AddLedger(params) {
   const [company, setCompany] = useState(null);
   const [productCode, setProductCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [productList, setProductList] = useState([]);
+
+  const [payLoad, setPayLoad] = useState({
+    categoryIds: [],
+    companyIds: [],
+    productIds: [],
+    sortBy: "createdAt",
+    sortOrder: "DESC",
+  });
+
+  const handleProductChange = (selectedOption) => {
+    setSelectedProduct(selectedOption);
+  };
 
   const {
     register,
@@ -38,10 +52,23 @@ export default function AddLedger(params) {
     formState: { errors },
   } = useForm();
 
-  
+
+  const getAllProducts = async () => {
+    console.log("product")
+    let products = await getProductListForCoupon(page, searchData, payLoad);
+    console.log("product", products);
+    if (!products?.resData?.message) {
+      setProductList(products?.resData);
+      return false;
+    } else {
+      toast.error(products?.message);
+      return false;
+    }
+  };
 
   useEffect(() => {
     getAllUsers();
+    getAllProducts();
   }, [page, searchData, userType]);
   const getAllUsers = async () => {
     const limit = 100000;
@@ -64,7 +91,6 @@ export default function AddLedger(params) {
     }
   };
 
-
   const handleUserChange = (selectedOption) => {
     setUsers(selectedOption);
   };
@@ -76,12 +102,13 @@ export default function AddLedger(params) {
       EntryType: data.entryType,
       RetailerUserId: users.value,
       Amount: data.amount,
-      Note: data.note ? data.note:"",
-      PersonalNote: data.personalNote? data.personalNote:"",
+      ProductId: selectedProduct.value,
+      Note: data.note ? data.note : "",
+      PersonalNote: data.personalNote ? data.personalNote : "",
       TransactionDate: data.transactionDate ? data.transactionDate : new Date(),
-      Unit: data.unit ? data.unit : 0 ,
+      Unit: data.unit ? data.unit : 0,
     };
-    let res = await addLedger(LedgerDetails,setIsLoading);
+    let res = await addLedger(LedgerDetails, setIsLoading);
     if (res?.resData?.success) {
       router.push("/admin/ledger");
       toast.success("Ledger Added Successfully");
@@ -199,22 +226,59 @@ export default function AddLedger(params) {
 
           <div className="w-full">
             <label
+              htmlFor="productName"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Product Name <span className="text-red-600">*</span>
+            </label>
+
+            <Controller
+              name="productName"
+              control={control}
+              rules={{ required: "Product Name is required" }}
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  value={selectedProduct}
+                  onChange={(value) => {
+                    field.onChange(value);
+                    handleProductChange(value);
+                  }}
+                  options={productList?.data?.map((element) => ({
+                    value: element?.ProductId,
+                    label: element?.Name,
+                  }))}
+                  id="productName"
+                  className="text-gray-900 text-sm rounded-lg dark:text-white"
+                  placeholder="Select Product"
+                  isClearable
+                />
+              )}
+            />
+
+            {errors.productName && (
+              <span className="text-red-500">{errors.productName.message}</span>
+            )}
+          </div>
+
+          <div className="w-full">
+            <label
               htmlFor="unit"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Unit
+              Product Unit <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
               step="0.01"
               id="unit"
               min="0"
-              {...register("unit", { required: false })}
+              {...register("unit", { required: "Product Unit is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Product Unit"
             />
             {errors.unit && (
-              <span className="text-red-500">{errors.amount.message}</span>
+              <span className="text-red-500">{errors.unit.message}</span>
             )}
           </div>
 
