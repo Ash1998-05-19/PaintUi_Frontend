@@ -86,11 +86,10 @@ const GeneratePDF = ({ data }) => {
 
       <div
         id="main"
-        style={
-          {
-            display: "none", position: "absolute"
-          }
-        }
+        style={{
+          display: "none",
+          position: "absolute",
+        }}
       >
         <div ref={contentRef} className="grid grid-cols-5 gap-1 p-1">
           {couponList.length > 0 ? (
@@ -145,7 +144,10 @@ const GeneratePDF = ({ data }) => {
                         />
                       )}
                       <p className="text-[7px] w-16">
-                       <strong>Code:</strong><span className="text-[7px] break-all">{coupon.CouponCode}</span>
+                        <strong>Code:</strong>
+                        <span className="text-[7px] break-all">
+                          {coupon.CouponCode}
+                        </span>
                       </p>
                     </div>
                   </div>

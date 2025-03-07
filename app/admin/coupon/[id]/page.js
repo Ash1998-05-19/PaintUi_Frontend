@@ -402,7 +402,7 @@ export default function Coupon(params) {
                 </button>
               </Link>
             </div>
-            <GeneratePDF data={listData} />
+            {/* <GeneratePDF data={listData} /> */}
             {/* {listData?.coupons?.length != 0 && (
               // <button
               //   onClick={generatePDF}
