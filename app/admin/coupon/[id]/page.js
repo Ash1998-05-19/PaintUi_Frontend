@@ -60,7 +60,7 @@ export default function Coupon(params) {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  //console.log("listData", listData);
+ 
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -95,13 +95,13 @@ export default function Coupon(params) {
   }, [searchData]);
 
   useEffect(() => {
-    // console.log("params data", params?.searchParams?.id)
+    
     // if(payLoad?.retailersCoupon?.length>0 && params?.searchParams?.id != undefined){
-    //   console.log("Get all coupon function called")
+    
     //   getAllCoupons(payLoad);
     // }
     // if(!params?.searchParams?.id){
-    //   console.log("coupon function called without params")
+   
     //   getAllCoupons(payLoad);
     // }
     getAllCoupons(payLoad);
@@ -111,13 +111,13 @@ export default function Coupon(params) {
     getAllUsers();
   }, [page, searchData, isRefresh, params, isdeleted, pageSize]);
 
-  //console.log("Outside get all coupon payload data", payLoad)
+  
 
   const [coupons, setCoupons] = useState([]);
   const [selectedCoupons, setSelectedCoupons] = useState([]);
   const [masterCheckbox, setMasterCheckbox] = useState(false);
 
-  // console.log("paramsId ----->", params);
+ 
 
   // Get Coupons including checking redeem date
   const getAllCoupons = async (payLoadData) => {
@@ -128,7 +128,7 @@ export default function Coupon(params) {
       payLoadData,
       pageSize
     );
-    // console.log("coupons ---->", coupons);
+    
     if (!coupons?.resData?.message) {
       setListData(coupons?.resData);
       setCoupons(coupons?.resData?.coupons);
@@ -211,7 +211,7 @@ export default function Coupon(params) {
   const getAllUsers = async () => {
     //const roleId = 2;
     let users = await getUser(page, searchData);
-    //console.log("User data", users)
+    
     if (!users?.resData?.message) {
       setUserData(users?.resData);
       return false;
@@ -258,13 +258,13 @@ export default function Coupon(params) {
     setSearchData(e);
   };
   const handlePageChange = (newPage) => {
-    // console.log(newPage);
+    
     setPage(newPage);
   };
 
   const openFilterModal = async () => {
     setFilterModalValue(true);
-    //console.log("filter")
+    
   };
 
   const closeFilterModal = async () => {
@@ -274,7 +274,7 @@ export default function Coupon(params) {
   const handleDelete = async () => {
     try {
       const res = await deleteCoupon(deleteId);
-      //console.log("delete response", res)
+      
       if (res.resData.message == "Coupon deleted successfully") {
         toast.success("Coupon deleted successfully");
         setIsPopupOpen(false); // Close the modal
@@ -297,10 +297,9 @@ export default function Coupon(params) {
     setIsPopupOpen(true);
   };
   const updateCouponDetails = async (id, payload) => {
-    // console.log("id", id);
-    // console.log("payload", payload);
+    
     let coupons = await updateCoupon(payload, id);
-    // console.log("responseCoupon", coupons);
+    
     if (!coupons?.message) {
       toast.success(coupons?.resData?.message);
       setIsRefresh((prev) => prev + 1);
@@ -311,8 +310,7 @@ export default function Coupon(params) {
     }
   };
   const toggleChange = async (id, isActive) => {
-    //console.log("toggle change id", id);
-    // console.log("toggleChange run")
+ 
     const payload = {
       IsActive: !isActive,
     };
@@ -328,7 +326,7 @@ export default function Coupon(params) {
     setIsDropdownOpen(!isDropdownOpen);
   };
   const handleCheckboxChange = (selectedId) => async (event) => {
-    // console.log("handleCheckboxChange run")
+   
     setIsLoading(true);
     const newValue = event.target.checked;
     const payload = {

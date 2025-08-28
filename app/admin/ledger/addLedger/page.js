@@ -54,9 +54,9 @@ export default function AddLedger(params) {
 
 
   const getAllProducts = async () => {
-    console.log("product")
+    
     let products = await getProductListForCoupon(page, searchData, payLoad);
-    console.log("product", products);
+    
     if (!products?.resData?.message) {
       setProductList(products?.resData);
       return false;

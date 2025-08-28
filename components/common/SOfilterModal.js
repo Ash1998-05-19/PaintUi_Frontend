@@ -60,11 +60,9 @@ export default function POfilterModal({
 
   const statusOptions = [
     { value: "", label: "All Status" },
-    { value: "Pending", label: "Pending" },
     { value: "Accepted", label: "Accepted" },
-    // { value: "Dispatch", label: "Dispatch" },
-    { value: "Rejected", label: "Rejected" },
-    // { value: "Delivered", label: "Delivered" },
+    { value: "Dispatched", label: "Dispatch" },
+    { value: "Delivered", label: "Delivered" },
   ];
 
   const sortByOptions = [

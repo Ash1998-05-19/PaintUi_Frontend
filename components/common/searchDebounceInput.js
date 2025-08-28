@@ -5,7 +5,7 @@ const SearchInput = ({ setSearchData }) => {
     const debounceTimeout = useRef(null);
 
     const handleSearch = (query) => {
-        console.log('Searching for:', query);
+        
     };
 
     const debounceSearch = (newQuery) => {

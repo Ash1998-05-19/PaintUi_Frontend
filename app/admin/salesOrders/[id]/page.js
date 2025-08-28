@@ -3,36 +3,40 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import SpinnerComp from "@/components/common/spinner";
-import { getPurchaseOrderById } from "@/apiFunction/purchaseOrderApi/purchaseOrderApi";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { getSalesOrderById } from "@/apiFunction/salesOrderApi/salesOrderApi";
 
 export default function PurchaseOrder() {
   const [isLoading, setIsLoading] = useState(false);
   const [listData, setListData] = useState({
     items: [],
-    orderDetails: {},
+    orderDetails: {
+      orderDate: "",
+      retailer: "",
+      status: "",
+      totalAmount: "",
+    },
   });
 
   const params = useParams();
-  const orderId = params?.id;
 
   // Fetch purchase order details
-  const fetchPurchaseOrder = async () => {
+  const fetchSalesOrder = async () => {
     try {
       setIsLoading(true);
-      const response = await getPurchaseOrderById(orderId, setIsLoading);
-      
+      const response = await getSalesOrderById(orderId, setIsLoading);
 
       if (response?.resData?.data) {
+        // Assuming response.resData.data.items is the array of items in the order
         setListData({
           items: response.resData.data.items || [],
           orderDetails: {
             orderDate: response.resData.data.OrderDate,
             retailer:
-              response.resData.data.User.FirstName +
+              response.resData.data.Customer.FirstName +
               " " +
-              response.resData.data.User.LastName,
+              response.resData.data.Customer.LastName,
             status: response.resData.data.Status,
             totalAmount: response.resData.data.TotalAmount,
             // orderId: response.resData.data.orderId
@@ -49,23 +53,25 @@ export default function PurchaseOrder() {
     }
   };
 
+  const orderId = params?.id;
   useEffect(() => {
     if (orderId) {
-      fetchPurchaseOrder();
+      fetchSalesOrder();
     }
   }, [orderId]);
- 
+
+  console.log("listData", listData);
 
   return (
     <section>
       {isLoading && <SpinnerComp />}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
-          Purchase Order Details
+          Sales Order Details
         </h1>
 
         <div className="pb-4">
-          <Link href={"/admin/purchaseOrders"}>
+          <Link href={"/admin/salesOrders"}>
             <button className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">
               Back to Orders
             </button>
@@ -78,31 +84,31 @@ export default function PurchaseOrder() {
             <div>
               <h3 className="text-sm font-medium text-gray-500">Order Date</h3>
               <p className="text-lg font-semibold">
-                {listData.orderDetails.orderDate || "-"}
+                {listData?.orderDetails?.orderDate
+                  ? new Date(listData.orderDetails.orderDate)
+                      .toISOString()
+                      .split("T")[0]
+                  : "-"}
               </p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Retailer</h3>
               <p className="text-lg font-semibold">
-                {listData.orderDetails.retailer}
-                {/* {listData.orderDetails.retailer || '-'} */}
+                {/* {listData.orderDetails.retailer} */}
+                {listData.orderDetails.retailer || "-"}
               </p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-gray-500">Status</h3>
               <p
                 className={`text-lg font-semibold ${
-                  listData.orderDetails.status === "Pending"
-                    ? "text-yellow-500"
-                    : listData.orderDetails.status === "Accepted"
+                   listData.orderDetails.status === "Accepted"
                     ? "text-green-500"
-                    : listData.orderDetails.status === "Dispatch"
+                    : listData.orderDetails.status === "Dispatched"
                     ? "text-blue-500"
                     : listData.orderDetails.status === "Delivered"
                     ? "text-purple-500"
                     : listData.orderDetails.status === "Cancelled"
-                    ? "text-red-500"
-                    : "text-gray-500"
                 }`}
               >
                 {listData.orderDetails.status || "-"}

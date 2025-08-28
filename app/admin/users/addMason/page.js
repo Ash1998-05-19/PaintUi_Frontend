@@ -36,7 +36,7 @@ export default function AddMasonUser() {
       Role: "Mason",
     };
     let res = await addUser(UserDetails,setIsLoading);
-    console.log("user res",res)
+    
     if (res?.resData?.success) {
       router.push("/admin/users");
       toast.success("User Added Succesfully");
