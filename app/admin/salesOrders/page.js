@@ -1,18 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ListPagination from "@/components/common/pagination";
 import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
 import SOfilterModal from "@/components/common/SOfilterModal";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 import {
   getsalesOrders,
   updateSalesOrder,
 } from "@/apiFunction/salesOrderApi/salesOrderApi";
 
-export default function SalesOrders() {
+export default function SalesOrdersWrapper() {
+  return (
+    <Suspense fallback={<div className="p-6 text-center">Loading...</div>}>
+      <SalesOrders />
+    </Suspense>
+  );
+}
+
+function SalesOrders() {
+  const searchParams = useSearchParams();
+  const retailer = searchParams.get("retailerId");
   // State for orders data
   const [orders, setOrders] = useState({
     data: [],
@@ -28,6 +39,15 @@ export default function SalesOrders() {
   const [sortBy, setSortBy] = useState("OrderDate");
   const [totalPages, setTotalPages] = useState(1);
 
+  useEffect(() => {
+    if (retailer) {
+      setFilters((prev) => ({
+        ...prev,
+        userId: { value: retailer },
+      }));
+    }
+  }, [retailer]);
+
   // Filters state
   const [filters, setFilters] = useState({
     dateFrom: "",
@@ -36,6 +56,13 @@ export default function SalesOrders() {
     retailer: "",
     userId: null,
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchSalesOrders();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [page, searchData, isRefresh, filters, sortOrder, sortBy]);
 
   // Status options for dropdown based on current status
   const getStatusOptions = (currentStatus) => {
@@ -93,9 +120,6 @@ export default function SalesOrders() {
   };
 
   // Fetch data when any filter changes
-  useEffect(() => {
-    fetchSalesOrders();
-  }, [page, searchData, isRefresh, filters, sortOrder, sortBy]);
 
   const resetFilters = () => {
     setFilters({
@@ -162,7 +186,17 @@ export default function SalesOrders() {
         </h1>
 
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-          <div></div>
+          <div>
+            <Link href={"/admin/salesOrders/addSalesOrder"}>
+              {" "}
+              <button
+                className="py-2.5 px-5 me-2 mt-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                type="button"
+              >
+                + Add Sales Order
+              </button>
+            </Link>
+          </div>
           <div className="flex">
             <i
               className="bi bi-funnel mr-2 font-medium text-2xl cursor-pointer"
@@ -183,7 +217,10 @@ export default function SalesOrders() {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Order Number
+                Purchase Order Number
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Sales Order Number
               </th>
               <th scope="col" className="px-6 py-3">
                 Order Date
@@ -209,7 +246,22 @@ export default function SalesOrders() {
 
               return (
                 <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">{order.OrderNumber}</td>
+                  <td className="px-6 py-4 text-blue-600 cursor-pointer hover:font-semibold text-center">
+                    {order?.PurchaseOrder?.OrderNumber ? (
+                      <Link
+                        href={`/admin/purchaseOrders/${order.PurchaseOrderId}`}
+                      >
+                        {order?.PurchaseOrder?.OrderNumber}
+                      </Link>
+                    ) : (
+                      "--"
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-blue-600 cursor-pointer hover:font-semibold">
+                    <Link href={`/admin/salesOrders/${order.SalesOrderId}`}>
+                      {order.OrderNumber}
+                    </Link>
+                  </td>
                   <td className="px-6 py-4">
                     {new Date(order.OrderDate).toLocaleDateString()}
                   </td>
@@ -228,9 +280,9 @@ export default function SalesOrders() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-4">
-                      <Link href={`/admin/salesOrders/${order.SalesOrderId}`}>
+                      {/* <Link href={`/admin/salesOrders/${order.SalesOrderId}`}>
                         <i className="bi bi-eye text-blue-600 text-xl"></i>
-                      </Link>
+                      </Link> */}
 
                       {canChangeStatus ? (
                         <select

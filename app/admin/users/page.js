@@ -36,7 +36,9 @@ export default function User(params) {
   const [openUserModal, setOpenUserModal] = useState(false);
   const [modalUserId, setModalUserId] = useState("");
   const [userExcelData, setLedgerExcelData] = useState("");
-  const [userType, setUserType] = useState(params.searchParams.Type?params.searchParams.Type:"Retailer");
+  const [userType, setUserType] = useState(
+    params.searchParams.Type ? params.searchParams.Type : "Retailer"
+  );
   useEffect(() => {
     if (listData?.users) {
       const retailerkeys = [
@@ -47,15 +49,11 @@ export default function User(params) {
         "Email",
         "Phone",
         "totalRewardPoints",
-        "masonCount"
+        "masonCount",
       ];
-      const masonKeys = [
-        "FirstName",
-        "LastName",
-        "Email",
-        "Phone",
-      ];
-      const keysToSelect = userType && userType==="Retailer" ? retailerkeys : masonKeys;
+      const masonKeys = ["FirstName", "LastName", "Email", "Phone"];
+      const keysToSelect =
+        userType && userType === "Retailer" ? retailerkeys : masonKeys;
       const filterCsvData = (data, keys) => {
         return data.map((item) => {
           let newItem = {};
@@ -67,14 +65,14 @@ export default function User(params) {
           return newItem;
         });
       };
-  
+
       const filteredData = filterCsvData(listData.users, keysToSelect);
-  
+
       // Uncomment to set the data to state if needed
       setLedgerExcelData(filteredData);
     }
   }, [listData]);
-  
+
   useEffect(() => {
     getAllUsers();
   }, [page, searchData, isRefresh, userType]);
@@ -93,11 +91,10 @@ export default function User(params) {
   };
 
   useEffect(() => {
-    if(fromDate && toDate){
+    if (fromDate && toDate) {
       getAllUsers();
     }
   }, [fromDate, toDate]);
-  
 
   const searchInputChange = (e) => {
     setSearchData(e);
@@ -158,7 +155,7 @@ export default function User(params) {
           Users
         </h1>
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
-        <div>
+          <div>
             {userType != "Mason" ? (
               <Link href={"/admin/users/addUser"}>
                 {" "}
@@ -169,7 +166,7 @@ export default function User(params) {
                   + Add Retailer
                 </button>
               </Link>
-            ):(
+            ) : (
               <Link href={"/admin/users/addMason"}>
                 {" "}
                 <button
@@ -182,20 +179,22 @@ export default function User(params) {
             )}
           </div>
           <div className="mt-0">
-              {listData?.users?.length > 0 && (
-                <ExportToExcel
-                  apiData={userExcelData}
-                  fileName={userType === "Retailer" ?"Retailer_Data" : "Mason_Data" }
-                />
-              )}
-            </div>
+            {listData?.users?.length > 0 && (
+              <ExportToExcel
+                apiData={userExcelData}
+                fileName={
+                  userType === "Retailer" ? "Retailer_Data" : "Mason_Data"
+                }
+              />
+            )}
+          </div>
           <UserDateRange
-          setFromDate={setFromDate}
-          setToDate={setToDate}
-          startDate={fromDate}
-          endDate={toDate}
-          setIsRefresh ={setIsRefresh}
-        />
+            setFromDate={setFromDate}
+            setToDate={setToDate}
+            startDate={fromDate}
+            endDate={toDate}
+            setIsRefresh={setIsRefresh}
+          />
           <div>
             <SearchInput setSearchData={searchInputChange} />
           </div>
@@ -259,7 +258,7 @@ export default function User(params) {
                   <th scope="col" className="px-6 py-3">
                     Name
                   </th>
-                 
+
                   <th scope="col" className="px-6 py-3">
                     Mobile
                   </th>
@@ -272,7 +271,7 @@ export default function User(params) {
                   <th scope="col" className="px-6 py-3">
                     ShopName
                   </th>
-                 
+
                   <th scope="col" className="px-6 py-3">
                     Action
                   </th>
@@ -305,12 +304,11 @@ export default function User(params) {
                           )}
                         </td>
 
-                       
                         <td className="px-6 py-4">{item?.Phone}</td>
                         <td className="px-6 py-4">{item?.Email || "-"}</td>
                         <td className="px-6 py-4">{item?.masonCount}</td>
                         <td className="px-6 py-4">{item?.ShopName || "-"}</td>
-                    
+
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-2">
                             {item?.IsActive ? (
@@ -352,6 +350,28 @@ export default function User(params) {
                                 style={{ color: "red", fontSize: "1.5em" }}
                               ></i>
                             </Link>
+                            {/* <div className="relative group">
+                              <button className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                <i
+                                  className="bi bi-three-dots-vertical"
+                                  style={{ fontSize: "1.5em" }}
+                                ></i>
+                              </button>
+                              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 delay-150 border border-gray-200">
+                                <Link
+                                  href={`/admin/purchaseOrders?retailerId=${item.UserId}`}
+                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                  View PO
+                                </Link>
+                                <Link
+                                  href={`/admin/salesOrders?retailerId=${item.UserId}`}
+                                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                                >
+                                  View SO
+                                </Link>
+                              </div>
+                            </div> */}
                           </div>
                         </td>
                       </tr>
@@ -373,7 +393,7 @@ export default function User(params) {
                   <th scope="col" className="px-6 py-3">
                     Name
                   </th>
-                
+
                   <th scope="col" className="px-6 py-3">
                     Mobile
                   </th>
@@ -418,7 +438,6 @@ export default function User(params) {
                           )}
                         </td>
 
-                      
                         <td className="px-6 py-4">{item?.Phone}</td>
                         <td className="px-6 py-4">{item?.Email || "-"}</td>
                         <td className="px-6 py-4">{item?.rewardPoints}</td>

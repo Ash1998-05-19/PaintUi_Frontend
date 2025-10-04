@@ -33,7 +33,6 @@ export const addCoupon = async (payload,setLoading=()=>{}) => {
   }
 };
 
-
 export const getCoupon = async (page,searchData,payLoadData,pageSize,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);
