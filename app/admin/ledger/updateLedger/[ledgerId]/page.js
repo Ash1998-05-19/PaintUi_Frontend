@@ -235,13 +235,14 @@ export default function UpdateLedger(params) {
               htmlFor="productName"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Name <span className="text-red-600">*</span>
+              Product Name
+               {/* <span className="text-red-600">*</span> */}
             </label>
 
             <Controller
               name="productName"
               control={control}
-              rules={{ required: "Product Name is required" }}
+              // rules={{ required: "Product Name is required" }}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -262,9 +263,9 @@ export default function UpdateLedger(params) {
               )}
             />
 
-            {errors.productName && (
+            {/* {errors.productName && (
               <span className="text-red-500">{errors.productName.message}</span>
-            )}
+            )} */}
           </div>
 
           <div className="w-full">
@@ -272,7 +273,8 @@ export default function UpdateLedger(params) {
               htmlFor="unit"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Unit <span className="text-red-600">*</span>
+              Product Unit
+               {/* <span className="text-red-600">*</span> */}
             </label>
             <input
               type="number"
@@ -283,9 +285,9 @@ export default function UpdateLedger(params) {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Product Unit"
             />
-            {errors.unit && (
+            {/* {errors.unit && (
               <span className="text-red-500">{errors.unit.message}</span>
-            )}
+            )} */}
           </div>
 
           <div className="w-full">

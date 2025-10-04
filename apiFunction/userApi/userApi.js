@@ -63,7 +63,6 @@ export const getUser = async (page, searchData, userType, fromDate, toDate, limi
   }
 };
 
-
 export const deleteUser = async (id,setLoading=()=>{}) => {
   const token = Cookies.get("token");
   setLoading(true);

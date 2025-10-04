@@ -1,18 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import ListPagination from "@/components/common/pagination";
 import SearchInput from "@/components/common/searchDebounceInput";
 import SpinnerComp from "@/components/common/spinner";
 import POfilterModal from "@/components/common/POfilterModal";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
 import {
   getPurchaseOrders,
   updatePurchaseOrderStatus,
 } from "@/apiFunction/purchaseOrderApi/purchaseOrderApi";
 
-export default function PurchaseOrders() {
+export default function PurchaseOrdersWrapper() {
+  return (
+    <Suspense fallback={<div className="text-center p-6">Loading...</div>}>
+      <PurchaseOrders />
+    </Suspense>
+  );
+}
+
+function PurchaseOrders() {
+  const searchParams = useSearchParams();
+  const retailer = searchParams.get("retailerId");
   // State for orders data
   const [orders, setOrders] = useState({
     data: [],
@@ -37,6 +48,14 @@ export default function PurchaseOrders() {
     userId: null,
   });
 
+  useEffect(() => {
+    if (retailer) {
+      setFilters((prev) => ({
+        ...prev,
+        userId: { value: retailer },
+      }));
+    }
+  }, [retailer]);
   // Status options for dropdown
   const statusOptions = {
     Pending: [
@@ -49,6 +68,15 @@ export default function PurchaseOrders() {
       { value: "Rejected", label: "Rejected" },
     ],
   };
+
+  // Fetch data when any filter changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchPurchaseOrders();
+    }, 100); // Small delay to ensure state is updated
+
+    return () => clearTimeout(timer);
+  }, [page, searchData, isRefresh, filters, sortOrder, sortBy]);
 
   // Fetch purchase orders with all filters
   const fetchPurchaseOrders = async () => {
@@ -74,7 +102,7 @@ export default function PurchaseOrders() {
         setOrders({
           data: response.resData.data,
           totalItems: response.resData.pagination.total || 0,
-          totalPages: response.resData.totalPages || 1,
+          totalPages: response.resData.pagination.totalPages || 1,
         });
         setTotalPages(response.resData.totalPages || 1);
       } else {
@@ -88,10 +116,9 @@ export default function PurchaseOrders() {
     }
   };
 
-  // Fetch data when any filter changes
-  useEffect(() => {
-    fetchPurchaseOrders();
-  }, [page, searchData, isRefresh, filters, sortOrder, sortBy]);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   const resetFilters = () => {
     setFilters({
@@ -138,7 +165,6 @@ export default function PurchaseOrders() {
         orderId: orderId,
         Status: newStatus,
       };
-
 
       const response = await updatePurchaseOrderStatus(payload, setIsLoading);
 
@@ -254,7 +280,6 @@ export default function PurchaseOrders() {
                       <select
                         value={order.Status}
                         onChange={(e) => {
-                          
                           handleStatusChange(
                             order.PurchaseOrderId,
                             e.target.value
@@ -345,10 +370,7 @@ export default function PurchaseOrders() {
         <div className="mt-4">
           <ListPagination
             data={orders}
-            pageNo={(newPage) => {
-              setPage(newPage);
-              window.scrollTo(0, 0);
-            }}
+            pageNo={handlePageChange}
             pageVal={page}
           />
         </div>
