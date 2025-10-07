@@ -172,5 +172,31 @@ export const updateUser = async (payload,id,setLoading=()=>{}) => {
   }
 };
 
+export const checkUserExists = async (phone, setLoading=()=>{}) => {
+  const token = Cookies.get("token");
+  setLoading(true);
+  try {
+    const res = await fetch(`${API_BASE_URL}/user/getUserExists?Phone=${phone}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+    const resData = await res.json();
+
+    if (resData?.success) {
+      setLoading(false);
+      return { resData };
+    } else {
+      //toast.error(resData.message);
+      setLoading(false);
+      return {errMessage:resData.error};
+    }
+  } catch (error) {
+    setLoading(false);
+    toast.error("someting went wrong");
+  }
+}
 
 
