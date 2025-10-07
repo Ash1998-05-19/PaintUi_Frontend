@@ -346,7 +346,7 @@ function PurchaseOrders() {
                       </span>
                     ) : (
                       <Link
-                        href={`/admin/salesOrders/addSalesOrder/${order.PurchaseOrderId}`}
+                        href={`/admin/salesOrders/addSO/${order.PurchaseOrderId}`}
                       >
                         <p className="text-blue-600 text-md">Generate SO</p>
                         {/* <i className="text-blue-600 text-xl">Generate SO</i> */}
