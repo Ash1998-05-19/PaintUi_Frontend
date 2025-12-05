@@ -77,7 +77,7 @@ export default function Password(params) {
     };
 
     let updateUserData = await changePassword(UserDetails);
-    // console.log("response message", updateUserData);
+    
     if (updateUserData?.successMessage?.success == true) {
       toast.success(updateUserData?.successMessage?.message);
       setIsLoading(false);

@@ -54,9 +54,9 @@ export default function AddLedger(params) {
 
 
   const getAllProducts = async () => {
-    console.log("product")
+    
     let products = await getProductListForCoupon(page, searchData, payLoad);
-    console.log("product", products);
+    
     if (!products?.resData?.message) {
       setProductList(products?.resData);
       return false;
@@ -96,13 +96,13 @@ export default function AddLedger(params) {
   };
 
   const router = useRouter();
-
+  
   const submitForm = async (data) => {
     const LedgerDetails = {
       EntryType: data.entryType,
       RetailerUserId: users.value,
       Amount: data.amount,
-      ProductId: selectedProduct.value,
+      ProductId: selectedProduct ? selectedProduct.value : null,
       Note: data.note ? data.note : "",
       PersonalNote: data.personalNote ? data.personalNote : "",
       TransactionDate: data.transactionDate ? data.transactionDate : new Date(),
@@ -124,16 +124,17 @@ export default function AddLedger(params) {
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Ledger Details
       </h1>
-      <Link href="/admin/ledger">
+      
         <div className="mb-5 mt-5">
+          <Link href="/admin/ledger">
           <button
             className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             type="button"
           >
             Back
           </button>
+          </Link>
         </div>
-      </Link>
       <form className="mb-5" onSubmit={handleSubmit(submitForm)}>
         <div className="grid gap-4 mb-4 md:grid-cols-2">
           <div className="mb-4">
@@ -229,13 +230,14 @@ export default function AddLedger(params) {
               htmlFor="productName"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Name <span className="text-red-600">*</span>
+              Product Name
+               {/* <span className="text-red-600">*</span> */}
             </label>
 
             <Controller
               name="productName"
               control={control}
-              rules={{ required: "Product Name is required" }}
+              // rules={{ required: "Product Name is required" }}
               render={({ field }) => (
                 <Select
                   {...field}
@@ -256,9 +258,9 @@ export default function AddLedger(params) {
               )}
             />
 
-            {errors.productName && (
+            {/* {errors.productName && (
               <span className="text-red-500">{errors.productName.message}</span>
-            )}
+            )} */}
           </div>
 
           <div className="w-full">
@@ -266,20 +268,21 @@ export default function AddLedger(params) {
               htmlFor="unit"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Product Unit <span className="text-red-600">*</span>
+              Product Unit
+               {/* <span className="text-red-600">*</span> */}
             </label>
             <input
               type="number"
               step="0.01"
               id="unit"
               min="0"
-              {...register("unit", { required: "Product Unit is required" })}
+              // {...register("unit", { required: "Product Unit is required" })}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Product Unit"
             />
-            {errors.unit && (
+            {/* {errors.unit && (
               <span className="text-red-500">{errors.unit.message}</span>
-            )}
+            )} */}
           </div>
 
           <div className="w-full">

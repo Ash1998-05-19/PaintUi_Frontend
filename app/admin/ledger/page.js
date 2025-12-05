@@ -194,7 +194,7 @@ const [sortBy, setSortBy] = useState("");
                 User Name
               </th>
               <th scope="col" className="px-6 py-3">
-                Product Name
+                Sales Order
               </th>
               <th scope="col" className="px-6 py-3">
                 Entry Type
@@ -205,7 +205,6 @@ const [sortBy, setSortBy] = useState("");
               <th scope="col" className="px-6 py-3">
                 Transaction Date
               </th>
-
               <th scope="col" className="px-6 py-3">
                 Action
               </th>
@@ -217,7 +216,7 @@ const [sortBy, setSortBy] = useState("");
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   {/* <td className="px-6 py-4">{item?.LedgerId}</td> */}
                   <td className="px-6 py-4">{item?.UserDetail?.FirstName}</td>
-                  <td className="px-6 py-4">{item?.ProductDetail?.Name}</td>
+                  <td className="px-6 py-4">{item?.SODetail?.OrderNumber || "_"}</td>
                   <td className="px-6 py-4">{item?.EntryType}</td>
                   <td className="px-6 py-4">{item?.Amount}</td>
                   <td className="px-6 py-4">

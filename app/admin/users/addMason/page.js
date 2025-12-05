@@ -3,9 +3,10 @@ import Link from "next/link";
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
-import { addUser } from "@/apiFunction/userApi/userApi";
+import { addUser, checkUserExists, updateUser } from "@/apiFunction/userApi/userApi";
 import { useRouter } from "next/navigation";
 import SpinnerComp from "@/components/common/spinner";
+import DeleteModal from "@/components/common/deleteModal";
 //import { addAmenity } from "@/api-functions/amenity/addAmenity";
 //import { ImageString  } from "@/api-functions/auth/authAction";
 //import { AddFaqAPi } from "@/api-functions/faq/addFaq";
@@ -16,52 +17,140 @@ export default function AddMasonUser() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [existingUser, setExistingUser] = useState(null);
+  const [formData, setFormData] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("");
 
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleEnabledChange = (e) => {
-    setIsEnabled(e.target.value === "true");
-  };
 
   const submitForm = async (data) => {
-    const UserDetails = {
-      FirstName: data.firstName,
-      LastName: data.lastName ? data.lastName : "" ,
-      Email: data.email ? data.email : "" ,
-      // ShopName: data.shopName,
-      // Address: data.address,
-      Phone: data.phone,
-      // Password: data.password,
-      Role: "Mason",
-    };
-    let res = await addUser(UserDetails,setIsLoading);
-    console.log("user res",res)
-    if (res?.resData?.success) {
-      router.push("/admin/users");
-      toast.success("User Added Succesfully");
-    } else {
-      toast.error(res?.errMessage);
-      return false;
+    setIsLoading(true);
+    setFormData(data);
+
+    try {
+      const existUser = await checkUserExists(data.phone);
+      const user = existUser.resData.user;
+
+      if (user) {
+        setExistingUser(user);
+
+        if (user.deletedAt && !user.IsActive) {
+          toast.error(
+            "This account is deactivated and deleted, contact system admin"
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        if (user.deletedAt && user.IsActive) {
+          setPopupMessage(
+            "This account is already registerd do you want to update and retrieve it?"
+          );
+          setIsLoading(false);
+          setIsPopupOpen(true);
+        } else if (!user.deletedAt && !user.IsActive) {
+          toast.error(
+            "This account already registered, please activate it first."
+          );
+          setIsLoading(false);
+          return;
+        } else if (!user.deletedAt && user.IsActive) {
+          setPopupMessage(
+            "This account already exists. Do you want to update it?"
+          );
+          setIsLoading(false);
+          setIsPopupOpen(true);
+        }
+      } else {
+        await createOrUpdateUser(data);
+      }
+    } catch (err) {
+      toast.error("Error checking user status");
+      setIsLoading(false);
     }
   };
 
+  const handleConfirmUpdate = async () => {
+    if (!formData) return;
+    await createOrUpdateUser(formData, true);
+    setIsPopupOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsPopupOpen(false);
+    setIsLoading(false);
+  };
+
+  const createOrUpdateUser = async (data, isUpdate = false) => {
+    const UserDetails = {
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email,
+    };
+
+    if (!isUpdate) {
+      UserDetails.Phone = data.phone;
+      UserDetails.Role = "Mason";
+    }
+
+    try {
+      const res = isUpdate
+        ? await updateUser(UserDetails, existingUser.UserId)
+        : await addUser(UserDetails);
+
+      if (res?.resData?.success) {
+        router.push("/admin/users");
+        toast.success(
+          isUpdate ? "User Updated Successfully" : "User Added Successfully"
+        );
+      } else {
+        toast.error(res?.errMessage || "Something went wrong");
+      }
+    } catch (err) {
+      toast.error("Error saving user");
+    }
+
+    setIsLoading(false);
+  };
+
+  // const submitForm = async (data) => {
+  //   const UserDetails = {
+  //     FirstName: data.firstName,
+  //     LastName: data.lastName ? data.lastName : "" ,
+  //     Email: data.email ? data.email : "" ,
+  //     Phone: data.phone,
+  //     Role: "Mason",
+  //   };
+  //   let res = await addUser(UserDetails,setIsLoading);
+
+  //   if (res?.resData?.success) {
+  //     router.push("/admin/users");
+  //     toast.success("User Added Succesfully");
+  //   } else {
+  //     toast.error(res?.errMessage);
+  //     return false;
+  //   }
+  // };
+
   return (
     <section>
-             {isLoading && <SpinnerComp />}
+      {isLoading && <SpinnerComp />}
       <h1 className="text-2xl text-black-600 underline mb-3 font-bold">
         Add Your Mason User Details
       </h1>
-      <Link href="/admin/users">
+      
         <div className="mb-5 mt-5">
+          <Link href="/admin/users">
           <button
             className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             type="button"
           >
             Back
           </button>
+          </Link>
         </div>
-      </Link>
       <form onSubmit={handleSubmit(submitForm)} className="mb-5">
         <div className="grid gap-4 mb-4 md:grid-cols-2">
           <div className="w-full">
@@ -253,6 +342,16 @@ export default function AddMasonUser() {
           Submit
         </button>
       </div> */}
+      <DeleteModal
+        isOpen={isPopupOpen}
+        title={popupMessage}
+        confirmLabel="Yes, Update"
+        cancelLabel="No, Cancel"
+        onConfirm={handleConfirmUpdate}
+        onCancel={handleCancel}
+      />
+
+      <ToastContainer />
     </section>
   );
 }
