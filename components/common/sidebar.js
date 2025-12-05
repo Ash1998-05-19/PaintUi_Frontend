@@ -396,6 +396,80 @@ export default function SidebarComp({ children }) {
                 </span>
               </Link>
             </li>
+            <li>
+              <Link
+                href="/admin/purchaseOrders"
+                onClick={() => handleTabClick("/admin/purchaseOrders")}
+                className={` ${
+                  activeTab === "/admin/purchaseOrders"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
+                } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
+              >
+                <svg
+                  className={`${
+                    activeTab === "/admin/purchaseOrders"
+                      ? ""
+                      : Styles.inactiveTab
+                  }  ${
+                    Styles.tabSvg
+                  }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m4-12H8m8 4H8m8 4H8M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                  />
+                </svg>
+
+                <span className={` flex-1 ms-3 whitespace-nowrap`}>
+                  Purchase Orders
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin/salesOrders"
+                onClick={() => handleTabClick("/admin/salesOrders")}
+                className={` ${
+                  activeTab === "/admin/salesOrders"
+                    ? Styles.activeTab
+                    : Styles.inactiveTab
+                } flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group`}
+              >
+                <svg
+                  className={`${
+                    activeTab === "/admin/salesOrders"
+                      ? ""
+                      : Styles.inactiveTab
+                  }  ${
+                    Styles.tabSvg
+                  }  flex-shrink-0 w-5 h-5 text-gray-900 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-black`}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4v16m4-12H8m8 4H8m8 4H8M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"
+                  />
+                </svg>
+
+                <span className={` flex-1 ms-3 whitespace-nowrap`}>
+                  Sales Orders
+                </span>
+              </Link>
+            </li>
             {/* <li className="fixed bottom-0 left-0 w-full">
               <button
                 onClick={logOut}

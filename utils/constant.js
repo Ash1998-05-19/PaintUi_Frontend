@@ -1,6 +1,8 @@
 export const PAGE_LIMIT = 10;
-export const API_BASE_URL = "http://api.srgenterprises.in/v1"
-export const VIEW_PDF_URL = "http://api.srgenterprises.in/pdf"
+// export const API_BASE_URL = "http://api.srgenterprises.in/v1"
+// export const VIEW_PDF_URL = "http://api.srgenterprises.in/pdf"
+export const API_BASE_URL = "http://devapi.srgenterprises.in/v1"
+export const VIEW_PDF_URL = "http://devapi.srgenterprises.in/pdf"
 // export const API_BASE_URL = "http://localhost:5000/v1"
 // export const VIEW_PDF_URL = "http://localhost:5000/pdf"
  //export const API_BASE_URL_FOR_MASTER = "http://localhost:5000/v1/masters"

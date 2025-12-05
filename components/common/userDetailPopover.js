@@ -36,6 +36,22 @@ export function UserDetailPopover({ userIdValue, children }) {
               Scanned Coupons
             </a>
           </li>
+          <li className="mb-4">
+            <a
+              href={`/admin/purchaseOrders?retailerId=${userIdValue}`}
+              className="text-blue-500 hover:underline"
+            >
+              View PO
+            </a>
+          </li>
+          <li className="mb-4">
+            <a
+              href={`/admin/salesOrders?retailerId=${userIdValue}`}
+              className="text-blue-500 hover:underline"
+            >
+              View SO
+            </a>
+          </li>
         </ul>
       </div>
     </div>

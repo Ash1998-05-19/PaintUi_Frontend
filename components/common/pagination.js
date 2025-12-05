@@ -38,6 +38,7 @@ const ListPagination = ({ data, pageNo, pageVal }) => {
   const pages = [...Array(endPage + 1 - startPage).keys()].map(
     (i) => startPage + i
   );
+
   const userCount = data?.users?.filter(user => user.Role.Name !== 'Admin').length || 0;
   return (
     <nav className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">

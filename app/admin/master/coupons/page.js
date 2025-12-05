@@ -117,7 +117,7 @@ const CouponsSection = ({ params }) => {
 
   const handleDelete = async () => {
     const res = await deleteDownloadFile(deleteId);
-    console.log("products --->", res);
+   
 
     if (res.resData.success) {
       toast.success("Coupon deleted successfully");
