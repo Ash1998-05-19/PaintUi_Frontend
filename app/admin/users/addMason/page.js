@@ -265,11 +265,11 @@ export default function AddMasonUser() {
                   value: 10,
                   message: "Mobile number should not exceed 10 digits",
                 },
-                validate: {
-                  validFirstDigit: (value) =>
-                    /^[789]/.test(value.charAt(0)) ||
-                    "First digit must be 7, 8, or 9",
-                },
+                // validate: {
+                //   validFirstDigit: (value) =>
+                //     /^[6789]/.test(value.charAt(0)) ||
+                //     "First digit must be 6, 7, 8, or 9",
+                // },
               })}
               className={`bg-gray-50 border text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
                 errors.phone ? "border-red-500" : "border-gray-300"
